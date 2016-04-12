@@ -739,7 +739,6 @@ namespace bilibili2
                 case "排行榜":
                     (infoFrame.Content as RankPage).BackEvent += MainPage_BackEvent;
                     break;
-
                 default:
                     break;
             }

@@ -28,7 +28,6 @@ using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 
-
 //“空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409 上有介绍
 
 namespace bilibili2
@@ -50,7 +49,7 @@ namespace bilibili2
             home_Items.ErrorEvent += Home_Items_ErrorEvent;
             //this.RequestedTheme = ElementTheme.Dark;
         }
-
+        string navInfo = string.Empty;
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             if (e.NavigationMode == NavigationMode.New)
@@ -60,6 +59,7 @@ namespace bilibili2
                 SetWeekInfo();
                 home_Items.SetHomeInfo();
             }
+            navInfo =  infoFrame.GetNavigationState();
         }
         //首页错误
         private void Home_Items_ErrorEvent(string aid)
@@ -165,17 +165,12 @@ namespace bilibili2
         private void pivot_Home_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             UpdateUI();
-            if (pivot_Home.SelectedIndex == 0)
-            {
-                top_txt_find.PlaceholderText = "搜索房间或主播";
-            }
-            else
-            {
-                top_txt_find.PlaceholderText = "搜索关键字或AV号";
-            }
+            
+            top_txt_find.PlaceholderText = "搜索关键字或AV号";
             switch (pivot_Home.SelectedIndex)
             {
                 case 0:
+                    top_txt_find.PlaceholderText = "搜索房间或主播";
                     break;
                 case 1:
                     break;
@@ -370,6 +365,11 @@ namespace bilibili2
         {
             infoFrame.ContentTransitions = null;
             infoFrame.Content = null;
+            //infoFrame.CacheSize = 0;
+            //int i=  infoFrame.BackStackDepth;
+            //string a = string.Empty;
+         
+            infoFrame.SetNavigationState(navInfo);
             dh.TranslateX = 0;
         }
         //首页Banner选择改变
@@ -482,7 +482,7 @@ namespace bilibili2
                     if (container.Values["AutoLogin"].ToString() == "true" && container.Values["UserName"].ToString() != "" && container.Values["UserPass"].ToString() != "")
                     {
                         //读取登录结果
-                        string result = await ApiHelper.loginBilibili(container.Values["UserName"].ToString(), container.Values["UserPass"].ToString());
+                        string result = await ApiHelper.LoginBilibili(container.Values["UserName"].ToString(), container.Values["UserPass"].ToString());
                         GetLoginInfoModel model = await getLogin.GetUserInfo();
                         if (model != null)
                         {
@@ -535,27 +535,39 @@ namespace bilibili2
             UserClass getLogin = new UserClass();
             if (getLogin.IsLogin())
             {
-                DT_0.Visibility = Visibility.Collapsed;
-                DT_1.Visibility = Visibility.Collapsed;
-                DT_Info.Visibility = Visibility.Visible;
-                DT_noLoad.Visibility = Visibility.Collapsed;
-                user_GridView_Bangumi.ItemsSource = await getLogin.GetUserBangumi();
-                if (user_GridView_Bangumi.Items.Count==0)
+                try
                 {
-                    DT_0.Visibility = Visibility.Visible;
+                    pr_Load_DT.Visibility = Visibility.Visible;
+                    DT_0.Visibility = Visibility.Collapsed;
+                    DT_1.Visibility = Visibility.Collapsed;
+                    DT_Info.Visibility = Visibility.Visible;
+                    DT_noLoad.Visibility = Visibility.Collapsed;
+                    user_GridView_Bangumi.ItemsSource = await getLogin.GetUserBangumi();
+                    if (user_GridView_Bangumi.Items.Count == 0)
+                    {
+                        DT_0.Visibility = Visibility.Visible;
+                    }
+                    List<GetAttentionUpdate> list_Attention = await getLogin.GetUserAttentionUpdate(DT_PageNum);
+                    DT_PageNum++;
+                    //User_ListView_Attention.ItemsSource = list_Attention;
+                    foreach (GetAttentionUpdate item in list_Attention)
+                    {
+                        User_ListView_Attention.Items.Add(item);
+                    }
+                    if (User_ListView_Attention.Items.Count == 0)
+                    {
+                        DT_1.Visibility = Visibility.Visible;
+                    }
+                    LoadDT = true;
                 }
-                List<GetAttentionUpdate> list_Attention = await getLogin.GetUserAttentionUpdate(DT_PageNum);
-                DT_PageNum++;
-                //User_ListView_Attention.ItemsSource = list_Attention;
-                foreach (GetAttentionUpdate item in list_Attention)
+                catch (Exception)
                 {
-                    User_ListView_Attention.Items.Add(item);
+                    messShow.Show("读取动态失败",3000);
                 }
-                if (User_ListView_Attention.Items.Count == 0)
+                finally
                 {
-                    DT_1.Visibility = Visibility.Visible;
+                    pr_Load_DT.Visibility = Visibility.Collapsed;
                 }
-                LoadDT = true;
             }
             else
             {
@@ -721,6 +733,7 @@ namespace bilibili2
             }
         }
         //infoFrame跳转
+        
         private void infoFrame_Navigated(object sender, NavigationEventArgs e)
         {
             switch ((e.Content as Page).Tag.ToString())
@@ -741,10 +754,16 @@ namespace bilibili2
                 case "排行榜":
                     (infoFrame.Content as RankPage).BackEvent += MainPage_BackEvent;
                     break;
-
+                case "番剧信息":
+                    (infoFrame.Content as BanInfoPage).BackEvent += MainPage_BackEvent;
+                    break;
+                case "番剧更新时间表":
+                    (infoFrame.Content as BanTimelinePage).BackEvent += MainPage_BackEvent;
+                    break;
                 default:
                     break;
             }
+            
         }
         //试试手气
         private void Find_btn_Random_Click(object sender, RoutedEventArgs e)
@@ -771,11 +790,10 @@ namespace bilibili2
         {
             infoFrame.Navigate(typeof(RankPage));
         }
-
         //番剧时间表点击
         private void list_0_ItemClick(object sender, ItemClickEventArgs e)
         {
-
+            infoFrame.Navigate(typeof(BanInfoPage),(e.ClickedItem as BangumiTimeLineModel).season_id);
         }
         int taday = 0;
         public void SetWeekInfo()
@@ -1125,10 +1143,17 @@ namespace bilibili2
         //番剧时间表点击
         private void Ban_btn_Timeline_Click(object sender, RoutedEventArgs e)
         {
-            B_Timeline.Visibility = Visibility.Visible;
-            gridview_List.Visibility = Visibility.Collapsed;
-            sp_Bangumi.IsPaneOpen = true;
-            GetBangumiTimeLine();
+            if (this.ActualWidth>600)
+            {
+                B_Timeline.Visibility = Visibility.Visible;
+                gridview_List.Visibility = Visibility.Collapsed;
+                sp_Bangumi.IsPaneOpen = true;
+                GetBangumiTimeLine();
+            }
+            else
+            {
+                infoFrame.Navigate(typeof(BanTimelinePage));
+            }
         }
         //索引点击
         private void gridview_List_ItemClick(object sender, ItemClickEventArgs e)
@@ -1143,6 +1168,12 @@ namespace bilibili2
             sp_Bangumi.IsPaneOpen = true;
             GetTagInfo();
         }
+        //追番点击
+        private void user_GridView_Bangumi_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            infoFrame.Navigate(typeof(BanInfoPage), (e.ClickedItem as GetUserBangumi).season_id);
+        }
+
     }
 
 }

@@ -765,7 +765,7 @@
                                     </HyperlinkButton>
                                     <TextBlock x:Name="DT_0" HorizontalAlignment="Center" Foreground="Gray">╮(╯_╰)╭ 没有追番</TextBlock>
                                     <ScrollViewer HorizontalScrollBarVisibility="Hidden" HorizontalScrollMode="Enabled" VerticalScrollMode="Disabled" VerticalScrollBarVisibility="Disabled">
-                                        <GridView x:Name="user_GridView_Bangumi"  ScrollViewer.VerticalScrollBarVisibility="Disabled"  HorizontalAlignment="Left" SelectionMode="None" IsItemClickEnabled="True" >
+                                        <GridView x:Name="user_GridView_Bangumi"  ScrollViewer.VerticalScrollBarVisibility="Disabled"  HorizontalAlignment="Left" SelectionMode="None" IsItemClickEnabled="True" ItemClick="user_GridView_Bangumi_ItemClick">
                                             <GridView.ItemContainerStyle>
                                                 <Style TargetType="GridViewItem">
                                                     <Setter Property="Margin" Value="5 5 5 0"></Setter>
@@ -836,6 +836,7 @@
                                     <HyperlinkButton x:Name="User_load_more" HorizontalAlignment="Center" VerticalAlignment="Bottom">加载更多</HyperlinkButton>
                                 </StackPanel>
                                 <TextBlock x:Name="DT_noLoad" Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Gray">（￣工￣lll） 请先登录</TextBlock>
+                                <ProgressBar  x:Name="pr_Load_DT" IsIndeterminate="True" Background="{x:Null}" VerticalAlignment="Top"></ProgressBar>
                             </Grid>
                            
                         </ScrollViewer>

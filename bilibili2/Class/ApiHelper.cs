@@ -26,10 +26,9 @@ namespace bilibili2
 
         public static string GetSign(string url)
         {
-            string lower;
+            string result;
             string str = url.Substring(url.IndexOf("?", 4) + 1);
-            string[] strArray = new string[] { "&" };
-            List<string> list = str.Split('&').ToList<string>();
+            List<string> list = str.Split('&').ToList();
             list.Sort();
             StringBuilder stringBuilder = new StringBuilder();
             foreach (string str1 in list)
@@ -37,17 +36,17 @@ namespace bilibili2
                 stringBuilder.Append((stringBuilder.Length > 0 ? "&" : string.Empty));
                 stringBuilder.Append(str1);
             }
-            stringBuilder.Append("ba3a4e554e9a6e15dc4d1d70c2b154e3");
-            lower = MD5.GetMd5String(stringBuilder.ToString()).ToLower();
-
-            return lower;
+            stringBuilder.Append(_appSecret);
+            result = MD5.GetMd5String(stringBuilder.ToString()).ToLower();
+            return result;
         }
+
         public static long GetTimeSpen
         {
             get { return Convert.ToInt64((DateTime.Now - new DateTime(1970, 1, 1, 0, 0, 0, 0)).TotalSeconds); }
         }
 
-        public static async Task<string> GetEncryptedPassword(string pw)
+        public static async Task<string> GetEncryptedPassword(string passWord)
         {
             string base64String;
             try
@@ -63,7 +62,7 @@ namespace bilibili2
                 JObject jObjects = JObject.Parse(stringAsync);
                 string str = jObjects["hash"].ToString();
                 string str1 = jObjects["key"].ToString();
-                string str2 = string.Concat(str, pw);
+                string str2 = string.Concat(str, passWord);
                 string str3 = Regex.Match(str1, "BEGIN PUBLIC KEY-----(?<key>[\\s\\S]+)-----END PUBLIC KEY").Groups["key"].Value.Trim();
                 byte[] numArray = Convert.FromBase64String(str3);
                 AsymmetricKeyAlgorithmProvider asymmetricKeyAlgorithmProvider = AsymmetricKeyAlgorithmProvider.OpenAlgorithm(AsymmetricAlgorithmNames.RsaPkcs1);
@@ -79,45 +78,7 @@ namespace bilibili2
             return base64String;
         }
 
-        public static async Task<string> GetUserCookie(string accessKey)
-        {
-            string empty;
-            try
-            {
-                string[] strArray = new string[] { "http://api.bilibili.com/login/sso?gourl=", WebUtility.UrlEncode("http://www.bilibili.com"), "&access_key=", accessKey, "&appkey=", _appKey, "&platform=wp" };
-                string str = string.Concat(strArray);
-                str = string.Concat(str, "&sign=", GetSign(str));
-                System.Net.Http.HttpClient httpClient = new System.Net.Http.HttpClient(new HttpClientHandler()
-                {
-                    AllowAutoRedirect = false
-                });
-                System.Net.Http.HttpResponseMessage async = await httpClient.GetAsync(new Uri(str));
-                IEnumerable<string> values = async.Headers.GetValues("Set-Cookie");
-                string empty1 = string.Empty;
-                foreach (string value in values)
-                {
-                    empty1 = string.Concat(empty1, value);
-                    empty1 = string.Concat(empty1, ";");
-                }
-                Match match = Regex.Match(empty1, "DedeUserID=(?<uid>.*?);");
-                Match match1 = Regex.Match(empty1, "DedeUserID__ckMd5=.*?;");
-                Match match2 = Regex.Match(empty1, "SESSDATA=.*?;");
-
-                if (match.Success && match1.Success && match2.Success)
-                {
-                    object[] objArray = new object[] { match.Value, match1.Value, match2.Value };
-                    empty = string.Format("{0} {1} {2}", objArray);
-                    return empty;
-                }
-            }
-            catch (Exception)
-            {
-            }
-            empty = string.Empty;
-            return empty;
-        }
-
-        public static async Task<string> loginBilibili(string UserName, string Password)
+        public static async Task<string> LoginBilibili(string UserName, string Password)
         {
             try
             {

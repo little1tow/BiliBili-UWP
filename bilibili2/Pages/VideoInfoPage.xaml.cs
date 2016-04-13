@@ -39,8 +39,8 @@ namespace bilibili2
         string aid = "";
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            if (e.NavigationMode== NavigationMode.New)
-            {
+           // if (e.NavigationMode== NavigationMode.New)
+           // {
                 video_Error_Null.Visibility = Visibility.Collapsed;
                 video_Error_User.Visibility = Visibility.Collapsed;
                 aid = "";
@@ -54,18 +54,33 @@ namespace bilibili2
                 UpdateUI();
                 aid = e.Parameter as string;
                 GetVideoInfo(aid);
-            }
+            //}
          
         }
         private void VideoInfoPage_BackRequested(object sender, BackRequestedEventArgs e)
         {
             e.Handled = true;
+            if (this.Frame.CanGoBack)
+            {
+                this.Frame.GoBack();
+            }
+            else
+            {
                 BackEvent();
+            }
         }
 
         private void btn_back_Click(object sender, RoutedEventArgs e)
         {
-             BackEvent();
+            if (this.Frame.CanGoBack)
+            {
+                this.Frame.GoBack();
+            }
+            else
+            {
+                BackEvent();
+            }
+             
         }
         private void pivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {

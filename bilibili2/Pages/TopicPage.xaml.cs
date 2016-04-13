@@ -35,12 +35,26 @@ namespace bilibili2.Pages
         private void TopicPage_BackRequested(object sender, BackRequestedEventArgs e)
         {
             e.Handled = true;
-            BackEvent();
+            if (this.Frame.CanGoBack)
+            {
+                this.Frame.GoBack();
+            }
+            else
+            {
+                BackEvent();
+            }
         }
 
         private void btn_back_Click(object sender, RoutedEventArgs e)
         {
-            BackEvent();
+            if (this.Frame.CanGoBack)
+            {
+                this.Frame.GoBack();
+            }
+            else
+            {
+                BackEvent();
+            }
         }
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {

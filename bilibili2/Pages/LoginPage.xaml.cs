@@ -42,7 +42,14 @@ namespace bilibili2
         private void LoginPage_BackRequested(object sender, BackRequestedEventArgs e)
         {
             e.Handled = true;
-            BackEvent();
+            if (this.Frame.CanGoBack)
+            {
+                this.Frame.GoBack();
+            }
+            else
+            {
+                BackEvent();
+            }
         }
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
@@ -71,7 +78,7 @@ namespace bilibili2
                 sc.IsEnabled = false;
                 btn_Login.Content = "正在登录";
                 pr_Load.Visibility = Visibility.Visible;
-                 string result= await  ApiHelper.loginBilibili(txt_User.Text, txt_Pass.Password);
+                 string result= await  ApiHelper.LoginBilibili(txt_User.Text, txt_Pass.Password);
                 if (result=="登录成功")
                 {
                     LoginEd();
@@ -141,8 +148,15 @@ namespace bilibili2
         }
         private void btn_back_Click(object sender, RoutedEventArgs e)
         {
-            BackEvent();
-           
+            if (this.Frame.CanGoBack)
+            {
+                this.Frame.GoBack();
+            }
+            else
+            {
+                BackEvent();
+            }
+
         }
 
         private void Login_Pass_LostFocus(object sender, RoutedEventArgs e)
@@ -178,7 +192,7 @@ namespace bilibili2
                 sc.IsEnabled = false;
                 btn_Login.Content = "正在登录";
                 pr_Load.Visibility = Visibility.Visible;
-                string result = await ApiHelper.loginBilibili(txt_User.Text, txt_Pass.Password);
+                string result = await ApiHelper.LoginBilibili(txt_User.Text, txt_Pass.Password);
                 if (result == "登录成功")
                 {
                     LoginEd();

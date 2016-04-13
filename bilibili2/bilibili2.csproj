@@ -166,8 +166,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\bg1.png" />
-    <Content Include="Assets\bg2.png" />
-    <Content Include="Assets\bg3.png" />
     <Content Include="Assets\bili_img_4180877.jpg" />
     <Content Include="Assets\Icon\DM.png" />
     <Content Include="Assets\Icon\DY.png" />

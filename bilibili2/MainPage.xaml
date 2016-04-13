@@ -884,7 +884,7 @@
                                     <HyperlinkButton x:Name="User_load_more" HorizontalAlignment="Center" VerticalAlignment="Bottom">加载更多</HyperlinkButton>
                                 </StackPanel>
                                 <TextBlock x:Name="DT_noLoad" Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Gray">（￣工￣lll） 请先登录</TextBlock>
-                                <ProgressBar  x:Name="pr_Load_DT" IsIndeterminate="True" Background="{x:Null}" VerticalAlignment="Top"></ProgressBar>
+                                <ProgressBar  x:Name="pr_Load_DT" Visibility="Collapsed" IsIndeterminate="True" Background="{x:Null}" VerticalAlignment="Top"></ProgressBar>
                             </Grid>
                            
                         </ScrollViewer>

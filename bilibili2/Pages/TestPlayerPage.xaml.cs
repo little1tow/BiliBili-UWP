@@ -36,8 +36,8 @@ namespace bilibili2.Pages
         {
             if (this.Frame.CanGoBack)
             {
-                this.Frame.GoBack();
                 e.Handled = true;
+                this.Frame.GoBack();
             }
         }
 

@@ -60,13 +60,14 @@ namespace bilibili2
         }
         private void VideoInfoPage_BackRequested(object sender, BackRequestedEventArgs e)
         {
-            e.Handled = true;
             if (this.Frame.CanGoBack)
             {
+                e.Handled = true;
                 this.Frame.GoBack();
             }
             else
             {
+                e.Handled = true;
                 BackEvent();
             }
         }

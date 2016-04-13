@@ -38,13 +38,15 @@ namespace bilibili2.Pages
 
         private void RankPage_BackRequested(object sender, BackRequestedEventArgs e)
         {
-            e.Handled = true;
+           
             if (this.Frame.CanGoBack)
             {
+                e.Handled = true;
                 this.Frame.GoBack();
             }
             else
             {
+                e.Handled = true;
                 BackEvent();
             }
         }

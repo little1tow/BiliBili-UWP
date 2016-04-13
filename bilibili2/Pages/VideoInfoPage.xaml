@@ -46,21 +46,10 @@
         </VisualStateManager.VisualStateGroups>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
-            <RowDefinition Height="36"/>
+            <RowDefinition Height="auto"/>
             <RowDefinition/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
-        <Grid Background="{ThemeResource Bili-ForeColor}" Grid.Row="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-            </Grid.ColumnDefinitions>
-            <Button x:Name="btn_info" Background="#00000000"  FontSize="16"  Foreground="#B2FFFFFF" Tag="0" VerticalContentAlignment="Stretch" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="Button_Click" Content="简介"/>
-            <Button x:Name="btn_Coment" Grid.Column="1" FontSize="16"  Foreground="#B2FFFFFF" Tag="1"  Background="#00000000"  VerticalContentAlignment="Stretch" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="Button_Click" Content="评论"/>
-            <Button x:Name="btn_About" Grid.Column="2" FontSize="16"  Foreground="#B2FFFFFF" Tag="2"  Background="#00000000"  VerticalContentAlignment="Stretch" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="Button_Click" Content="相关推荐"/>
-        </Grid>
-    
         <Grid Background="{ThemeResource Bili-ForeColor}" Grid.Row="0" Height="48" >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="48"/>
@@ -68,7 +57,7 @@
                 <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
             <AppBarButton x:Name="btn_back" Click="btn_back_Click" Icon="Back" Width="48" Height="48" Foreground="White"/>
-            <TextBlock  Text="AV1008611" Margin="5 0" FontSize="16" x:Name="top_txt_Header" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" />
+            <TextBlock  Text="AV" Margin="5 0" FontSize="16" x:Name="top_txt_Header" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" />
             <AppBarButton x:Name="btn_Sort" Grid.Column="2" Width="48" Height="48" Icon="Sort" Foreground="White">
                 <AppBarButton.Flyout>
                     <MenuFlyout>
@@ -79,139 +68,155 @@
                 </AppBarButton.Flyout>
             </AppBarButton>
         </Grid>
+        
+        <Grid Background="{ThemeResource Bili-ForeColor}" Grid.Row="1" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Button x:Name="btn_info" Background="#00000000"  FontSize="16"  Foreground="#B2FFFFFF" Tag="0" VerticalContentAlignment="Stretch" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="Button_Click" Content="简介"/>
+            <Button x:Name="btn_Coment" Grid.Column="1" FontSize="16"  Foreground="#B2FFFFFF" Tag="1"  Background="#00000000"  VerticalContentAlignment="Stretch" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="Button_Click" Content="评论"/>
+            <Button x:Name="btn_About" Grid.Column="2" FontSize="16"  Foreground="#B2FFFFFF" Tag="2"  Background="#00000000"  VerticalContentAlignment="Stretch" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="Button_Click" Content="相关推荐"/>
+        </Grid>
+    
         <Pivot x:Name="pivot" Style="{StaticResource PivotStyle1}" Grid.Row="2" SelectionChanged="pivot_SelectionChanged">
             <PivotItem Margin="0">
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
-                    <Grid >
-                        <Grid Margin="10 10 15 0" x:Name="Video_Grid_Info">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="auto"/>
-                                <RowDefinition Height="auto"/>
-                                <RowDefinition Height="auto"/>
-                                <RowDefinition Height="auto"/>
-                                <RowDefinition Height="auto"/>
-                                <RowDefinition Height="auto"/>
-                            </Grid.RowDefinitions>
-                            <Image Source="{Binding pic}" />
-                            <Grid Grid.Row="0"  VerticalAlignment="Bottom" >
-                                <Grid.Background>
-                                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                                        <GradientStop Color="#00000000" Offset="0"/>
-                                        <GradientStop Color="#7F000000" Offset="1"/>
-                                    </LinearGradientBrush>
-                                </Grid.Background>
-                                <HyperlinkButton Foreground="Black">
-                                    <TextBlock Text="{Binding title}" x:Name="Video_Title" Margin="10,0" FontSize="18" TextWrapping="Wrap" Foreground="White"/>
+                    <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                   
+                        <Grid >
+                            <Grid Margin="10 10 15 0" x:Name="Video_Grid_Info">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="auto"/>
+                                </Grid.RowDefinitions>
+                                <Image Source="{Binding pic}" />
+                                <Grid Grid.Row="0"  VerticalAlignment="Bottom" >
+                                    <Grid.Background>
+                                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                            <GradientStop Color="#00000000" Offset="0"/>
+                                            <GradientStop Color="#7F000000" Offset="1"/>
+                                        </LinearGradientBrush>
+                                    </Grid.Background>
+                                    <HyperlinkButton Foreground="Black">
+                                        <TextBlock Text="{Binding title}" x:Name="Video_Title" Margin="10,0" FontSize="18" TextWrapping="Wrap" Foreground="White"/>
+                                    </HyperlinkButton>
+                                </Grid>
+                                <HyperlinkButton  x:Name="btn_playP1" Foreground="{ThemeResource Bili-ForeColor}" HorizontalAlignment="Stretch" ToolTipService.ToolTip="点击播放P1" VerticalAlignment="Stretch" Background="#00EAEAEA" Click="btn_playP1_Click">
+                                    <!--<FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE102;" FontSize="80" />-->
                                 </HyperlinkButton>
-                            </Grid>
-                            <HyperlinkButton  x:Name="btn_playP1" Foreground="{ThemeResource Bili-ForeColor}" HorizontalAlignment="Stretch" ToolTipService.ToolTip="点击播放P1" VerticalAlignment="Stretch" Background="#00EAEAEA" Click="btn_playP1_Click">
-                                <!--<FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE102;" FontSize="80" />-->
-                            </HyperlinkButton>
-                            <Grid Grid.Row="1">
-                                <HyperlinkButton Foreground="{ThemeResource Bili-FontColor}" HorizontalContentAlignment="Stretch">
-                                    <Grid >
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition/>
-                                            <ColumnDefinition/>
-                                        </Grid.ColumnDefinitions>
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition/>
-                                            <RowDefinition/>
-                                        </Grid.RowDefinitions>
-                                        <Ellipse Width="36" Grid.RowSpan="2" Height="36" Margin="0,0,10 0">
-                                            <Ellipse.Fill>
-                                                <ImageBrush ImageSource="{Binding face}"/>
-                                            </Ellipse.Fill>
-                                        </Ellipse>
-                                        <TextBlock  Grid.Column="1" Text="{Binding author}" FontSize="16" />
-                                        <TextBlock Grid.Column="1" Grid.Row="1" FontSize="14" Foreground="Gray">
+                                <Grid Grid.Row="1">
+                                    <HyperlinkButton Foreground="{ThemeResource Bili-FontColor}" HorizontalContentAlignment="Stretch">
+                                        <Grid >
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition/>
+                                                <ColumnDefinition/>
+                                            </Grid.ColumnDefinitions>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition/>
+                                                <RowDefinition/>
+                                            </Grid.RowDefinitions>
+                                            <Ellipse Width="36" Grid.RowSpan="2" Height="36" Margin="0,0,10 0">
+                                                <Ellipse.Fill>
+                                                    <ImageBrush ImageSource="{Binding face}"/>
+                                                </Ellipse.Fill>
+                                            </Ellipse>
+                                            <TextBlock  Grid.Column="1" Text="{Binding author}" FontSize="16" />
+                                            <TextBlock Grid.Column="1" Grid.Row="1" FontSize="14" Foreground="Gray">
 									<Run Text="发表于"/>
                                         <Run Text="{Binding Created_at}"></Run>
-                                        </TextBlock>
-                                    </Grid>
-                                </HyperlinkButton>
-                                <HyperlinkButton HorizontalAlignment="Right" Foreground="White">
-                                    <Border CornerRadius="5" Background="{ThemeResource Bili-ForeColor}">
-                                        <TextBlock Margin="10 5">
+                                            </TextBlock>
+                                        </Grid>
+                                    </HyperlinkButton>
+                                    <HyperlinkButton HorizontalAlignment="Right" Foreground="White">
+                                        <Border CornerRadius="5" Background="{ThemeResource Bili-ForeColor}">
+                                            <TextBlock Margin="10 5">
 									<Run Text="关注"/>
-                                        </TextBlock>
-                                    </Border>
-                                </HyperlinkButton>
+                                            </TextBlock>
+                                        </Border>
+                                    </HyperlinkButton>
 
-                            </Grid>
-                            <StackPanel Grid.Row="3" Margin="0 5">
-                                <TextBlock x:Name="txt_Desc"  IsTextSelectionEnabled="True" TextWrapping="Wrap" MaxLines="2" Foreground="Gray">
+                                </Grid>
+                                <StackPanel Grid.Row="3" Margin="0 5">
+                                    <TextBlock x:Name="txt_Desc"  IsTextSelectionEnabled="True" TextWrapping="Wrap" MaxLines="2" Foreground="Gray">
 							<Run Text="{Binding description}"/>
-                                </TextBlock>
-                                <HyperlinkButton x:Name="btn_Open" HorizontalAlignment="Right" Foreground="Gray" FontSize="12" Content="展开" Click="btn_Open_Click"/>
-                            </StackPanel>
-                            <ScrollViewer Grid.Row="2" Margin="0 5" VerticalScrollMode="Disabled" VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Hidden" HorizontalScrollMode="Enabled">
-                                <StackPanel Orientation="Horizontal" >
-                                    <StackPanel  Orientation="Horizontal">
-                                        <TextBlock FontSize="14">播放：</TextBlock>
-                                        <TextBlock FontSize="14" Margin="0 0 10 0" Text="{Binding Play}"></TextBlock>
-                                    </StackPanel>
-                                    <StackPanel Grid.Column="1" Orientation="Horizontal">
-                                        <TextBlock FontSize="14">弹幕：</TextBlock>
-                                        <TextBlock FontSize="14" Margin="0 0 10 0" Text="{Binding Video_review}"></TextBlock>
-                                    </StackPanel>
-                                    <StackPanel Grid.Row="1" Orientation="Horizontal">
-                                        <TextBlock FontSize="14">收藏：</TextBlock>
-                                        <TextBlock FontSize="14" Margin="0 0 10 0" Text="{Binding Favorites}"></TextBlock>
-                                    </StackPanel>
-
-                                    <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
-                                        <TextBlock FontSize="14">硬币：</TextBlock>
-                                        <TextBlock FontSize="14" Margin="0 0 10 0" Text="{Binding Coins}"></TextBlock>
-                                    </StackPanel>
+                                    </TextBlock>
+                                    <HyperlinkButton x:Name="btn_Open" HorizontalAlignment="Right" Foreground="Gray" FontSize="12" Content="展开" Click="btn_Open_Click"/>
                                 </StackPanel>
-                            </ScrollViewer>
+                                <ScrollViewer Grid.Row="2" Margin="0 5" VerticalScrollMode="Disabled" VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Hidden" HorizontalScrollMode="Enabled">
+                                    <StackPanel Orientation="Horizontal" >
+                                        <StackPanel  Orientation="Horizontal">
+                                            <TextBlock FontSize="14">播放：</TextBlock>
+                                            <TextBlock FontSize="14" Margin="0 0 10 0" Text="{Binding Play}"></TextBlock>
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                            <TextBlock FontSize="14">弹幕：</TextBlock>
+                                            <TextBlock FontSize="14" Margin="0 0 10 0" Text="{Binding Video_review}"></TextBlock>
+                                        </StackPanel>
+                                        <StackPanel Grid.Row="1" Orientation="Horizontal">
+                                            <TextBlock FontSize="14">收藏：</TextBlock>
+                                            <TextBlock FontSize="14" Margin="0 0 10 0" Text="{Binding Favorites}"></TextBlock>
+                                        </StackPanel>
 
-                            <ScrollViewer Grid.Row="4" Margin="0 5" VerticalScrollMode="Disabled" VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Hidden" HorizontalScrollMode="Enabled">
-                                <StackPanel x:Name="grid_tag" Orientation="Horizontal">
+                                        <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
+                                            <TextBlock FontSize="14">硬币：</TextBlock>
+                                            <TextBlock FontSize="14" Margin="0 0 10 0" Text="{Binding Coins}"></TextBlock>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </ScrollViewer>
 
+                                <ScrollViewer Grid.Row="4" Margin="0 5" VerticalScrollMode="Disabled" VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Hidden" HorizontalScrollMode="Enabled">
+                                    <StackPanel x:Name="grid_tag" Orientation="Horizontal">
+
+                                    </StackPanel>
+                                </ScrollViewer>
+                                <StackPanel Grid.Row="5" >
+                                    <TextBlock>全部剧集</TextBlock>
+                                    <ListView x:Name="Video_List" SelectionMode="None" IsItemClickEnabled="True" Margin="0 5" BorderThickness="0 0.5 0 0" BorderBrush="#7F808080" ItemClick="Video_List_ItemClick">
+                                        <ListView.ItemContainerStyle>
+                                            <Style TargetType="ListViewItem">
+                                                <Setter Property="Margin" Value="0 5"></Setter>
+                                                <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
+                                                <Setter Property="Background" Value="#7FFFFFFF"></Setter>
+                                            </Style>
+                                        </ListView.ItemContainerStyle>
+                                        <ListView.ItemTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="P"/>
+                                                    <TextBlock Text="{Binding page}" Margin="0,0,5,0"/>
+                                                    <TextBlock Text="{Binding part}"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </ListView.ItemTemplate>
+                                    </ListView>
                                 </StackPanel>
-                            </ScrollViewer>
-                            <StackPanel Grid.Row="5" >
-                                <TextBlock>全部剧集</TextBlock>
-                                <ListView x:Name="Video_List" SelectionMode="None" IsItemClickEnabled="True" Margin="0 5" BorderThickness="0 0.5 0 0" BorderBrush="#7F808080" ItemClick="Video_List_ItemClick">
-                                    <ListView.ItemContainerStyle>
-                                        <Style TargetType="ListViewItem">
-                                            <Setter Property="Margin" Value="0 5"></Setter>
-                                            <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
-                                            <Setter Property="Background" Value="#7FFFFFFF"></Setter>
-                                        </Style>
-                                    </ListView.ItemContainerStyle>
-                                    <ListView.ItemTemplate>
-                                        <DataTemplate>
-                                            <StackPanel Orientation="Horizontal">
-                                                <TextBlock Text="P"/>
-                                                <TextBlock Text="{Binding page}" Margin="0,0,5,0"/>
-                                                <TextBlock Text="{Binding part}"/>
-                                            </StackPanel>
-                                        </DataTemplate>
-                                    </ListView.ItemTemplate>
-                                </ListView>
-                            </StackPanel>
+                            </Grid>
                         </Grid>
-                        <Grid x:Name="video_Error_Null" Visibility="Collapsed" Background="{ThemeResource Bili-Background}">
-                            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                                <TextBlock FontSize="24" HorizontalAlignment="Center">╮(╯_╰)╭</TextBlock>
-                                <TextBlock HorizontalAlignment="Center">视频不存在或已被删除</TextBlock>
-                            </StackPanel>
-                        </Grid>
-                        <Grid x:Name="video_Error_User" Visibility="Collapsed" Background="{ThemeResource Bili-Background}">
-                            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                                <TextBlock FontSize="24" HorizontalAlignment="Center">ㄟ( ▔, ▔ )ㄏ</TextBlock>
-                                <TextBlock HorizontalAlignment="Center">权限不足，登录后试试</TextBlock>
-                            </StackPanel>
-
-                        </Grid>
+                   
+                    <Grid Grid.Column="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <StackPanel Orientation="Horizontal" Margin="0 10 0 0">
+                            <Border Background="{ThemeResource Bili-ForeColor}" Width="10"  Height="24"  Margin="0 0 5 0"/>
+                            <TextBlock Text="热门评论" FontSize="18" VerticalAlignment="Center" />
+                        </StackPanel>
                     </Grid>
-                 
-                </ScrollViewer>
-             
+                
+    </Grid>
 
+                </ScrollViewer>
             </PivotItem>
             <PivotItem Margin="0" >
                 <SplitView OpenPaneLength="300">
@@ -293,7 +298,6 @@
                         </Border>
                     </Grid>
                 </SplitView>
-               
             </PivotItem>
             <PivotItem Margin="0" >
                 <ListView x:Name="list_About" SelectionMode="None" IsItemClickEnabled="True" ItemClick="ListView_ItemClick">
@@ -339,6 +343,19 @@
                 </ListView>
             </PivotItem>
         </Pivot>
+        <Grid x:Name="video_Error_Null" Grid.RowSpan="3" Grid.Row="1" Visibility="Collapsed" Background="{ThemeResource Bili-Background}">
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                <TextBlock FontSize="24" HorizontalAlignment="Center">╮(╯_╰)╭</TextBlock>
+                <TextBlock HorizontalAlignment="Center">视频不存在或已被删除</TextBlock>
+            </StackPanel>
+        </Grid>
+        <Grid x:Name="video_Error_User" Grid.RowSpan="3" Grid.Row="1"  Visibility="Collapsed" Background="{ThemeResource Bili-Background}">
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                <TextBlock FontSize="24" HorizontalAlignment="Center">ㄟ( ▔, ▔ )ㄏ</TextBlock>
+                <TextBlock HorizontalAlignment="Center">权限不足，登录后试试</TextBlock>
+            </StackPanel>
+
+        </Grid>
         <CommandBar x:Name="com_bar" Grid.Row="0" HorizontalAlignment="Right" Background="{ThemeResource Bili-ForeColor}" Foreground="White">
             <CommandBar.SecondaryCommands>
                 <AppBarButton x:Name="Video_Refresh" Icon="Refresh"  Label="刷新"/>

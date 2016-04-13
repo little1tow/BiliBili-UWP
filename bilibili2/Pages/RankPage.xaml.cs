@@ -67,11 +67,9 @@ namespace bilibili2.Pages
         {
             try
             {
-                using (hc = new HttpClient())
-                {
-                    HttpResponseMessage hr = await hc.GetAsync(new Uri("http://api.bilibili.cn/list?appkey=84b739484c36d653&order=hot&original=0&page=1&pagesize=20"));
-                    hr.EnsureSuccessStatusCode();
-                    string results = await hr.Content.ReadAsStringAsync();
+                
+                    WebClientClass wc = new WebClientClass();
+                    string results = await wc.GetResults(new Uri("http://api.bilibili.cn/list?appkey=84b739484c36d653&order=hot&original=0&page=1&pagesize=20"));
                     InfoModel model = new InfoModel();
                     model = JsonConvert.DeserializeObject<InfoModel>(results);
                     JObject json = JObject.Parse(model.list.ToString());
@@ -91,8 +89,6 @@ namespace bilibili2.Pages
                         });
                     }
                     QQ_Rank_QZ.ItemsSource = ReList;
-                }
-
             }
             catch (Exception ex)
             {
@@ -104,12 +100,9 @@ namespace bilibili2.Pages
         {
             try
             {
-                using (hc = new HttpClient())
-                {
-                    HttpResponseMessage hr = await hc.GetAsync(new Uri("http://api.bilibili.com/list?appkey=422fd9d7289a1dd9&order=hot&original=1&page=1&pagesize=20"));
-                    hr.EnsureSuccessStatusCode();
-                    string results = await hr.Content.ReadAsStringAsync();
-                    InfoModel model = new InfoModel();
+                WebClientClass wc = new WebClientClass();
+                    string results = await wc.GetResults(new Uri("http://api.bilibili.com/list?appkey=422fd9d7289a1dd9&order=hot&original=1&page=1&pagesize=20"));
+                InfoModel model = new InfoModel();
                     model = JsonConvert.DeserializeObject<InfoModel>(results);
                     JObject json = JObject.Parse(model.list.ToString());
                     QQ_Rank_YC.Items.Clear();
@@ -128,7 +121,6 @@ namespace bilibili2.Pages
                         });
                     }
                     QQ_Rank_YC.ItemsSource = ReList;
-                }
 
             }
             catch (Exception ex)

@@ -456,6 +456,57 @@ namespace bilibili2
 
 
     }
-    
+    //番剧Tag
+    public class BanSeasonTagModel
+    {
+        public int count { get; set; }
+        public int pages { get; set; }
+        public object result { get; set; }
 
+        public string bangumi_title { get; set; }//标题
+        public string brief { get; set; }//简介
+        public string pub_time { get; set; }//时间
+        public string title { get; set; }
+        public string Time
+        {
+            get
+            {
+                try
+                {
+                    return String.Format("{0}年{1}月", DateTime.Parse(pub_time).Year, DateTime.Parse(pub_time).Month);
+                }
+                catch (Exception)
+                {
+                    return "";
+                }
+                //string a = pub_time.Remove(11, pub_time.Length - 1);
+            }
+        }
+        public string squareCover { get; set; }//封面
+        public string season_id { get; set; }//SID
+        public int is_finish { get; set; }//是否完结
+        public string newest_ep_index { get; set; }//最新话
+        public string Is_finish
+        {
+            get
+            {
+                if (is_finish == 1)
+                {
+                    return String.Format("已完结,共{0}话", newest_ep_index);
+                }
+                else
+                {
+                    return String.Format("更新至{0}话", newest_ep_index);
+                }
+            }
+        }
+        public int favorites { get; set; }//订阅数
+        public string Favorites
+        {
+            get
+            {
+                return String.Format("{0}万人订阅", (double)favorites / 10000);
+            }
+        }
+    }
 }

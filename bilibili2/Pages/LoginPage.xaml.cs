@@ -56,7 +56,6 @@ namespace bilibili2
             GetPass();
         }
 
-        //public string access_key = "";
         private async void btn_Login_Click(object sender, RoutedEventArgs e)
         {
             if (txt_User.Text.Length == 0)
@@ -93,25 +92,6 @@ namespace bilibili2
                 sc.IsEnabled = true;
             }
 
-           // txt_Status.Text = "加密登录信息";
-           // string encryptedPassword = await ApiHelper.GetEncryptedPassword(txt_Pass.Password);
-           // txt_Status.Text = "开始登录";
-           // string[] appKey = new string[] { "https://api.bilibili.com/login?appkey=", ApiHelper._appKey, "&platform=wp&pwd=", WebUtility.UrlEncode(encryptedPassword), "&type=json&userid=", WebUtility.UrlEncode(txt_User.Text) };
-           // string str = string.Concat(appKey);
-           // str = string.Concat(str, "&sign=", ApiHelper.GetSign(str));
-           // HttpBaseProtocolFilter httpBaseProtocolFilter = new HttpBaseProtocolFilter();
-           //httpBaseProtocolFilter.IgnorableServerCertificateErrors.Add( (Windows.Security.Cryptography.Certificates.ChainValidationResult)3);
-           // httpBaseProtocolFilter.IgnorableServerCertificateErrors.Add((Windows.Security.Cryptography.Certificates.ChainValidationResult)1);
-           // HttpClient hc = new HttpClient(httpBaseProtocolFilter);
-           // HttpResponseMessage hr =await hc.GetAsync(new Uri(str));
-           // hr.EnsureSuccessStatusCode();
-           // txt_Status.Text =await hr.Content.ReadAsStringAsync();
-
-           // JObject jObjects = JObject.Parse(txt_Status.Text);
-           // string str1 = jObjects.SelectToken("access_key").ToString();
-           // string userCookie = await ApiHelper.GetUserCookie(str1);
-           // access_key = str1;
-           // txt_Status.Text += "\r\n"+userCookie;
         }
         ApplicationDataContainer container = ApplicationData.Current.LocalSettings;
         private void GetPass()

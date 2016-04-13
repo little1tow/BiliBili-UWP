@@ -592,8 +592,11 @@
                                                 <TextBlock Text="番剧推荐" FontSize="16" VerticalAlignment="Center" />
                                             </StackPanel>
                                         </HyperlinkButton>
+                                        <GridView>
+                                            <GridViewItem></GridViewItem>
+                                        </GridView>
                                     </StackPanel>
-
+                                    
                                 </Grid>
                             </ScrollViewer>
                         </SplitView>

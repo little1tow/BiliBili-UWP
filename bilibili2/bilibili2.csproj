@@ -110,8 +110,14 @@
     <Compile Include="Controls\MessageShow.xaml.cs">
       <DependentUpon>MessageShow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\BanByTagPage.xaml.cs">
+      <DependentUpon>BanByTagPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\BanInfoPage.xaml.cs">
       <DependentUpon>BanInfoPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\BanTagPage.xaml.cs">
+      <DependentUpon>BanTagPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\BanTimelinePage.xaml.cs">
       <DependentUpon>BanTimelinePage.xaml</DependentUpon>
@@ -201,7 +207,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Pages\BanByTagPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Pages\BanInfoPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\BanTagPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

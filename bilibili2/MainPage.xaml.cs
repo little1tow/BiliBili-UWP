@@ -733,7 +733,6 @@ namespace bilibili2
             }
         }
         //infoFrame跳转
-        
         private void infoFrame_Navigated(object sender, NavigationEventArgs e)
         {
             switch ((e.Content as Page).Tag.ToString())
@@ -760,10 +759,15 @@ namespace bilibili2
                 case "番剧更新时间表":
                     (infoFrame.Content as BanTimelinePage).BackEvent += MainPage_BackEvent;
                     break;
+                case "番剧索引":
+                    (infoFrame.Content as BanTagPage).BackEvent += MainPage_BackEvent;
+                    break;
+                case "番剧Tag":
+                    (infoFrame.Content as BanByTagPage).BackEvent += MainPage_BackEvent;
+                    break;
                 default:
                     break;
             }
-            
         }
         //试试手气
         private void Find_btn_Random_Click(object sender, RoutedEventArgs e)
@@ -1143,7 +1147,7 @@ namespace bilibili2
         //番剧时间表点击
         private void Ban_btn_Timeline_Click(object sender, RoutedEventArgs e)
         {
-            if (this.ActualWidth>600)
+            if (this.ActualWidth>500)
             {
                 B_Timeline.Visibility = Visibility.Visible;
                 gridview_List.Visibility = Visibility.Collapsed;
@@ -1158,15 +1162,22 @@ namespace bilibili2
         //索引点击
         private void gridview_List_ItemClick(object sender, ItemClickEventArgs e)
         {
-
+            infoFrame.Navigate(typeof(BanByTagPage), new string[] { (e.ClickedItem as TagModel).tag_id.ToString(),(e.ClickedItem as  TagModel).tag_name});
         }
         //索引表点击
         private void Ban_btn_Tag_Click(object sender, RoutedEventArgs e)
         {
-            B_Timeline.Visibility = Visibility.Collapsed;
-            gridview_List.Visibility = Visibility.Visible;
-            sp_Bangumi.IsPaneOpen = true;
-            GetTagInfo();
+            if (this.ActualWidth>500)
+            {
+                B_Timeline.Visibility = Visibility.Collapsed;
+                gridview_List.Visibility = Visibility.Visible;
+                sp_Bangumi.IsPaneOpen = true;
+                GetTagInfo();
+            }
+            else
+            {
+                infoFrame.Navigate(typeof(BanTagPage));
+            }
         }
         //追番点击
         private void user_GridView_Bangumi_ItemClick(object sender, ItemClickEventArgs e)

@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -7,6 +8,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Core;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -22,19 +24,18 @@ namespace bilibili2.Pages
     /// <summary>
     /// 可用于自身或导航至 Frame 内部的空白页。
     /// </summary>
-    public sealed partial class TopicPage : Page
+    public sealed partial class BanTagPage : Page
     {
         public delegate void GoBackHandler();
         public event GoBackHandler BackEvent;
-        public TopicPage()
+        public BanTagPage()
         {
             this.InitializeComponent();
-            SystemNavigationManager.GetForCurrentView().BackRequested += TopicPage_BackRequested;
+             NavigationCacheMode = NavigationCacheMode.Required;
+            SystemNavigationManager.GetForCurrentView().BackRequested += BanInfoPage_BackRequested;
         }
-
-        private void TopicPage_BackRequested(object sender, BackRequestedEventArgs e)
+        private void BanInfoPage_BackRequested(object sender, BackRequestedEventArgs e)
         {
-
             e.Handled = true;
             if (this.Frame.CanGoBack)
             {
@@ -59,29 +60,45 @@ namespace bilibili2.Pages
         }
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            if (e.NavigationMode== NavigationMode.New)
+            if (e.NavigationMode== NavigationMode.New )
             {
-                GetTopic();
+                GetTagInfo();
             }
+            
         }
-        private async void GetTopic()
+
+        //索引
+        public async void GetTagInfo()
         {
             try
             {
-                pr_Load.Visibility = Visibility.Visible;
+                pr_Load_Ban.Visibility =Visibility.Visible;
                 WebClientClass wc = new WebClientClass();
-                string results = await wc.GetResults(new Uri("http://www.bilibili.com/index/slideshow.json"));
-                TopicModel model = JsonConvert.DeserializeObject<TopicModel>(results);
-                list_Topic.ItemsSource = JsonConvert.DeserializeObject<List<TopicModel>>(model.list.ToString());
+                string uri = "http://bangumi.bilibili.com/api/tags?_device=wp&_ulv=10000&appkey=422fd9d7289a1dd9&build=411005&page=" + 1 + "&pagesize=60&platform=android&ts=" + ApiHelper.GetTimeSpen + "000";
+                string sign = ApiHelper.GetSign(uri);
+                uri += "&sign=" + sign;
+                string results = await wc.GetResults(new Uri(uri));
+                JObject jo = JObject.Parse(results);
+                List<TagModel> list = JsonConvert.DeserializeObject<List<TagModel>>(jo["result"].ToString());
+                gridview_List.ItemsSource = list;
             }
             catch (Exception ex)
             {
-                messShow.Show("读取话题失败\r\n" + ex.Message, 3000);
+                messShow.Show("读取索引信息失败！\r\n" + ex.Message, 3000);
+                
             }
             finally
             {
-                pr_Load.Visibility = Visibility.Collapsed;
+                pr_Load_Ban.Visibility = Visibility.Collapsed;
+                // IsLoading = false;
             }
         }
+
+        //索引点击
+        private void gridview_List_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            this.Frame.Navigate(typeof(BanByTagPage), new string[] { (e.ClickedItem as TagModel).tag_id.ToString(), (e.ClickedItem as TagModel).tag_name });
+        }
+
     }
 }

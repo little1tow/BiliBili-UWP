@@ -201,7 +201,13 @@
                 </Setter.Value>
             </Setter>
         </Style>
-
+        <Style x:Name="GridViewItemStyle" TargetType="GridViewItem">
+            <Setter Property="BorderBrush" Value="#33000000"></Setter>
+            <Setter Property="BorderThickness" Value="1"></Setter>
+            <Setter Property="Margin" Value="5"></Setter>
+            <Setter Property="VerticalAlignment" Value="Top"></Setter>
+            <Setter Property="Background" Value="{ThemeResource Bili-List-Background}"></Setter>
+        </Style>
     </Page.Resources>
     <Grid Background="{ThemeResource Bili-Background}">
         <Grid.RowDefinitions>
@@ -279,7 +285,7 @@
                                 </Ellipse>
                                 <StackPanel Grid.Column="1" VerticalAlignment="Center">
                                     <TextBlock x:Name="txt_UserName" Foreground="White" FontSize="18">请登录</TextBlock>
-                                    <TextBlock x:Name="txt_Sign"  ToolTipService.ToolTip="{Binding ElementName=txt_Sign,Path=Text}" Visibility="Collapsed" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" MaxLines="1" Foreground="White" FontSize="14">
+                                    <TextBlock x:Name="txt_Sign"   Visibility="Collapsed" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" MaxLines="1" Foreground="White" FontSize="14">
 										<Run Text="个人签名"/>
                                     </TextBlock>
                                 </StackPanel>
@@ -575,7 +581,7 @@
                                         <ColumnDefinition/>
                                     </Grid.ColumnDefinitions>
                                     <FlipView Height="180" Grid.ColumnSpan="3"/>
-                                    <Button Grid.Row="1" Grid.Column="0" HorizontalAlignment="Stretch" Margin="5" Background="{ThemeResource Bili-ForeColor}" Foreground="White" Content="我的追番"/>
+                                    <Button x:Name="Ban_btn_MyBan" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Stretch" Margin="5" Background="{ThemeResource Bili-ForeColor}" Foreground="White" Content="我的追番" Click="Ban_btn_MyBan_Click"/>
                                     <Button x:Name="Ban_btn_Tag" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" Margin="5" Background="{ThemeResource Bili-ForeColor}" Foreground="White" Content="番剧索引" Click="Ban_btn_Tag_Click"/>
                                     <Button x:Name="Ban_btn_Timeline" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Stretch" Margin="5" Background="{ThemeResource Bili-ForeColor}" Foreground="White" Content="放送时间表" Click="Ban_btn_Timeline_Click"/>
                                     <StackPanel Grid.Row="2" Grid.ColumnSpan="3">
@@ -585,7 +591,37 @@
                                                 <TextBlock Text="最近更新" FontSize="16" VerticalAlignment="Center" />
                                             </StackPanel>
                                         </HyperlinkButton>
-                                        
+                                        <ScrollViewer VerticalScrollMode="Disabled" VerticalScrollBarVisibility="Disabled" HorizontalScrollMode="Enabled" HorizontalScrollBarVisibility="Hidden">
+                                            <GridView x:Name="GridView_Bangumi_NewUpdate"  HorizontalAlignment="Center" ItemContainerStyle="{StaticResource GridViewItemStyle}" ScrollViewer.VerticalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollMode="Disabled" SelectionMode="None"  IsItemClickEnabled="True"   ItemClick="GridView_Bangumi_NewUpdate_ItemClick">
+                                                <GridView.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <StackPanel >
+                                                            <Grid>
+                                                                <Image Source="{Binding cover}" Width="150" ></Image>
+                                                                <Border VerticalAlignment="Bottom" HorizontalAlignment="Right" Background="#7F000000" Margin="5" CornerRadius="5">
+                                                                    <StackPanel Orientation="Horizontal" Margin="5,0">
+                                                                        <TextBlock Foreground="White" FontSize="12" Text="{Binding watchingCount}"></TextBlock>
+                                                                        <TextBlock Foreground="White" FontSize="12" >人在看</TextBlock>
+                                                                    </StackPanel>
+                                                                </Border>
+                                                            </Grid>
+                                                            <Grid MaxWidth="150" Margin="5">
+                                                                <Grid.RowDefinitions>
+                                                                    <RowDefinition Height="32"></RowDefinition>
+                                                                    <RowDefinition></RowDefinition>
+                                                                </Grid.RowDefinitions>
+                                                                <TextBlock Text="{Binding title}"  FontSize="12" TextAlignment="Center" VerticalAlignment="Center"  HorizontalAlignment="Left" TextWrapping="Wrap" ></TextBlock>
+                                                                <StackPanel Orientation="Horizontal" Grid.Row="1">
+                                                                    <TextBlock Text="更新至第" FontSize="12" Foreground="#FF0078D7" ></TextBlock>
+                                                                    <TextBlock Text="{Binding newest_ep_index}" FontSize="12" Foreground="#FF0078D7" ></TextBlock>
+                                                                    <TextBlock Text="话" FontSize="12" Foreground="#FF0078D7" ></TextBlock>
+                                                                </StackPanel>
+                                                            </Grid>
+                                                        </StackPanel>
+                                                    </DataTemplate>
+                                                </GridView.ItemTemplate>
+                                            </GridView>
+                                        </ScrollViewer>
                                         <HyperlinkButton  Foreground="{ThemeResource Bili-FontColor}" >
                                             <StackPanel Orientation="Horizontal">
                                                 <Border Background="{ThemeResource Bili-ForeColor}" Width="10"  Height="24"  Margin="5,0"/>
@@ -593,7 +629,16 @@
                                             </StackPanel>
                                         </HyperlinkButton>
                                         <GridView>
-                                            <GridViewItem></GridViewItem>
+                                            <GridViewItem Width="500" VerticalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                                                <Grid>
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition/>
+                                                        <RowDefinition />
+                                                        <RowDefinition/>
+                                                    </Grid.RowDefinitions>
+                                                </Grid>
+                                                
+                                            </GridViewItem>
                                         </GridView>
                                     </StackPanel>
                                     
@@ -760,7 +805,7 @@
                         <ScrollViewer x:Name="sc" VerticalScrollBarVisibility="Auto" ViewChanged="sc_ViewChanged">
                             <Grid>
                                 <StackPanel x:Name="DT_Info" Visibility="Visible">
-                                    <HyperlinkButton Margin="10 5 10 0" HorizontalContentAlignment="Stretch" HorizontalAlignment="Stretch" Foreground="{ThemeResource Bili-FontColor}">
+                                    <HyperlinkButton Margin="10 5 10 0" HorizontalContentAlignment="Stretch" HorizontalAlignment="Stretch" Foreground="{ThemeResource Bili-FontColor}" Click="Ban_btn_MyBan_Click">
                                         <StackPanel Orientation="Horizontal">
                                             <Image Source="Assets/PartIcon/BFJ.png" Width="24" Height="24" Margin="0 0 5 0"/>
                                             <TextBlock Text="追番" VerticalAlignment="Center" FontSize="16"/>
@@ -830,7 +875,7 @@
                                                     </StackPanel>
                                                     <StackPanel Orientation="Horizontal" Grid.Row="3" Grid.Column="1" Margin="10,0" VerticalAlignment="Center">
                                                         <Image Source="Assets/Icon/Time.png" Width="16" Height="16"></Image>
-                                                        <TextBlock Text="{Binding create}"  FontSize="12"  TextWrapping="Wrap" MaxLines="2"  Foreground="#FF898989"></TextBlock>
+                                                        <TextBlock Text="{Binding Create}"  FontSize="12"  TextWrapping="Wrap" MaxLines="2"  Foreground="#FF898989"></TextBlock>
                                                     </StackPanel>
                                                 </Grid>
                                             </DataTemplate>
@@ -851,7 +896,7 @@
                                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                                     <StackPanel>
                                         <ProgressBar x:Name="pr_Load_Topic"  Background="{x:Null}" IsIndeterminate="True" ></ProgressBar>
-                                        <TextBlock FontSize="16" Margin="10 5">话题</TextBlock>
+                                        <TextBlock FontSize="18" Margin="10 5">话题</TextBlock>
                                         <GridView x:Name="list_Topic" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled" SelectionMode="None" IsItemClickEnabled="True">
                                             <GridView.ItemsPanel>
                                                 <ItemsPanelTemplate>

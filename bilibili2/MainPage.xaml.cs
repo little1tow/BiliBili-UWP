@@ -175,11 +175,19 @@ namespace bilibili2
                 case 1:
                     break;
                 case 2:
+                    if (!LoadBan)
+                    {
+                        GetBanUpdate();
+                    }
                     break;
                 case 3:
                     if (!LoadDT)
                     {
                         GetDt();
+                    }
+                    if (!LoadBan)
+                    {
+                        GetBanUpdate();
                     }
                     break;
                 case 4:
@@ -305,6 +313,8 @@ namespace bilibili2
         //页面大小改变
         private void Page_SizeChanged(object sender, SizeChangedEventArgs e)
         {
+
+           
             if (this.ActualWidth <= 640)
             {
                 fvLeft.Visibility = Visibility.Collapsed;
@@ -488,7 +498,7 @@ namespace bilibili2
                         {
                             txt_UserName.Text = model.name;
                             txt_Sign.Visibility = Visibility.Visible;
-                            txt_Sign.Text = model.sign;
+                            txt_Sign.Text = model.RankStr;
                             img_user.ImageSource = new BitmapImage(new Uri(model.face));
                         }
                         messShow.Show(result, 3000);
@@ -521,7 +531,7 @@ namespace bilibili2
                 {
                     txt_UserName.Text = model.name;
                     txt_Sign.Visibility = Visibility.Visible;
-                    txt_Sign.Text = model.sign;
+                    txt_Sign.Text = model.RankStr;
                     img_user.ImageSource = new BitmapImage(new Uri(model.face));
                 }
             }
@@ -764,6 +774,9 @@ namespace bilibili2
                     break;
                 case "番剧Tag":
                     (infoFrame.Content as BanByTagPage).BackEvent += MainPage_BackEvent;
+                    break;
+                case "全部追番":
+                    (infoFrame.Content as UserBangumiPage).BackEvent += MainPage_BackEvent;
                     break;
                 default:
                     break;
@@ -1184,7 +1197,43 @@ namespace bilibili2
         {
             infoFrame.Navigate(typeof(BanInfoPage), (e.ClickedItem as GetUserBangumi).season_id);
         }
+        //番剧最近更新
+        bool LoadBan = false;
+        private async void GetBanUpdate()
+        {
+            try
+            {
+                wc = new WebClientClass();
+                string results = await wc.GetResults(new Uri("http://bangumi.bilibili.com/api/app_index_page"));
+                BannumiIndexModel model = JsonConvert.DeserializeObject<BannumiIndexModel>(results);
+                JObject json = JObject.Parse(model.result.ToString());
+                List<BannumiIndexModel> ban = JsonConvert.DeserializeObject<List<BannumiIndexModel>>(json["latestUpdate"]["list"].ToString());
+                GridView_Bangumi_NewUpdate.ItemsSource = ban;
+                LoadBan = true;
+            }
+            catch (Exception ex)
+            {
+                messShow.Show("读取番剧最近更新失败\r\n" + ex.Message,3000);
+                LoadBan = false;
+            }
+        }
 
+        private void GridView_Bangumi_NewUpdate_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            infoFrame.Navigate(typeof(BanInfoPage), (e.ClickedItem as BannumiIndexModel).season_id);
+        }
+
+        private void Ban_btn_MyBan_Click(object sender, RoutedEventArgs e)
+        {
+            if (new UserClass().IsLogin())
+            {
+                infoFrame.Navigate(typeof(UserBangumiPage), UserClass.Uid);
+            }
+            else
+            {
+                messShow.Show("请先登录",3000);
+            }
+        }
     }
 
 }

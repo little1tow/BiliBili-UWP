@@ -54,6 +54,7 @@ namespace bilibili2
                 UpdateUI();
                 aid = e.Parameter as string;
                 GetVideoInfo(aid);
+               
             //}
          
         }
@@ -149,7 +150,7 @@ namespace bilibili2
                 pr_Load.Visibility = Visibility.Visible;
                
                 WebClientClass wc = new WebClientClass();
-                string results = await wc.GetResults(new Uri("http://api.bilibili.com/view?type=json&appkey=422fd9d7289a1dd9&id=" + aid + "&batch=1&rnd=" + new Random().Next(1, 9999)));
+                string results = await wc.GetResults(new Uri("http://api.bilibili.com/view?type=json&appkey=422fd9d7289a1dd9&id=" + aid + "&batch=1&"+ApiHelper.access_key+"&rnd=" + new Random().Next(1, 9999)));
                 VideoInfoModel model = new VideoInfoModel();
                 model = JsonConvert.DeserializeObject<VideoInfoModel>(results);
                 if (model.code== -403)
@@ -163,7 +164,7 @@ namespace bilibili2
                     return;
                 }
                 Video_Grid_Info.DataContext = model;
-
+               //top_txt_Header.Text = model.typename + "/AV" + aid;
                 List<VideoInfoModel> ban = JsonConvert.DeserializeObject<List<VideoInfoModel>>(model.list.ToString());
                 foreach (VideoInfoModel item in ban)
                 {
@@ -179,6 +180,7 @@ namespace bilibili2
                     grid_tag.Children.Add(hy);
                 }
                 Video_List.ItemsSource = ban;
+                GetVideoComment_Hot();
             }
             catch (Exception ex)
             {
@@ -264,6 +266,51 @@ namespace bilibili2
             finally
             {
                 CanLoad = true;
+                pr_Load.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        private async void GetVideoComment_Hot()
+        {
+            try
+            {
+                pr_Load.Visibility = Visibility.Visible;
+                ListView_Comment_Hot.Items.Clear();
+                WebClientClass wc = new WebClientClass();
+                Random r = new Random();
+                string results = await wc.GetResults(new Uri("http://api.bilibili.com/x/reply?jsonp=jsonp&type=1&sort=" + 2 + "&oid=" + aid + "&pn=" + 1 + "&nohot=1&ps=5&r=" + r.Next(1000, 99999)));
+                CommentModel model = JsonConvert.DeserializeObject<CommentModel>(results);
+                CommentModel model3 = JsonConvert.DeserializeObject<CommentModel>(model.data.ToString());
+                //Video_Grid_Info.DataContext = model;
+                List<CommentModel> ban = JsonConvert.DeserializeObject<List<CommentModel>>(model3.replies.ToString());
+                foreach (CommentModel item in ban)
+                {
+                    CommentModel model1 = new CommentModel();
+                    model1 = JsonConvert.DeserializeObject<CommentModel>(item.member.ToString());
+                    CommentModel model2 = new CommentModel();
+                    model2 = JsonConvert.DeserializeObject<CommentModel>(item.content.ToString());
+                    CommentModel resultsModel = new CommentModel()
+                    {
+                        avatar = model1.avatar,
+                        message = model2.message,
+                        plat = model2.plat,
+                        floor = item.floor,
+                        uname = model1.uname,
+                        mid = model1.mid,
+                        ctime = item.ctime,
+                        like = item.like,
+                        rcount = item.rcount,
+                        rpid = item.rpid
+                    };
+                    ListView_Comment_Hot.Items.Add(resultsModel);
+                }
+            }
+            catch (Exception ex)
+            {
+                messShow.Show("读取热门评论失败!\r\n" + ex.Message, 3000);
+            }
+            finally
+            {
                 pr_Load.Visibility = Visibility.Collapsed;
             }
         }

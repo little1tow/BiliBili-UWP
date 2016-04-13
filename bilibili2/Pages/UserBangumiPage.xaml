@@ -1,0 +1,64 @@
+﻿<Page
+    x:Class="bilibili2.Pages.UserBangumiPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:bilibili2.Pages"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Tag="全部追番"
+    >
+
+    <Grid Background="{ThemeResource Bili-Background}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="48"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid Background="{ThemeResource Bili-ForeColor}" Grid.Row="0" Height="48" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="48"/>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
+            <AppBarButton x:Name="btn_back" Click="btn_back_Click" Icon="Back" Width="48" Height="48" Foreground="White"/>
+            <TextBlock  Text="全部追番" Margin="5 0" FontSize="16" x:Name="top_txt_Header" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" />
+        </Grid>
+   
+        <ScrollViewer x:Name="sc" Grid.Row="1" ViewChanged="sc_ViewChanged">
+            <ListView x:Name="list" SelectionMode="None" ItemClick="list_ItemClick" IsItemClickEnabled="True" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled">
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="BorderThickness" Value="0 0 0 0.5"></Setter>
+                        <Setter Property="BorderBrush" Value="#7F808080"></Setter>
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
+                    </Style>
+                </ListView.ItemContainerStyle>
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Margin="5">
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Image Grid.RowSpan="4" Source="{Binding cover}" Height="100"></Image>
+                            <TextBlock Text="{Binding title}" Grid.Column="1" Margin="5 0"></TextBlock>
+                            <TextBlock Text="{Binding brief}" MaxLines="1" TextTrimming="CharacterEllipsis" Foreground="Gray" Grid.Row="1" Grid.Column="1" Margin="5 0" FontSize="14"></TextBlock>
+                            <TextBlock Text="{Binding NewOver}" Foreground="Gray" Grid.Row="2" Grid.Column="1" Margin="5 0" FontSize="14"></TextBlock>
+                            <TextBlock  Foreground="Gray" Grid.Row="3" Grid.Column="1" Margin="5 0" FontSize="14">
+                            <Run Text="{Binding favorites}"></Run>
+                              <Run Text="人订阅"></Run>
+                            </TextBlock>
+                        </Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </ScrollViewer>
+        <ProgressBar x:Name="pr_Load" VerticalAlignment="Top" IsIndeterminate="True" Background="{x:Null}" Foreground="White"></ProgressBar>
+    </Grid>
+</Page>

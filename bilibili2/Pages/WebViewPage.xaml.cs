@@ -29,6 +29,7 @@ namespace bilibili2.Pages
         public WebViewPage()
         {
             this.InitializeComponent();
+            NavigationCacheMode = NavigationCacheMode.Required;
             SystemNavigationManager.GetForCurrentView().BackRequested += WebViewPage_BackRequested; ;
         }
 
@@ -40,10 +41,10 @@ namespace bilibili2.Pages
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            if (e.NavigationMode == NavigationMode.New)
-            {
+           // if (e.NavigationMode == NavigationMode.New)
+           // {
                 webview_WebView.Navigate(new Uri((string)e.Parameter));
-            }
+            //}
         }
 
         private void webview_btn_Refresh_Click(object sender, RoutedEventArgs e)

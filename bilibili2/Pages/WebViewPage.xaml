@@ -23,9 +23,10 @@
             <TextBlock Text="浏览网页" FontSize="16" x:Name="text" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" />
             <AppBarButton x:Name="webview_btn_Close"  Grid.Column="0" Width="48" Icon="Back" Foreground="White" Click="webview_btn_Close_Click" VerticalAlignment="Stretch"/>
             
-            <ProgressBar x:Name="webview_progressBar" VerticalAlignment="Top" Background="{x:Null}" Foreground="White" IsIndeterminate="True"></ProgressBar>
+         
             
         </Grid>
         <WebView x:Name="webview_WebView" Grid.Row="1" NavigationStarting="webview_WebView_NavigationStarting" DOMContentLoaded="webview_WebView_DOMContentLoaded" NewWindowRequested="webview_WebView_NewWindowRequested"/>
+        <ProgressBar x:Name="webview_progressBar" VerticalAlignment="Top" Background="{x:Null}" Foreground="White" IsIndeterminate="True"></ProgressBar>
     </Grid>
 </Page>

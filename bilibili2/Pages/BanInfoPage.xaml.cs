@@ -193,9 +193,10 @@ namespace bilibili2.Pages
         private void Btn_Click(object sender, RoutedEventArgs e)
         {
             string tid = ((sender as HyperlinkButton).DataContext as BangumiInfoModel).tag_id.ToString();
+            string name = ((sender as HyperlinkButton).DataContext as BangumiInfoModel).tag_name.ToString();
             if (tid != null)
             {
-                //this.Frame.Navigate(typeof(BanSeasonByTag), tid);
+                this.Frame.Navigate(typeof(BanByTagPage), new string[]{tid,name});
             }
         }
 

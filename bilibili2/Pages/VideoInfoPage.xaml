@@ -20,19 +20,10 @@
                     <VisualState.Setters>
                         <Setter Target="com_bar.(Grid.Row)" Value="0"/>
                         <Setter Target="com_bar.HorizontalAlignment" Value="Right"/>
+                        <Setter Target="grid_HotComment.Visibility" Value="Visible"></Setter>
+                        <Setter Target="width.Width" Value="*"></Setter>
                     </VisualState.Setters>
                 </VisualState>
-                <!--<VisualState x:Name="wide800">
-                    <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="501"></AdaptiveTrigger>
-                    </VisualState.StateTriggers>
-                    <VisualState.Setters>
-                        <Setter Target="sp_View.DisplayMode" Value="CompactOverlay"></Setter>
-                        <Setter Target="sp_View.IsPaneOpen" Value="false"></Setter>
-                        <Setter Target="top_txt_find.Visibility" Value="Visible"></Setter>
-                        <Setter Target="top_btn_find.Visibility" Value="Collapsed"></Setter>
-                    </VisualState.Setters>
-                </VisualState>-->
                 <VisualState x:Name="narrow">
                     <VisualState.StateTriggers>
                         <AdaptiveTrigger MinWindowWidth="0"/>
@@ -40,6 +31,8 @@
                     <VisualState.Setters>
                         <Setter Target="com_bar.(Grid.Row)" Value="3"/>
                         <Setter Target="com_bar.HorizontalAlignment" Value="Stretch"/>
+                        <Setter Target="grid_HotComment.Visibility" Value="Collapsed"></Setter>
+                        <Setter Target="width.Width" Value="auto"></Setter>
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -50,7 +43,7 @@
             <RowDefinition/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
-        <Grid Background="{ThemeResource Bili-ForeColor}" Grid.Row="0" Height="48" >
+        <Grid Background="{ThemeResource Bili-ForeColor}"  Grid.Row="0" Height="48" >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="48"/>
                 <ColumnDefinition/>
@@ -86,9 +79,9 @@
                     <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
-                        <ColumnDefinition />
+                        <ColumnDefinition x:Name="width" Width="*"/>
                     </Grid.ColumnDefinitions>
-                   
+                        
                         <Grid >
                             <Grid Margin="10 10 15 0" x:Name="Video_Grid_Info">
                                 <Grid.RowDefinitions>
@@ -203,18 +196,72 @@
                             </Grid>
                         </Grid>
                    
-                    <Grid Grid.Column="1">
+                    <Grid Grid.Column="1" x:Name="grid_HotComment">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="auto"/>
-                            <RowDefinition/>
+                            <RowDefinition />
                         </Grid.RowDefinitions>
-                        <StackPanel Orientation="Horizontal" Margin="0 10 0 0">
-                            <Border Background="{ThemeResource Bili-ForeColor}" Width="10"  Height="24"  Margin="0 0 5 0"/>
-                            <TextBlock Text="热门评论" FontSize="18" VerticalAlignment="Center" />
-                        </StackPanel>
-                    </Grid>
+                            <StackPanel Orientation="Horizontal" Margin="0 10">
+                                <Border Background="{ThemeResource Bili-ForeColor}" Width="10"  Height="24"  Margin="0 0 5 0"/>
+                                <TextBlock Text="热门评论" FontSize="18" VerticalAlignment="Center" />
+                            </StackPanel>
+                            <ListView x:Name="ListView_Comment_Hot" Grid.Row="1" ScrollViewer.VerticalScrollMode="Disabled" IsItemClickEnabled="True"   VerticalAlignment="Top" SelectionMode="None" >
+                                <ListView.ItemContainerStyle>
+                                    <Style TargetType="ListViewItem">
+                                        <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
+                                        <Setter Property="BorderThickness" Value="0 0 0.5 0"></Setter>
+                                        <Setter Property="BorderBrush" Value="#7F808080"></Setter>
+                                    </Style>
+                                </ListView.ItemContainerStyle>
+                                <ListView.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid  BorderBrush="#33000000" Margin="0,5">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition></RowDefinition>
+                                                <RowDefinition></RowDefinition>
+                                                <RowDefinition></RowDefinition>
+                                                <RowDefinition></RowDefinition>
+                                            </Grid.RowDefinitions>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="auto"></ColumnDefinition>
+                                                <ColumnDefinition ></ColumnDefinition>
+                                            </Grid.ColumnDefinitions>
+                                            <HyperlinkButton Grid.RowSpan="2" HorizontalAlignment="Left" >
+                                                <Ellipse Width="32" Height="32"  Stroke="#7FC1C1C1" >
+                                                    <Ellipse.Fill>
+                                                        <ImageBrush ImageSource="{Binding avatar}"></ImageBrush>
+                                                    </Ellipse.Fill>
+                                                </Ellipse>
+                                            </HyperlinkButton>
+                                            <TextBlock Margin="5,0" Text="{Binding uname}" Grid.Column="1"></TextBlock>
+                                            <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2">
+                                                <StackPanel Orientation="Horizontal"  Margin="5,0">
+                                                    <TextBlock Text="#" Foreground="#FFB6B6B6" ></TextBlock>
+                                                    <TextBlock Text="{Binding floor}"  Foreground="#FFB6B6B6" ></TextBlock>
+                                                    <TextBlock Text="{Binding Plat}"  Foreground="#FFB6B6B6" Margin="5,0"></TextBlock>
+                                                </StackPanel>
+                                                <TextBlock Text="{Binding time}" Foreground="#FFB6B6B6"></TextBlock>
+                                            </StackPanel>
+                                            <TextBlock Grid.ColumnSpan="3" Grid.Column="0" Grid.Row="2" Margin="0,5" Text="{Binding message}" TextWrapping="Wrap"></TextBlock>
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Grid.ColumnSpan="2" Grid.Row="3">
+                                                <!--<SymbolIcon Symbol="Message" Foreground="#FF666666" />-->
+                                                <HyperlinkButton  HorizontalAlignment="Left" >
+                                                    <TextBlock Text="回复" VerticalAlignment="Center"  FontSize="12" Margin="5,0"></TextBlock>
+                                                </HyperlinkButton>
+                                                <TextBlock Text="{Binding rcount}" VerticalAlignment="Center"  FontSize="12" Margin="5,0"></TextBlock>
+                                                <!--<SymbolIcon Symbol="Like" Foreground="#FF666666" />-->
+                                                <HyperlinkButton x:Name="btn_Zan">
+                                                    <TextBlock Text="赞同" VerticalAlignment="Center"  FontSize="12" Margin="5,0"></TextBlock>
+                                                </HyperlinkButton>
+                                                <TextBlock Text="{Binding like}" VerticalAlignment="Center" FontSize="12" Margin="5,0"></TextBlock>
+                                            </StackPanel>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                        </Grid>
                 
-    </Grid>
+               </Grid>
 
                 </ScrollViewer>
             </PivotItem>

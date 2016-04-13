@@ -144,6 +144,12 @@
     <Compile Include="Pages\TopicPage.xaml.cs">
       <DependentUpon>TopicPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\UserBangumiPage.xaml.cs">
+      <DependentUpon>UserBangumiPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\UserInfoPage.xaml.cs">
+      <DependentUpon>UserInfoPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\WebViewPage.xaml.cs">
       <DependentUpon>WebViewPage.xaml</DependentUpon>
     </Compile>
@@ -159,6 +165,9 @@
     <None Include="bilibili2_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\bg1.png" />
+    <Content Include="Assets\bg2.png" />
+    <Content Include="Assets\bg3.png" />
     <Content Include="Assets\bili_img_4180877.jpg" />
     <Content Include="Assets\Icon\DM.png" />
     <Content Include="Assets\Icon\DY.png" />
@@ -248,6 +257,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Pages\TopicPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\UserBangumiPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\UserInfoPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

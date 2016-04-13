@@ -27,6 +27,7 @@ namespace bilibili2
         public string pic { get; set; }
         public string title { get; set; }
         public string play { get; set; }
+        public string typename { get; set; }
         public string author { get; set; }
         public string video_review { get; set; }
         public string description { get; set; }
@@ -118,6 +119,7 @@ namespace bilibili2
                 }
             }
         }
+
     }
     //评论
     public class CommentModel
@@ -140,13 +142,13 @@ namespace bilibili2
                 switch (plat)
                 {
                     case 2:
-                        return "安卓客户端";
+                        return "来自 Android";
                     case 3:
-                        return "IOS客户端";
+                        return "来自 IOS";
                     case 4:
-                        return "Windows客户端";
+                        return "来自 WindowsPhone";
                     case 6:
-                        return "Windows客户端";
+                        return "来自 Windows";
                     default:
                         return "";
                 }
@@ -203,6 +205,35 @@ namespace bilibili2
         public string sex { get; set; }//性别
         public string coins { get; set; }//硬币
         public string face { get; set; }//头像
+
+        public int rank { get; set; }//用户级别
+
+        public string RankStr
+        {
+            get
+            {
+                switch (rank)
+                {
+                    case 0:
+                        return "普通用户";
+                    case 5000:
+                        return "注册会员";
+                    case 10000:
+                        return "正式会员";
+                    case 20000:
+                        return "字幕君";
+                    case 25000:
+                        return "VIP用户";
+                    case 30000:
+                        return "职人";
+                    case 32000:
+                        return "站长大人";
+                    default:
+                        return "蜜汁等级";
+                }
+            }
+        }
+
         public string birthday { get; set; }//生日
         public long regtime { get; set; }//注册时间
         public string Regtime
@@ -305,6 +336,25 @@ namespace bilibili2
         public string video_review { get; set; }//弹幕数
         public string create { get; set; }//上传时间
         public string pic { get; set; }//封面
+
+      public string Create
+        {
+            get
+            {
+                DateTime dt = Convert.ToDateTime(create);
+
+                if (dt.Date == DateTime.Now.Date)
+                {
+                    TimeSpan ts = DateTime.Now - dt;
+                    return ts.Hours + "小时前";
+                }
+                else
+                {
+                        return create;
+                }
+            }
+        }
+
     }
     //话题
     public class TopicModel
@@ -508,5 +558,31 @@ namespace bilibili2
                 return String.Format("{0}万人订阅", (double)favorites / 10000);
             }
         }
+    }
+
+    public class BannumiIndexModel
+    {
+        public object result { get; set; }
+        //最近更新
+        public object latestUpdate { get; set; }
+        public object list { get; set; }
+        public string title { get; set; }
+        public int watchingCount { get; set; }
+        public string newest_ep_index { get; set; }
+        public string cover { get; set; }
+        public string newest_ep_id { get; set; }
+        public string season_id { get; set; }
+        //分类
+        public object categories { get; set; }
+        public object category { get; set; }
+        public string bangumi_title { get; set; }
+        public int spid { get; set; }
+        public string bangumi_id { get; set; }
+        public string total_count { get; set; }
+
+        //分类推荐信息
+        public object recommendCategory { get; set; }
+        public string tag_name { get; set; }
+        public string tag_id { get; set; }
     }
 }

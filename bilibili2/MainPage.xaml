@@ -975,25 +975,25 @@
                 <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE700;" />
             </AppBarButton.Icon>
         </AppBarButton>
-        <Frame x:Name="infoFrame" Grid.RowSpan="4" RenderTransformOrigin="0.5,0.5" Navigating="infoFrame_Navigating"  Navigated="infoFrame_Navigated">
+        <Frame x:Name="infoFrame" Grid.RowSpan="4"  Navigating="infoFrame_Navigating"  Navigated="infoFrame_Navigated">
             <Frame.Resources>
                 <!--<Storyboard x:Name="storyboardPopIn" >
                     <DoubleAnimation x:Name="jinr" To="0" Duration="00:00:0.15" 
                      Storyboard.TargetName="dh"  Storyboard.TargetProperty="TranslateX">
                     </DoubleAnimation>
-                    --><!--<PopInThemeAnimation Storyboard.TargetName="infoFrame" FromHorizontalOffset="1000" FromVerticalOffset="0" />--><!--
+                    -->
+                <!--<PopInThemeAnimation Storyboard.TargetName="infoFrame" FromHorizontalOffset="1000" FromVerticalOffset="0" />-->
+                <!--
                 </Storyboard>-->
                 <Storyboard x:Name="storyboardPopOut" >
-                    <DoubleAnimation x:Name="tuic" From="0"  Duration="00:00:0.1" 
+                    <DoubleAnimation x:Name="tuic" From="0"  Duration="00:00:0.1"  Completed="StoryboardPopOut_Completed"
                      Storyboard.TargetName="dh"  Storyboard.TargetProperty="TranslateX">
                     </DoubleAnimation>
                 </Storyboard>
             </Frame.Resources>
-           
             <Frame.RenderTransform>
                 <CompositeTransform x:Name="dh"/>
             </Frame.RenderTransform>
-
             <!--<Ellipse Width="100" Height="100" Fill="Black"></Ellipse>-->
         </Frame>
         <local:MessageShow x:Name="messShow" Grid.RowSpan="4" Margin="10" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>

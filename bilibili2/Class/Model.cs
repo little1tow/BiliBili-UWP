@@ -315,7 +315,7 @@ namespace bilibili2
         public string img { get; set; }
         public string link { get; set; }
     }
-
+    //排行
     public class RankModel
     {
         public object hot_original { get; set; }
@@ -330,7 +330,7 @@ namespace bilibili2
         public string aid { get; set; }
         public int num { get; set; }
     }
-
+    //番剧更新表
     public class BangumiTimeLineModel
     {
         public object list { get; set; }
@@ -343,7 +343,7 @@ namespace bilibili2
         public string spid { get; set; }
         public string season_id { get; set; }
     }
-
+    //番剧索引
     public class TagModel
     {
         public object result { get; set; }
@@ -352,4 +352,110 @@ namespace bilibili2
         public int tag_id { get; set; }
         public string tag_name { get; set; }
     }
+    //番剧信息
+    public class BangumiInfoModel
+    {
+        public int code { get; set; }
+        public string message { get; set; }
+        public object result { get; set; }
+
+        public string alias { get; set; }//别名
+        public string area { get; set; }//地区
+        public string bangumi_title { get; set; }//番剧名。与season_title不同
+        public string season_title { get; set; }//专题名
+        public string title { get; set; }
+        public string evaluate { get; set; }//介绍
+        public int favorites { get; set; }//订阅
+        public int coins { get; set; }//硬币
+        public int play_count { get; set; }
+        public int danmaku_count { get; set; }
+        public int is_finish { get; set; }//是否完结
+        public int newest_ep_index { get; set; }//最新话
+        public string staff { get; set; }
+        public string cover { get; set; }
+        public DateTime pub_time { get; set; }
+
+        public object user_season { get; set; }
+        public int attention { get; set; }//是否关注
+                                          // public double last_ep_index { get; set; }//看到
+
+        public object tags { get; set; }
+        public string index { get; set; }
+        public int tag_id { get; set; }
+        public string tag_name { get; set; }
+
+        public object actor { get; set; }
+        public string role { get; set; }
+
+        public object episodes { get; set; }
+        public string av_id { get; set; }
+        public int danmaku { get; set; }
+        public string index_title { get; set; }
+
+        public int total_count { get; set; }
+        public string status
+        {
+            get
+            {
+                if (is_finish == 1)
+                {
+                    return string.Format("已完结，共{0}话", total_count);
+                }
+                else
+                {
+                    return string.Format("连载中，更新至{0}话", newest_ep_index) ?? "";
+                }
+            }
+        }
+
+        public string upTime
+        {
+            get
+            {
+                if (pub_time != null)
+                {
+                    return pub_time.Date.ToString("d");
+                }
+                else
+                {
+                    return "";
+                }
+            }
+
+        }
+
+        public string PlayCount
+        {
+            get
+            {
+                if (play_count > 10000)
+                {
+                    return ((double)play_count / 10000).ToString("0.0" + "万");
+                }
+                else
+                {
+                    return play_count.ToString();
+                }
+            }
+        }
+
+        public string favoritesCount
+        {
+            get
+            {
+                if (favorites > 10000)
+                {
+                    return ((double)favorites / 10000).ToString("0.0" + "万");
+                }
+                else
+                {
+                    return favorites.ToString();
+                }
+            }
+        }
+
+
+    }
+
+
 }

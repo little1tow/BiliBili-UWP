@@ -39,6 +39,7 @@ namespace bilibili2
     public sealed partial class MainPage : Page
     {
         ApplicationDataContainer container = ApplicationData.Current.LocalSettings;
+        Frame rootFrame = (Window.Current.Content as Frame);
         public MainPage()
         {
             this.InitializeComponent();
@@ -50,7 +51,6 @@ namespace bilibili2
             //this.RequestedTheme = ElementTheme.Dark;
         }
 
-        Frame rootFrame = (Window.Current.Content as Frame);
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             if (e.NavigationMode == NavigationMode.New)
@@ -361,16 +361,16 @@ namespace bilibili2
         //子页面后退
         private void MainPage_BackEvent()
         {
-            storyboardPopOut.Completed += StoryboardPopOut_Completed;
+           //storyboardPopOut.Completed += StoryboardPopOut_Completed;
             tuic.To = this.ActualWidth;
             storyboardPopOut.Begin();
         }
         //子页面后退动画完成
         private void StoryboardPopOut_Completed(object sender, object e)
         {
-            dh.TranslateX = 0;
             infoFrame.ContentTransitions = null;
             infoFrame.Content = null;
+            dh.TranslateX = 0;
         }
         //首页Banner选择改变
         private void home_flipView_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -626,6 +626,8 @@ namespace bilibili2
                 titleBar.ButtonForegroundColor = Color.FromArgb(255, 254, 254, 254);
                 titleBar.InactiveBackgroundColor = ((SolidColorBrush)top_grid.Background).Color;
                 titleBar.ButtonInactiveBackgroundColor = ((SolidColorBrush)top_grid.Background).Color;
+
+               
             }
         }
         //动态加载更多
@@ -754,6 +756,7 @@ namespace bilibili2
         //infoFrame跳转动画
         private void infoFrame_Navigating(object sender, NavigatingCancelEventArgs e)
         {
+            dh.TranslateX = 0;
             EdgeUIThemeTransition edge = new EdgeUIThemeTransition();
             if (e.NavigationMode == NavigationMode.New)
             {
@@ -762,7 +765,6 @@ namespace bilibili2
                 tc.Add(edge);
                 infoFrame.ContentTransitions = tc;
             }
-
         }
         //点击排行榜
         private void Find_btn_Rank_Click(object sender, RoutedEventArgs e)

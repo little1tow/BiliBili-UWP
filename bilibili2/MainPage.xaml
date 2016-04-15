@@ -208,6 +208,15 @@
             <Setter Property="VerticalAlignment" Value="Top"></Setter>
             <Setter Property="Background" Value="{ThemeResource Bili-List-Background}"></Setter>
         </Style>
+        <Style x:Key="grid_TJ" TargetType="GridViewItem">
+            <Setter Property="Background" Value="{ThemeResource Bili-List-Background}"></Setter>
+            <Setter Property="BorderThickness" Value="1" ></Setter>
+            <Setter Property="BorderBrush" Value="#7F808080"></Setter>
+            <Setter Property="VerticalContentAlignment" Value="Stretch"></Setter>
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
+            <Setter Property="Margin" Value="5"></Setter>
+            <Setter Property="MaxWidth" Value="640"></Setter>
+        </Style>
     </Page.Resources>
     <Grid Background="{ThemeResource Bili-Background}">
         <Grid.RowDefinitions>
@@ -568,7 +577,7 @@
                                     <ProgressBar x:Name="pr_Load_Ban" IsIndeterminate="True" VerticalAlignment="Top" Background="{x:Null}"></ProgressBar>
                                 </Grid>
                             </SplitView.Pane>
-                            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                            <ScrollViewer x:Name="sc_Ban" VerticalScrollBarVisibility="Auto" ViewChanged="sc_Ban_ViewChanged">
                                 <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="auto"/>
@@ -580,7 +589,67 @@
                                         <ColumnDefinition/>
                                         <ColumnDefinition/>
                                     </Grid.ColumnDefinitions>
-                                    <FlipView Height="180" Grid.ColumnSpan="3"/>
+                                    <Grid Grid.ColumnSpan="3">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition x:Name="grid_c_left_Ban" Width="*"/>
+                                            <ColumnDefinition x:Name="grid_c_center_Ban" Width="auto" />
+                                            <ColumnDefinition x:Name="grid_c_right_Ban" Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid  Grid.Column="0" MaxHeight="200">
+                                            <Grid.Background>
+                                                <LinearGradientBrush StartPoint="0,0.5" EndPoint="1,0.5">
+                                                    <LinearGradientBrush.GradientStops>
+                                                        <GradientStopCollection>
+                                                            <GradientStop Offset="1" Color="Black"/>
+                                                            <GradientStop Offset="0.101" Color="Gray"/>
+                                                        </GradientStopCollection>
+                                                    </LinearGradientBrush.GradientStops>
+                                                </LinearGradientBrush>
+                                            </Grid.Background>
+                                            <FlipView x:Name="fvLeft_Ban" Opacity="0.5" IsEnabled="False">
+                                                <FlipView.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <Image Source="{Binding img}" Height="200" Width="640"/>
+                                                    </DataTemplate>
+                                                </FlipView.ItemTemplate>
+                                            </FlipView>
+                                        </Grid>
+                                        <Viewbox MaxWidth="640"  Grid.Column="1">
+                                            <FlipView  x:Name="home_flipView_Ban"  Height="200" Width="640" Grid.Column="1"   SelectionChanged="home_flipView_SelectionChanged_1"   Style="{StaticResource FlipViewStyle1}" VerticalAlignment="Top" >
+                                                <FlipView.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <Grid>
+                                                            <Image Source="{Binding img}"  Height="200"/>
+                                                            <HyperlinkButton x:Name="btn_Banner_Ban" Click="btn_Banner_Ban_Click">
+                                                                <Grid Width="640" Height="200" >
+                                                                    <TextBlock/>
+                                                                </Grid>
+                                                            </HyperlinkButton>
+                                                        </Grid>
+                                                    </DataTemplate>
+                                                </FlipView.ItemTemplate>
+                                            </FlipView>
+                                        </Viewbox>
+                                        <Grid Grid.Column="2" MaxHeight="200" >
+                                            <Grid.Background>
+                                                <LinearGradientBrush StartPoint="0,0.5" EndPoint="1,0.5">
+                                                    <LinearGradientBrush.GradientStops>
+                                                        <GradientStopCollection>
+                                                            <GradientStop Offset="0.101" Color="Black"/>
+                                                            <GradientStop Offset="1" Color="Gray"/>
+                                                        </GradientStopCollection>
+                                                    </LinearGradientBrush.GradientStops>
+                                                </LinearGradientBrush>
+                                            </Grid.Background>
+                                            <FlipView x:Name="fvRight_Ban" Opacity="0.3" IsEnabled="False">
+                                                <FlipView.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <Image Source="{Binding img}" Height="200" Width="640"/>
+                                                    </DataTemplate>
+                                                </FlipView.ItemTemplate>
+                                            </FlipView>
+                                        </Grid>
+                                    </Grid>
                                     <Button x:Name="Ban_btn_MyBan" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Stretch" Margin="5" Background="{ThemeResource Bili-ForeColor}" Foreground="White" Content="我的追番" Click="Ban_btn_MyBan_Click"/>
                                     <Button x:Name="Ban_btn_Tag" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" Margin="5" Background="{ThemeResource Bili-ForeColor}" Foreground="White" Content="番剧索引" Click="Ban_btn_Tag_Click"/>
                                     <Button x:Name="Ban_btn_Timeline" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Stretch" Margin="5" Background="{ThemeResource Bili-ForeColor}" Foreground="White" Content="放送时间表" Click="Ban_btn_Timeline_Click"/>
@@ -628,20 +697,25 @@
                                                 <TextBlock Text="番剧推荐" FontSize="16" VerticalAlignment="Center" />
                                             </StackPanel>
                                         </HyperlinkButton>
-                                        <GridView>
-                                            <GridViewItem Width="500" VerticalAlignment="Stretch" HorizontalContentAlignment="Stretch">
-                                                <Grid>
-                                                    <Grid.RowDefinitions>
-                                                        <RowDefinition/>
-                                                        <RowDefinition />
-                                                        <RowDefinition/>
-                                                    </Grid.RowDefinitions>
-                                                </Grid>
-                                                
-                                            </GridViewItem>
+                                        <Border x:Name="test" Width="auto" Margin="5 0" Height="1"  Background="#0001FFFF" VerticalAlignment="Top"></Border>
+                                        <GridView x:Name="list_Ban_TJ" HorizontalAlignment="Center"  ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled" ItemContainerStyle="{StaticResource grid_TJ}" SelectionMode="None" IsItemClickEnabled="True" ItemClick="list_Ban_TJ_ItemClick">
+                                            <GridView.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Grid Width="{Binding ElementName=test,Path=Width}">
+                                                        <Grid.RowDefinitions>
+                                                            <RowDefinition />
+                                                            <RowDefinition Height="30"/>
+                                                            <RowDefinition Height="48"/>
+                                                        </Grid.RowDefinitions>
+                                                        <Image  Source="{Binding cover}" ></Image>
+                                                        <TextBlock Grid.Row="1" FontSize="16"  Margin="5 0" Text="{Binding title}" VerticalAlignment="Center"></TextBlock>
+                                                        <TextBlock Grid.Row="2" Foreground="Gray" Margin="5 0" VerticalAlignment="Center" TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis" Text="{Binding desc}"></TextBlock>
+                                                    </Grid>
+                                                </DataTemplate>
+                                            </GridView.ItemTemplate>
                                         </GridView>
+                                        <TextBlock x:Name="Ban_TJ_more" Foreground="Gray" HorizontalAlignment="Center">加载更多</TextBlock>
                                     </StackPanel>
-                                    
                                 </Grid>
                             </ScrollViewer>
                         </SplitView>
@@ -845,7 +919,7 @@
                                         <ListView.ItemContainerStyle>
                                             <Style TargetType="ListViewItem">
                                                 <Setter Property="BorderThickness" Value="0,0,0,0.5"></Setter>
-                                                <Setter Property="BorderBrush" Value="#7F808080"></Setter>
+                                                <Setter Property="BorderBrush" Value="#33808080"></Setter>
                                             </Style>
                                         </ListView.ItemContainerStyle>
                                         <ListView.ItemTemplate>

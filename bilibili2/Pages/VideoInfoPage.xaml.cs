@@ -39,9 +39,10 @@ namespace bilibili2
         string aid = "";
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-           // if (e.NavigationMode== NavigationMode.New)
-           // {
-                video_Error_Null.Visibility = Visibility.Collapsed;
+            // if (e.NavigationMode== NavigationMode.New)
+            // {
+           
+            video_Error_Null.Visibility = Visibility.Collapsed;
                 video_Error_User.Visibility = Visibility.Collapsed;
                 aid = "";
                 top_txt_Header.Text = "AV" + e.Parameter as string;

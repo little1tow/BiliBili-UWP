@@ -63,7 +63,7 @@ namespace bilibili2
 
             //电脑标题栏颜色
             var titleBar = Windows.UI.ViewManagement.ApplicationView.GetForCurrentView().TitleBar;
-           
+
             Color co = Color.FromArgb(255, 223, 133, 160);
             titleBar.BackgroundColor = co;
             titleBar.ForegroundColor = Color.FromArgb(255, 254, 254, 254);//Colors.White纯白用不了。。。

@@ -85,32 +85,17 @@ namespace bilibili2
                     home_GridView_DY.Height = d;
                     home_GridView_DSJ.Height = d;
 
-
-                    //ViewBox_num.Width = 200;
-                    //ViewBox2_num.Width = 200;
-
-                    //home_GridView_FJ.Height = 200;
-                    //home_GridView_DH.Height = 200;
-                    //home_GridView_YYWD.Height = 200;
-                    //home_GridView_WD.Height = 200;
-                    //home_GridView_YX.Height = 200;
-                    //home_GridView_KJ.Height = 200;
-                    //home_GridView_GC.Height = 200;
-                    //home_GridView_YL.Height = 200;
-                    //home_GridView_DY.Height = 200;
-                    //home_GridView_DSJ.Height = 200;
                 }
             }
             }
-        public void SetListView(string results, GridView ls, bool isBanner)
+        public void SetListView(string results, GridView ls)
         {
             try
             {
                     ls.Items.Clear();
-                    InfoModel model = new InfoModel();
-                    model = JsonConvert.DeserializeObject<InfoModel>(results);
+                    InfoModel model= JsonConvert.DeserializeObject<InfoModel>(results);
                     List<InfoModel> ban = JsonConvert.DeserializeObject<List<InfoModel>>(model.list.ToString());
-                    for (int i = 0; i < 6; i++)
+                    for (int i = 0; i < 12; i++)
                     {
                         ls.Items.Add(ban[i]);
                     }
@@ -127,29 +112,29 @@ namespace bilibili2
         {
             try
             {
+                pr_Load.Visibility = Visibility.Visible;
                 // string banner = await wc.GetResults(new Uri("http://www.bilibili.com/index/slideshow.json"));
-                string banner = await wc.GetResults(new Uri("http://app.bilibili.com/x/banner?plat=4&build=412001"));
-                SetListView(banner, null, true);
+
                 string dh = await wc.GetResults(new Uri("http://api.bilibili.com/list?type=json&appkey=422fd9d7289a1dd9&tid=1&page=1&pagesize=" + 20 + "&order=hot&ver=2"));
-                SetListView(dh, home_GridView_DH, false);
+                SetListView(dh, home_GridView_DH);
                 string fj = await wc.GetResults(new Uri("http://api.bilibili.com/list?type=json&appkey=422fd9d7289a1dd9&tid=13&page=1&pagesize=" + 20 + "&order=hot&ver=2"));
-                SetListView(fj, home_GridView_FJ, false);
+                SetListView(fj, home_GridView_FJ);
                 string yy = await wc.GetResults(new Uri("http://api.bilibili.com/list?type=json&appkey=422fd9d7289a1dd9&tid=3&page=1&pagesize=" + 20 + "&order=hot&ver=2"));
-                SetListView(yy, home_GridView_YYWD, false);
+                SetListView(yy, home_GridView_YYWD);
                 string wd = await wc.GetResults(new Uri("http://api.bilibili.com/list?type=json&appkey=422fd9d7289a1dd9&tid=20&page=1&pagesize=" + 20 + "&order=hot&ver=2"));
-                SetListView(wd, home_GridView_WD, false);
+                SetListView(wd, home_GridView_WD);
                 string yx = await wc.GetResults(new Uri("http://api.bilibili.com/list?type=json&appkey=422fd9d7289a1dd9&tid=4&page=1&pagesize=" + 20 + "&order=hot&ver=2"));
-                SetListView(yx, home_GridView_YX, false);
+                SetListView(yx, home_GridView_YX);
                 string kj = await wc.GetResults(new Uri("http://api.bilibili.com/list?type=json&appkey=422fd9d7289a1dd9&tid=36&page=1&pagesize=" + 20 + "&order=hot&ver=2"));
-                SetListView(kj, home_GridView_KJ, false);
+                SetListView(kj, home_GridView_KJ);
                 string YL = await wc.GetResults(new Uri("http://api.bilibili.com/list?type=json&appkey=422fd9d7289a1dd9&tid=5&page=1&pagesize=" + 20 + "&order=hot&ver=2"));
-                SetListView(YL, home_GridView_YL, false);
+                SetListView(YL, home_GridView_YL);
                 string GC = await wc.GetResults(new Uri("http://api.bilibili.com/list?type=json&appkey=422fd9d7289a1dd9&tid=119&page=1&pagesize=" + 20 + "&order=hot&ver=2"));
-                SetListView(GC, home_GridView_GC, false);
+                SetListView(GC, home_GridView_GC);
                 string DY = await wc.GetResults(new Uri("http://api.bilibili.com/list?type=json&appkey=422fd9d7289a1dd9&tid=23&page=1&pagesize=" + 20 + "&order=hot&ver=2"));
-                SetListView(DY, home_GridView_DY, false);
+                SetListView(DY, home_GridView_DY);
                 string DSJ = await wc.GetResults(new Uri("http://api.bilibili.com/list?type=json&appkey=422fd9d7289a1dd9&tid=11&page=1&pagesize=" + 20 + "&order=hot&ver=2"));
-                SetListView(DSJ, home_GridView_DSJ, false);
+                SetListView(DSJ, home_GridView_DSJ);
             }
             catch (Exception ex)
             {
@@ -160,7 +145,10 @@ namespace bilibili2
                 ErrorEvent(ex.Message);
                 
             }
-
+            finally
+            {
+                pr_Load.Visibility = Visibility.Collapsed;
+            }
             // GetZBInfo();
         }
 

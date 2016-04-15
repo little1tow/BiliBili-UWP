@@ -33,6 +33,9 @@ namespace bilibili2.Pages
             NavigationCacheMode = NavigationCacheMode.Required;
             SystemNavigationManager.GetForCurrentView().BackRequested += BanInfoPage_BackRequested;
         }
+
+       
+
         private void BanInfoPage_BackRequested(object sender, BackRequestedEventArgs e)
         {
            

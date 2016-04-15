@@ -420,7 +420,7 @@ namespace bilibili2
         public int play_count { get; set; }
         public int danmaku_count { get; set; }
         public int is_finish { get; set; }//是否完结
-        public int newest_ep_index { get; set; }//最新话
+        public double newest_ep_index { get; set; }//最新话
         public string staff { get; set; }
         public string cover { get; set; }
         public DateTime pub_time { get; set; }
@@ -584,5 +584,30 @@ namespace bilibili2
         public object recommendCategory { get; set; }
         public string tag_name { get; set; }
         public string tag_id { get; set; }
+    }
+
+    //番剧Banner
+    public class BanBannerModel
+    {
+        public int code { get; set; }
+        public string message { get; set; }
+        public object result { get; set; }
+        public object banners { get; set; }
+        public string img { get; set; }
+        public string title { get; set; }
+        public string link { get; set; }
+    }
+
+    public class BanTJModel
+    {
+        public int code { get; set; }
+        public string message { get; set; }
+        public object result { get; set; }
+        public int id { get; set; }
+        public string title { get; set; }
+        public string cover { get; set; }
+        public string desc { get; set; }
+        public string link { get; set; }
+        public string cursor { get; set; }//以防万一数字太大，用string
     }
 }

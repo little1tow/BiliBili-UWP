@@ -149,6 +149,7 @@
     <StackPanel>
         <Border x:Name="ViewBox_num" Background="Gray" Width="200"></Border>
         <Border x:Name="ViewBox2_num" Background="Gray" Width="200"></Border>
+        <ProgressBar x:Name="pr_Load" Visibility="Collapsed"  Background="{x:Null}" IsIndeterminate="True"></ProgressBar>
         <HyperlinkButton x:Name="Btn_FJ_More" Margin="10 0" Foreground="{ThemeResource Bili-FontColor}" >
             <StackPanel Orientation="Horizontal">
                 <Image Source="ms-appx:///Assets/PartIcon/BFJ.png" Width="24" Height="24" Margin="0,0,5,0"></Image>

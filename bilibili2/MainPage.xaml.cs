@@ -8,6 +8,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.Foundation;
@@ -162,10 +163,10 @@ namespace bilibili2
             }
         }
         // pivot改变
-        private void pivot_Home_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async void pivot_Home_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             UpdateUI();
-            
+
             top_txt_find.PlaceholderText = "搜索关键字或AV号";
             switch (pivot_Home.SelectedIndex)
             {
@@ -177,7 +178,11 @@ namespace bilibili2
                 case 2:
                     if (!LoadBan)
                     {
-                        GetBanUpdate();
+                        LoadBan = false;
+                        await GetBanUpdate();
+                        await GetBanBanner();
+                        await GetBanTJ();
+                        LoadBan = true;
                     }
                     break;
                 case 3:
@@ -187,7 +192,11 @@ namespace bilibili2
                     }
                     if (!LoadBan)
                     {
-                        GetBanUpdate();
+                        LoadBan = false;
+                        await GetBanUpdate();
+                        await GetBanBanner();
+                        await GetBanTJ();
+                        LoadBan = true;
                     }
                     break;
                 case 4:
@@ -205,7 +214,7 @@ namespace bilibili2
                 default:
                     break;
             }
-           
+
         }
 
         //侧滑来源http://www.cnblogs.com/hebeiDGL/p/4775377.html
@@ -322,6 +331,11 @@ namespace bilibili2
                 grid_c_left.Width = new GridLength(0, GridUnitType.Auto);
                 grid_c_right.Width = new GridLength(0, GridUnitType.Auto);
                 grid_c_center.Width = new GridLength(1, GridUnitType.Star);
+                fvLeft_Ban.Visibility = Visibility.Collapsed;
+                fvRight_Ban.Visibility = Visibility.Collapsed;
+                grid_c_left_Ban.Width = new GridLength(0, GridUnitType.Auto);
+                grid_c_right_Ban.Width = new GridLength(0, GridUnitType.Auto);
+                grid_c_center_Ban.Width = new GridLength(1, GridUnitType.Star);
             }
             else
             {
@@ -330,6 +344,11 @@ namespace bilibili2
                 grid_c_left.Width = new GridLength(1, GridUnitType.Star);
                 grid_c_right.Width = new GridLength(1, GridUnitType.Star);
                 grid_c_center.Width = new GridLength(0, GridUnitType.Auto);
+                fvLeft_Ban.Visibility = Visibility.Visible;
+                fvRight_Ban.Visibility = Visibility.Visible;
+                grid_c_left_Ban.Width = new GridLength(1, GridUnitType.Star);
+                grid_c_right_Ban.Width = new GridLength(1, GridUnitType.Star);
+                grid_c_center_Ban.Width = new GridLength(0, GridUnitType.Auto);
             }
 
             if (this.ActualWidth < 1000)
@@ -339,7 +358,17 @@ namespace bilibili2
             else
             {
                 top_txt_Header.HorizontalAlignment = HorizontalAlignment.Center;
-               
+            }
+
+            if (this.ActualWidth<640)
+            {
+               //double i = (double)test.ActualWidth;
+                test.Width = double.NaN;
+            }
+            else
+            {
+                int i=  Convert.ToInt32(pivot_Home.ActualWidth / 500);
+                test.Width = pivot_Home.ActualWidth / i - 20;
             }
         }
         //打开搜索框
@@ -378,7 +407,6 @@ namespace bilibili2
             //infoFrame.CacheSize = 0;
             //int i=  infoFrame.BackStackDepth;
             //string a = string.Empty;
-         
             infoFrame.SetNavigationState(navInfo);
             dh.TranslateX = 0;
         }
@@ -418,6 +446,42 @@ namespace bilibili2
                 return;
             }
         }
+        //番剧Banner选择改变
+        private void home_flipView_SelectionChanged_1(object sender, SelectionChangedEventArgs e)
+        {
+            if (home_flipView_Ban.Items.Count == 0 || fvLeft_Ban.Items.Count == 0 || fvRight_Ban.Items.Count == 0)
+            {
+                return;
+            }
+            if (fvLeft_Ban.Visibility == Visibility.Collapsed || fvRight_Ban.Visibility == Visibility.Collapsed)
+            {
+                return;
+            }
+            if (this.home_flipView_Ban.SelectedIndex == 0)
+            {
+                this.fvLeft_Ban.SelectedIndex = this.fvLeft.Items.Count - 1;
+                this.fvRight_Ban.SelectedIndex = 1;
+            }
+            else if (this.home_flipView_Ban.SelectedIndex == 1)
+            {
+                this.fvLeft_Ban.SelectedIndex = 0;
+                this.fvRight_Ban.SelectedIndex = this.fvRight.Items.Count - 1;
+            }
+            else if (this.home_flipView_Ban.SelectedIndex == this.home_flipView_Ban.Items.Count - 1)
+            {
+                this.fvLeft_Ban.SelectedIndex = this.fvLeft_Ban.Items.Count - 2;
+                this.fvRight_Ban.SelectedIndex = 0;
+            }
+            else if ((this.home_flipView_Ban.SelectedIndex < (this.home_flipView_Ban.Items.Count - 1)) && this.home_flipView_Ban.SelectedIndex > -1)
+            {
+                this.fvLeft_Ban.SelectedIndex = this.home_flipView_Ban.SelectedIndex - 1;
+                this.fvRight_Ban.SelectedIndex = this.home_flipView_Ban.SelectedIndex + 1;
+            }
+            else
+            {
+                return;
+            }
+        }
         //Banner的加载
         public void SetListView(string results)
         {
@@ -440,6 +504,7 @@ namespace bilibili2
             {
             }
         }
+
         WebClientClass wc = new WebClientClass();
         public async void SetHomeInfo()
         {
@@ -1199,7 +1264,7 @@ namespace bilibili2
         }
         //番剧最近更新
         bool LoadBan = false;
-        private async void GetBanUpdate()
+        private async Task GetBanUpdate()
         {
             try
             {
@@ -1209,12 +1274,12 @@ namespace bilibili2
                 JObject json = JObject.Parse(model.result.ToString());
                 List<BannumiIndexModel> ban = JsonConvert.DeserializeObject<List<BannumiIndexModel>>(json["latestUpdate"]["list"].ToString());
                 GridView_Bangumi_NewUpdate.ItemsSource = ban;
-                LoadBan = true;
+               // LoadBan = true;
             }
             catch (Exception ex)
             {
                 messShow.Show("读取番剧最近更新失败\r\n" + ex.Message,3000);
-                LoadBan = false;
+                //LoadBan = false;
             }
         }
 
@@ -1233,6 +1298,111 @@ namespace bilibili2
             {
                 messShow.Show("请先登录",3000);
             }
+        }
+
+        private async  Task GetBanBanner()
+        {
+            wc = new WebClientClass();
+            string results=await wc.GetResults(new Uri("http://bangumi.bilibili.com/api/app_index_page_v2?rnd"+new Random().Next(1000,9999)));
+            BanBannerModel model = JsonConvert.DeserializeObject<BanBannerModel>(results);
+            if (model.code==0)
+            {
+                JObject jo = JObject.Parse(results);
+                List<BanBannerModel> list = JsonConvert.DeserializeObject<List<BanBannerModel>>(jo["result"]["banners"].ToString());
+                home_flipView_Ban.ItemsSource = list;
+                fvLeft_Ban.ItemsSource = list;
+                fvRight_Ban.ItemsSource = list;
+                this.home_flipView_Ban.SelectedIndex = 0;
+                if (fvLeft_Ban.Visibility != Visibility.Collapsed || fvRight_Ban.Visibility != Visibility.Collapsed)
+                {
+                    this.fvLeft_Ban.SelectedIndex = this.fvLeft_Ban.Items.Count - 1;
+                    this.fvRight_Ban.SelectedIndex = this.home_flipView_Ban.SelectedIndex + 1;
+                }
+            }
+            else
+            {
+                messShow.Show("读取番剧Banner失败！"+model.message,3000);
+            }
+        }
+        string Page_BanTJ = "-1";
+        private async Task GetBanTJ()
+        {
+            Ban_TJ_more.Text = "正在加载...";
+            wc = new WebClientClass();
+            string uri = "http://bangumi.bilibili.com/api/bangumi_recommend?_device=wp&appkey=422fd9d7289a1dd9&build=411005&cursor="+Page_BanTJ+"&pagesize=10&platform=android&ts="+ApiHelper.GetTimeSpen;
+            uri +="&sign="+ ApiHelper.GetSign(uri);
+            string results = await wc.GetResults(new Uri(uri));
+            BanTJModel model = JsonConvert.DeserializeObject<BanTJModel>(results);
+            if (model.code == 0)
+            {
+                JObject jo = JObject.Parse(results);
+                List<BanTJModel> list = JsonConvert.DeserializeObject<List<BanTJModel>>(model.result.ToString());
+                foreach (BanTJModel item in list)
+                {
+                    list_Ban_TJ.Items.Add(item);
+                }
+                if (list.Count!=0)
+                {
+                    Page_BanTJ = (list[list.Count - 1] as BanTJModel).cursor;
+                    Ban_TJ_more.Text = "加载更多";
+                }
+                else
+                {
+                    Ban_TJ_more.Text = "没有更多了...";
+                }
+            }
+            else
+            {
+                messShow.Show("读取番剧推荐失败！" + model.message, 3000);
+            }
+        }
+
+        private void btn_Banner_Ban_Click(object sender, RoutedEventArgs e)
+        {
+            string tag = Regex.Match((home_flipView_Ban.SelectedItem as BanBannerModel).link, @"^http://bangumi.bilibili.com/anime/category/(.*?)$").Groups[1].Value;
+            if (tag.Length != 0)
+            {
+                infoFrame.Navigate(typeof(BanByTagPage), new string[] { tag, (home_flipView_Ban.SelectedItem as BanBannerModel).title });
+                return;
+            }
+            string ban = Regex.Match((home_flipView_Ban.SelectedItem as BanBannerModel).link, @"^http://bangumi.bilibili.com/anime/(.*?)$").Groups[1].Value;
+            if (ban.Length != 0)
+            {
+                infoFrame.Navigate(typeof(BanInfoPage), ban);
+                return;
+            }
+            infoFrame.Navigate(typeof(WebViewPage), (home_flipView_Ban.SelectedItem as BanBannerModel).link);
+        }
+       bool LoadBaning = false;
+        private  async void sc_Ban_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
+        {
+            if (sc_Ban.VerticalOffset == sc_Ban.ScrollableHeight)
+            {
+                if (!LoadBaning&&Ban_TJ_more.Text!= "没有更多了...")
+                {
+                    LoadBaning = true;
+                    await GetBanTJ();
+                    LoadBaning = false;
+                }
+            }
+        }
+
+        private void list_Ban_TJ_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            //妈蛋，B站就一定要返回个链接么
+            string tag= Regex.Match((e.ClickedItem as BanTJModel).link,@"^http://bangumi.bilibili.com/anime/category/(.*?)$").Groups[1].Value;
+            if (tag.Length!=0)
+            {
+                infoFrame.Navigate(typeof(BanByTagPage),new string[] { tag, (e.ClickedItem as BanTJModel).title});
+                return;
+            }
+            string ban = Regex.Match((e.ClickedItem as BanTJModel).link, @"^http://bangumi.bilibili.com/anime/(.*?)$").Groups[1].Value;
+            if (ban.Length != 0)
+            {
+                infoFrame.Navigate(typeof(BanInfoPage), ban);
+                return;
+            }
+            infoFrame.Navigate(typeof(WebViewPage), (e.ClickedItem as BanTJModel).link);
         }
     }
 

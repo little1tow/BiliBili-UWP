@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.System.Display;
 using Windows.UI.Core;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
@@ -31,7 +32,7 @@ namespace bilibili2.Pages
             this.InitializeComponent();
             SystemNavigationManager.GetForCurrentView().BackRequested += TestPlayerPage_BackRequested; ;
         }
-
+        private DisplayRequest dispRequest = null;
         private void TestPlayerPage_BackRequested(object sender, BackRequestedEventArgs e)
         {
             if (this.Frame.CanGoBack)
@@ -44,6 +45,19 @@ namespace bilibili2.Pages
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             GetPlayInfo(e.Parameter as string, 2);
+            if (dispRequest == null)
+            {
+                // 用户观看视频，需要保持屏幕的点亮状态
+                dispRequest = new DisplayRequest();
+                dispRequest.RequestActive(); // 激活显示请求
+            }
+        }
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            if (dispRequest!=null)
+            {
+                dispRequest = null;
+            }
         }
         private void btn_GoBack_Click(object sender, RoutedEventArgs e)
         {

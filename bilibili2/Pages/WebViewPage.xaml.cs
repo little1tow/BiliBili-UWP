@@ -59,6 +59,21 @@ namespace bilibili2.Pages
 
         private void webview_WebView_NavigationStarting(WebView sender, WebViewNavigationStartingEventArgs args)
         {
+            string ban = Regex.Match(args.Uri.AbsoluteUri, @"^http://bangumi.bilibili.com/anime/(.*?)$").Groups[1].Value;
+            if (ban.Length != 0)
+            {
+                //args.Handled = true;
+                this.Frame.Navigate(typeof(BanInfoPage), ban);
+                return;
+            }
+            string ban2 = Regex.Match(args.Uri.AbsoluteUri, @"^http://www.bilibili.com/bangumi/i/(.*?)$").Groups[1].Value;
+            if (ban2.Length != 0)
+            {
+                //args.Handled = true;
+                this.Frame.Navigate(typeof(BanInfoPage), ban2);
+                return;
+            }
+
             //text .Text= args.Uri.AbsoluteUri;
             webview_progressBar.Visibility = Visibility.Visible;
             if (Regex.IsMatch(args.Uri.AbsoluteUri, "/video/av(.*)?[/|+](.*)?"))
@@ -67,6 +82,8 @@ namespace bilibili2.Pages
                 string a = Regex.Match(args.Uri.AbsoluteUri, "/video/av(.*)?[/|+](.*)?").Groups[1].Value;
                 this.Frame.Navigate(typeof(VideoInfoPage), a);
             }
+
+
         }
 
         private void webview_WebView_FrameDOMContentLoaded(WebView sender, WebViewDOMContentLoadedEventArgs args)
@@ -82,6 +99,21 @@ namespace bilibili2.Pages
 
         private void webview_WebView_NewWindowRequested(WebView sender, WebViewNewWindowRequestedEventArgs args)
         {
+            string ban = Regex.Match(args.Uri.AbsoluteUri, @"^http://bangumi.bilibili.com/anime/(.*?)$").Groups[1].Value;
+            if (ban.Length != 0)
+            {
+                args.Handled = true;
+                this.Frame.Navigate(typeof(BanInfoPage), ban);
+                return;
+            }
+            string ban2 = Regex.Match(args.Uri.AbsoluteUri, @"^http://www.bilibili.com/bangumi/i/(.*?)$").Groups[1].Value;
+            if (ban2.Length != 0)
+            {
+                args.Handled = true;
+                this.Frame.Navigate(typeof(BanInfoPage), ban2);
+                return;
+            }
+
             //乱写一通的正则
             //正则真的真的真的不会啊- -
             if (Regex.IsMatch(args.Uri.AbsoluteUri, "/video/av(.*)?[/|+](.*)?"))

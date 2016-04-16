@@ -40,6 +40,7 @@ namespace bilibili2
     {
         ApplicationDataContainer container = ApplicationData.Current.LocalSettings;
         Frame rootFrame = (Window.Current.Content as Frame);
+        
         public MainPage()
         {
             this.InitializeComponent();
@@ -51,6 +52,7 @@ namespace bilibili2
             //this.RequestedTheme = ElementTheme.Dark;
         }
         string navInfo = string.Empty;
+
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             if (e.NavigationMode == NavigationMode.New)
@@ -61,6 +63,7 @@ namespace bilibili2
                 home_Items.SetHomeInfo();
             }
             navInfo =  infoFrame.GetNavigationState();
+            infoFrame.Tag = (SolidColorBrush)top_grid.Background;
         }
         //首页错误
         private void Home_Items_ErrorEvent(string aid)
@@ -80,7 +83,7 @@ namespace bilibili2
         private async void MainPage_BackRequested(object sender, BackRequestedEventArgs e)
         {
             //Frame rootFrame = Window.Current.Content as Frame;
-            if (!rootFrame.CanGoBack && e.Handled == false&&infoFrame.Content==null)
+            if (e.Handled == false&&infoFrame.Content==null)
             {
                 if (IsClicks)
                 {
@@ -535,7 +538,7 @@ namespace bilibili2
             }
             else
             {
-                messShow.Show("跳转个人中心",3000);
+                infoFrame.Navigate(typeof(UserInfoPage));
             }
             //this.Frame.Navigate(typeof(LoginPage));
         }
@@ -695,27 +698,52 @@ namespace bilibili2
                     RequestedTheme = ElementTheme.Light;
                     font_D_L.Glyph = "\uE708";
                 }
-
-                if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.UI.ViewManagement.StatusBar"))
-                {
-                    // StatusBar.GetForCurrentView().HideAsync();
-                    StatusBar statusBar = StatusBar.GetForCurrentView();
-                    statusBar.ForegroundColor = Colors.White;
-                    statusBar.BackgroundColor = ((SolidColorBrush)top_grid.Background).Color;
-                    statusBar.BackgroundOpacity = 100;
-                }
-                //电脑标题栏颜色
-                var titleBar = Windows.UI.ViewManagement.ApplicationView.GetForCurrentView().TitleBar;
-                titleBar.BackgroundColor = ((SolidColorBrush)top_grid.Background).Color;
-                titleBar.ForegroundColor = Color.FromArgb(255, 254, 254, 254);//Colors.White纯白用不了。。。
-                titleBar.ButtonHoverBackgroundColor = ((SolidColorBrush)menu_DarkBack.Background).Color;
-                titleBar.ButtonBackgroundColor = ((SolidColorBrush)top_grid.Background).Color;
-                titleBar.ButtonForegroundColor = Color.FromArgb(255, 254, 254, 254);
-                titleBar.InactiveBackgroundColor = ((SolidColorBrush)top_grid.Background).Color;
-                titleBar.ButtonInactiveBackgroundColor = ((SolidColorBrush)top_grid.Background).Color;
-
-               
             }
+            if ((e.ClickedItem as StackPanel).Tag.ToString()=="Chanage")
+            {
+                ResourceDictionary newDictionary = new ResourceDictionary();
+                newDictionary.Source = new Uri("ms-appx:///Theme/BlueTheme.xaml", UriKind.RelativeOrAbsolute);
+                Application.Current.Resources.MergedDictionaries.Clear();
+                Application.Current.Resources.MergedDictionaries.Add(newDictionary);
+                RequestedTheme = ElementTheme.Dark;
+                RequestedTheme = ElementTheme.Light;
+            }
+            if ((e.ClickedItem as StackPanel).Tag.ToString() == "Chanage1")
+            {
+                ResourceDictionary newDictionary = new ResourceDictionary();
+                newDictionary.Source = new Uri("ms-appx:///Theme/PinkTheme.xaml", UriKind.RelativeOrAbsolute);
+                Application.Current.Resources.MergedDictionaries.Clear();
+                Application.Current.Resources.MergedDictionaries.Add(newDictionary);
+                RequestedTheme = ElementTheme.Dark;
+                RequestedTheme = ElementTheme.Light;
+            }
+            if ((e.ClickedItem as StackPanel).Tag.ToString() == "Chanage2")
+            {
+                ResourceDictionary newDictionary = new ResourceDictionary();
+                newDictionary.Source = new Uri("ms-appx:///Theme/GreenTheme.xaml", UriKind.RelativeOrAbsolute);
+                Application.Current.Resources.MergedDictionaries.Clear();
+                Application.Current.Resources.MergedDictionaries.Add(newDictionary);
+                RequestedTheme = ElementTheme.Dark;
+                RequestedTheme = ElementTheme.Light;
+            }
+            if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.UI.ViewManagement.StatusBar"))
+            {
+                // StatusBar.GetForCurrentView().HideAsync();
+                StatusBar statusBar = StatusBar.GetForCurrentView();
+                statusBar.ForegroundColor = Colors.White;
+                statusBar.BackgroundColor = ((SolidColorBrush)top_grid.Background).Color;
+                statusBar.BackgroundOpacity = 100;
+            }
+            //电脑标题栏颜色
+            var titleBar = Windows.UI.ViewManagement.ApplicationView.GetForCurrentView().TitleBar;
+            titleBar.BackgroundColor = ((SolidColorBrush)top_grid.Background).Color;
+            titleBar.ForegroundColor = Color.FromArgb(255, 254, 254, 254);//Colors.White纯白用不了。。。
+            titleBar.ButtonHoverBackgroundColor = ((SolidColorBrush)menu_DarkBack.Background).Color;
+            titleBar.ButtonBackgroundColor = ((SolidColorBrush)top_grid.Background).Color;
+            titleBar.ButtonForegroundColor = Color.FromArgb(255, 254, 254, 254);
+            titleBar.InactiveBackgroundColor = ((SolidColorBrush)top_grid.Background).Color;
+            titleBar.ButtonInactiveBackgroundColor = ((SolidColorBrush)top_grid.Background).Color;
+            infoFrame.Tag = (SolidColorBrush)top_grid.Background;
         }
         //动态加载更多
         bool Moreing = true;
@@ -767,6 +795,7 @@ namespace bilibili2
             }
             if (((BannerModel)home_flipView.SelectedItem).type == 3)
             {
+                infoFrame.Navigate(typeof(BanInfoPage), ((BannerModel)home_flipView.SelectedItem).value);
                 //KeyValuePair<string, bool> info = new KeyValuePair<string, bool>(((BannerModel)home_flipView.SelectedItem).value, true);
                 //this.Frame.Navigate(typeof(BangumiInfoPage), info);
                 // this.Frame.Navigate(typeof(WebViewPage), ((BannerModel)home_flipView.SelectedItem).value);
@@ -842,6 +871,9 @@ namespace bilibili2
                     break;
                 case "全部追番":
                     (infoFrame.Content as UserBangumiPage).BackEvent += MainPage_BackEvent;
+                    break;
+                case "用户中心":
+                    (infoFrame.Content as UserInfoPage).BackEvent += MainPage_BackEvent;
                     break;
                 default:
                     break;
@@ -1299,64 +1331,84 @@ namespace bilibili2
                 messShow.Show("请先登录",3000);
             }
         }
-
+        //读取番剧Banner
         private async  Task GetBanBanner()
         {
-            wc = new WebClientClass();
-            string results=await wc.GetResults(new Uri("http://bangumi.bilibili.com/api/app_index_page_v2?rnd"+new Random().Next(1000,9999)));
-            BanBannerModel model = JsonConvert.DeserializeObject<BanBannerModel>(results);
-            if (model.code==0)
+            try
             {
-                JObject jo = JObject.Parse(results);
-                List<BanBannerModel> list = JsonConvert.DeserializeObject<List<BanBannerModel>>(jo["result"]["banners"].ToString());
-                home_flipView_Ban.ItemsSource = list;
-                fvLeft_Ban.ItemsSource = list;
-                fvRight_Ban.ItemsSource = list;
-                this.home_flipView_Ban.SelectedIndex = 0;
-                if (fvLeft_Ban.Visibility != Visibility.Collapsed || fvRight_Ban.Visibility != Visibility.Collapsed)
+                wc = new WebClientClass();
+                string results = await wc.GetResults(new Uri("http://bangumi.bilibili.com/api/app_index_page_v2?rnd" + new Random().Next(1000, 9999)));
+                BanBannerModel model = JsonConvert.DeserializeObject<BanBannerModel>(results);
+                if (model.code == 0)
                 {
-                    this.fvLeft_Ban.SelectedIndex = this.fvLeft_Ban.Items.Count - 1;
-                    this.fvRight_Ban.SelectedIndex = this.home_flipView_Ban.SelectedIndex + 1;
-                }
-            }
-            else
-            {
-                messShow.Show("读取番剧Banner失败！"+model.message,3000);
-            }
-        }
-        string Page_BanTJ = "-1";
-        private async Task GetBanTJ()
-        {
-            Ban_TJ_more.Text = "正在加载...";
-            wc = new WebClientClass();
-            string uri = "http://bangumi.bilibili.com/api/bangumi_recommend?_device=wp&appkey=422fd9d7289a1dd9&build=411005&cursor="+Page_BanTJ+"&pagesize=10&platform=android&ts="+ApiHelper.GetTimeSpen;
-            uri +="&sign="+ ApiHelper.GetSign(uri);
-            string results = await wc.GetResults(new Uri(uri));
-            BanTJModel model = JsonConvert.DeserializeObject<BanTJModel>(results);
-            if (model.code == 0)
-            {
-                JObject jo = JObject.Parse(results);
-                List<BanTJModel> list = JsonConvert.DeserializeObject<List<BanTJModel>>(model.result.ToString());
-                foreach (BanTJModel item in list)
-                {
-                    list_Ban_TJ.Items.Add(item);
-                }
-                if (list.Count!=0)
-                {
-                    Page_BanTJ = (list[list.Count - 1] as BanTJModel).cursor;
-                    Ban_TJ_more.Text = "加载更多";
+                    JObject jo = JObject.Parse(results);
+                    List<BanBannerModel> list = JsonConvert.DeserializeObject<List<BanBannerModel>>(jo["result"]["banners"].ToString());
+                    home_flipView_Ban.ItemsSource = list;
+                    fvLeft_Ban.ItemsSource = list;
+                    fvRight_Ban.ItemsSource = list;
+                    this.home_flipView_Ban.SelectedIndex = 0;
+                    if (fvLeft_Ban.Visibility != Visibility.Collapsed || fvRight_Ban.Visibility != Visibility.Collapsed)
+                    {
+                        this.fvLeft_Ban.SelectedIndex = this.fvLeft_Ban.Items.Count - 1;
+                        this.fvRight_Ban.SelectedIndex = this.home_flipView_Ban.SelectedIndex + 1;
+                    }
                 }
                 else
                 {
-                    Ban_TJ_more.Text = "没有更多了...";
+                    messShow.Show("读取番剧Banner失败！" + model.message, 3000);
                 }
             }
-            else
+            catch (Exception ex)
             {
-                messShow.Show("读取番剧推荐失败！" + model.message, 3000);
+                messShow.Show("读取番剧Banner失败！" + ex.Message, 3000);
+                //throw;
             }
+             
         }
+        //读取番剧推荐
+        string Page_BanTJ = "-1";
+        private async Task GetBanTJ()
+        {
+            try
+            {
+                Ban_TJ_more.Text = "正在加载...";
+                wc = new WebClientClass();
+                string uri = "http://bangumi.bilibili.com/api/bangumi_recommend?_device=wp&appkey=422fd9d7289a1dd9&build=411005&cursor=" + Page_BanTJ + "&pagesize=10&platform=android&ts=" + ApiHelper.GetTimeSpen;
+                uri += "&sign=" + ApiHelper.GetSign(uri);
+                string results = await wc.GetResults(new Uri(uri));
+                BanTJModel model = JsonConvert.DeserializeObject<BanTJModel>(results);
+                if (model.code == 0)
+                {
+                    JObject jo = JObject.Parse(results);
+                    List<BanTJModel> list = JsonConvert.DeserializeObject<List<BanTJModel>>(model.result.ToString());
+                    foreach (BanTJModel item in list)
+                    {
+                        list_Ban_TJ.Items.Add(item);
+                    }
+                    if (list.Count != 0)
+                    {
+                        Page_BanTJ = (list[list.Count - 1] as BanTJModel).cursor;
+                        Ban_TJ_more.Text = "加载更多";
+                    }
+                    else
+                    {
+                        Ban_TJ_more.Text = "没有更多了...";
+                    }
+                }
+                else
+                {
+                    messShow.Show("读取番剧推荐失败！" + model.message, 3000);
+                }
 
+            }
+            catch (Exception ex)
+            {
+                messShow.Show("读取番剧推荐失败！" + ex.Message, 3000);
+               // throw;
+            }
+            
+        }
+        //番剧Banner点击
         private void btn_Banner_Ban_Click(object sender, RoutedEventArgs e)
         {
             string tag = Regex.Match((home_flipView_Ban.SelectedItem as BanBannerModel).link, @"^http://bangumi.bilibili.com/anime/category/(.*?)$").Groups[1].Value;
@@ -1373,6 +1425,7 @@ namespace bilibili2
             }
             infoFrame.Navigate(typeof(WebViewPage), (home_flipView_Ban.SelectedItem as BanBannerModel).link);
         }
+        //番剧推荐加载更多
        bool LoadBaning = false;
         private  async void sc_Ban_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
         {
@@ -1386,7 +1439,7 @@ namespace bilibili2
                 }
             }
         }
-
+        //番剧推荐点击
         private void list_Ban_TJ_ItemClick(object sender, ItemClickEventArgs e)
         {
             //妈蛋，B站就一定要返回个链接么
@@ -1403,6 +1456,86 @@ namespace bilibili2
                 return;
             }
             infoFrame.Navigate(typeof(WebViewPage), (e.ClickedItem as BanTJModel).link);
+        }
+        //搜索
+        private void txt_auto_Find_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
+        {
+            if (sender.Text.Length == 0)
+            {
+                //top_txt_find.Visibility = Visibility.Collapsed;
+                //top_btn_find.Visibility = Visibility.Visible;
+                //mainFrame.Navigate(typeof(SeasonPage));
+            }
+            else
+            {
+                this.infoFrame.Navigate(typeof(SearchPage), top_txt_find.Text);
+            }
+        }
+        
+        private async void txt_auto_Find_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+        {
+            if (sender.Text.Length != 0)
+            {
+                sender.ItemsSource = await GetSugges(sender.Text);
+            }
+            else
+            {
+                sender.ItemsSource = null;
+            }
+        }
+
+        private  void txt_auto_Find_SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
+        {
+            txt_auto_Find.Text = args.SelectedItem as string;
+        }
+
+        public async Task<ObservableCollection<String>> GetSugges(string text)
+        {
+            try
+            {
+                WebClientClass wc = new WebClientClass();
+                string results = await wc.GetResults(new Uri("http://s.search.bilibili.com/main/suggest?suggest_type=accurate&sub_type=tag&main_ver=v1&term=" + text));
+                JObject json = JObject.Parse(results);
+                // json["result"]["tag"].ToString();
+                List<SuggesModel> list = JsonConvert.DeserializeObject<List<SuggesModel>>(json["result"]["tag"].ToString());
+                ObservableCollection<String> suggestions = new ObservableCollection<string>();
+                foreach (SuggesModel item in list)
+                {
+                    suggestions.Add(item.value);
+                }
+                return suggestions;
+            }
+            catch (Exception)
+            {
+                return new ObservableCollection<string>();
+            }
+
+        }
+        public class SuggesModel
+        {
+            public string name { get; set; }
+            public string value { get; set; }
+        }
+        //话题点击
+        private void list_Topic_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            if (Regex.IsMatch(((TopicModel)e.ClickedItem).link, "/video/av(.*)?[/|+](.*)?"))
+            {
+                string a = Regex.Match(((TopicModel)e.ClickedItem).link, "/video/av(.*)?[/|+](.*)?").Groups[1].Value;
+                this.infoFrame.Navigate(typeof(VideoInfoPage), a);
+            }
+            else
+            {
+                if (Regex.IsMatch(((TopicModel)e.ClickedItem).link, @"live.bilibili.com/(.*?)"))
+                {
+                    string a = Regex.Match(((TopicModel)e.ClickedItem).link + "a", "live.bilibili.com/(.*?)a").Groups[1].Value;
+                   // livePlayVideo(a);
+                }
+                else
+                {
+                    this.infoFrame.Navigate(typeof(WebViewPage), ((TopicModel)e.ClickedItem).link);
+                }
+            }
         }
     }
 

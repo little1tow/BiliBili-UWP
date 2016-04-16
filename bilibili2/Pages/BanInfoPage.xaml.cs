@@ -35,7 +35,7 @@ namespace bilibili2.Pages
         public BanInfoPage()
         {
             this.InitializeComponent();
-            NavigationCacheMode = NavigationCacheMode.Required;
+            NavigationCacheMode = NavigationCacheMode.Enabled;
             SystemNavigationManager.GetForCurrentView().BackRequested += BanInfoPage_BackRequested;
         }
 
@@ -71,6 +71,7 @@ namespace bilibili2.Pages
         //bool IsBan = false;
         protected  override void OnNavigatedTo(NavigationEventArgs e)
         {
+            bg.Color = ((SolidColorBrush)this.Frame.Tag).Color;
             if (e.NavigationMode == NavigationMode.New)
             {
                 font_icon.Glyph = "\uE006";

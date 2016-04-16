@@ -9,13 +9,16 @@
     mc:Ignorable="d"
     Tag="话题"
     >
+    <Page.Resources>
+        <SolidColorBrush x:Key="BG" x:Name="bg" Color="#FFDF85A0"></SolidColorBrush>
+    </Page.Resources>
     <Grid Background="{ThemeResource Bili-Background}">
         <Grid.RowDefinitions>
             <RowDefinition Height="48"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
 
-        <Grid Background="{ThemeResource Bili-ForeColor}" Grid.Row="0" Height="48" >
+        <Grid Background="{StaticResource BG}" Grid.Row="0" Height="48" >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="48"/>
                 <ColumnDefinition/>
@@ -24,7 +27,7 @@
             <AppBarButton x:Name="btn_back" Click="btn_back_Click" Icon="Back" Width="48" Height="48" Foreground="White"/>
             <TextBlock  Text="话题" Margin="5 0" FontSize="16" x:Name="top_txt_Header" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" />
         </Grid>
-        <GridView x:Name="list_Topic" Grid.Row="1"  ScrollViewer.VerticalScrollBarVisibility="Auto" SelectionMode="None" IsItemClickEnabled="True">
+        <GridView x:Name="list_Topic" Grid.Row="1"  ScrollViewer.VerticalScrollBarVisibility="Auto" SelectionMode="None" IsItemClickEnabled="True" ItemClick="list_Topic_ItemClick">
             <GridView.ItemsPanel>
                 <ItemsPanelTemplate>
                     <ItemsStackPanel Orientation="Vertical"/>

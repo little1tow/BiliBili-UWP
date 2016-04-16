@@ -138,6 +138,9 @@
     <Compile Include="Pages\RankPage.xaml.cs">
       <DependentUpon>RankPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\SearchPage.xaml.cs">
+      <DependentUpon>SearchPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\TestPlayerPage.xaml.cs">
       <DependentUpon>TestPlayerPage.xaml</DependentUpon>
     </Compile>
@@ -181,11 +184,20 @@
     <Content Include="Assets\ic_33_hide.png" />
     <Content Include="Assets\ic_bili_logo.png" />
     <Content Include="Assets\LOGO88.png" />
+    <Content Include="Assets\MiniIcon\scj.png" />
+    <Content Include="Assets\MiniIcon\Sex.png" />
+    <Content Include="Assets\MiniIcon\uid.png" />
+    <Content Include="Assets\MiniIcon\地址.png" />
+    <Content Include="Assets\MiniIcon\注册时间.png" />
+    <Content Include="Assets\MiniIcon\生日.png" />
+    <Content Include="Assets\MiniIcon\硬币.png" />
     <Content Include="Assets\other\NoAvatar.png" />
     <Content Include="Assets\PartIcon\BDH.png" />
     <Content Include="Assets\PartIcon\BDSJ.png" />
     <Content Include="Assets\PartIcon\BDY.png" />
     <Content Include="Assets\PartIcon\BFJ.png" />
+    <Content Include="Assets\PartIcon\bg2.png" />
+    <Content Include="Assets\PartIcon\bg3.png" />
     <Content Include="Assets\PartIcon\BGC.png" />
     <Content Include="Assets\PartIcon\BKJ.png" />
     <Content Include="Assets\PartIcon\BSS.png" />
@@ -247,6 +259,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Pages\RankPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\SearchPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

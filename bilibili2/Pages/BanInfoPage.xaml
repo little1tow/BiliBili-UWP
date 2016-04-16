@@ -9,13 +9,15 @@
     mc:Ignorable="d"
     Tag="番剧信息"
     >
-
+    <Page.Resources>
+        <SolidColorBrush x:Name="bg" x:Key="BG" Color="#FFDF85A0" />
+    </Page.Resources>
     <Grid  Background="{ThemeResource Bili-Background}">
         <Grid.RowDefinitions>
             <RowDefinition Height="48"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <Grid Background="{ThemeResource Bili-ForeColor}" Grid.Row="0" Height="48" >
+        <Grid Background="{StaticResource BG}" Grid.Row="0" Height="48" >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="48"/>
                 <ColumnDefinition/>
@@ -79,7 +81,7 @@
                         </Grid.RowDefinitions>
                         <HyperlinkButton Foreground="{ThemeResource Bili-FontColor}" >
                             <StackPanel Orientation="Horizontal">
-                                <Border Background="{ThemeResource Bili-ForeColor}" Width="10"  Height="24"  Margin="10,0"/>
+                                <Border Background="{StaticResource BG}" Width="10"  Height="24"  Margin="10,0"/>
                                 <TextBlock Text="剧集" FontSize="18" VerticalAlignment="Center" />
                             </StackPanel>
                         </HyperlinkButton>
@@ -88,7 +90,7 @@
                             <GridView.ItemContainerStyle>
                                 <Style TargetType="GridViewItem">
                                     <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                                    <Setter Property="Background" Value="{ThemeResource Bili-ForeColor}" />
+                                    <Setter Property="Background" Value="{StaticResource BG}" />
                                 </Style>
                             </GridView.ItemContainerStyle>
                             <GridView.ItemTemplate>
@@ -106,7 +108,7 @@
                         </Grid.RowDefinitions>
                         <HyperlinkButton Foreground="{ThemeResource Bili-FontColor}" >
                             <StackPanel Orientation="Horizontal">
-                                <Border Background="{ThemeResource Bili-ForeColor}" Width="10"  Height="24"  Margin="10,0"/>
+                                <Border Background="{StaticResource BG}" Width="10"  Height="24"  Margin="10,0"/>
                                 <TextBlock Text="介绍" FontSize="18" VerticalAlignment="Center" />
                             </StackPanel>
                         </HyperlinkButton>
@@ -123,7 +125,7 @@
                         </Grid.RowDefinitions>
                         <HyperlinkButton Foreground="{ThemeResource Bili-FontColor}" >
                             <StackPanel Orientation="Horizontal">
-                                <Border Background="{ThemeResource Bili-ForeColor}" Width="10"  Height="24"  Margin="10,0"/>
+                                <Border Background="{StaticResource BG}" Width="10"  Height="24"  Margin="10,0"/>
                                 <TextBlock Text="TAG" FontSize="18" VerticalAlignment="Center" />
                             </StackPanel>
                         </HyperlinkButton>
@@ -136,7 +138,7 @@
                         </Grid.RowDefinitions>
                         <HyperlinkButton Foreground="{ThemeResource Bili-FontColor}" >
                             <StackPanel Orientation="Horizontal">
-                                <Border Background="{ThemeResource Bili-ForeColor}" Width="10"  Height="24"  Margin="10,0"/>
+                                <Border Background="{StaticResource BG}" Width="10"  Height="24"  Margin="10,0"/>
                                 <TextBlock Text="CV" FontSize="18" VerticalAlignment="Center" />
                             </StackPanel>
                         </HyperlinkButton>
@@ -153,7 +155,7 @@
                         </Grid.RowDefinitions>
                         <HyperlinkButton Foreground="{ThemeResource Bili-FontColor}" >
                             <StackPanel Orientation="Horizontal">
-                                <Border Background="{ThemeResource Bili-ForeColor}" Width="10"  Height="24"  Margin="10,0"/>
+                                <Border Background="{StaticResource BG}" Width="10"  Height="24"  Margin="10,0"/>
                                 <TextBlock Text="STAFF" FontSize="18" VerticalAlignment="Center" />
                             </StackPanel>
                         </HyperlinkButton>
@@ -161,11 +163,11 @@
                     </Grid>
                 </Grid>
             </ScrollViewer>
-            <CommandBar x:Name="com_bar" Grid.Row="1" Background="{ThemeResource Bili-ForeColor}" Foreground="White" VerticalAlignment="Bottom">
+            <CommandBar x:Name="com_bar" Grid.Row="1" Background="{StaticResource BG}" Foreground="White" VerticalAlignment="Bottom">
                 <CommandBar.SecondaryCommands>
                     <AppBarButton x:Name="btn_Refresh" Icon="Refresh" Label="刷新" Click="btn_Refresh_Click"/>
                     <AppBarButton Icon="ReShare" Label="分享" />
-                    <AppBarToggleButton x:Name="cb_IsPlay" Icon="Play" Label="直接播放" IsChecked="True"/>
+                    <AppBarToggleButton x:Name="cb_IsPlay" Icon="Play" Label="直接播放" IsChecked="False"/>
                 </CommandBar.SecondaryCommands>
                 <AppBarButton x:Name="btn_CB" Visibility="Collapsed" Icon="Bold" Label="承包" Foreground="White"/>
                 <AppBarButton x:Name="btn_Conent" Visibility="Collapsed" Icon="Message" Label="评论" Foreground="White"/>
@@ -176,7 +178,7 @@
                     </AppBarButton.Icon>
                 </AppBarButton>
             </CommandBar>
-            <CommandBar x:Name="com_bar_Down" Visibility="Collapsed" Grid.Row="1" Background="{ThemeResource Bili-ForeColor}" Foreground="White" VerticalAlignment="Bottom">
+            <CommandBar x:Name="com_bar_Down" Visibility="Collapsed" Grid.Row="1" Background="{StaticResource BG}" Foreground="White" VerticalAlignment="Bottom">
                 <CommandBar.Content>
                     <ComboBox x:Name="cb_Qu" SelectedIndex="1" Margin="10,10">
                         <ComboBoxItem Content="清晰"/>

@@ -420,7 +420,7 @@ namespace bilibili2
         public int play_count { get; set; }
         public int danmaku_count { get; set; }
         public int is_finish { get; set; }//是否完结
-        public double newest_ep_index { get; set; }//最新话
+        public string newest_ep_index { get; set; }//最新话
         public string staff { get; set; }
         public string cover { get; set; }
         public DateTime pub_time { get; set; }

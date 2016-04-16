@@ -30,7 +30,7 @@ namespace bilibili2.Pages
         public UserBangumiPage()
         {
             this.InitializeComponent();
-            NavigationCacheMode = NavigationCacheMode.Required;
+            NavigationCacheMode = NavigationCacheMode.Enabled;
             SystemNavigationManager.GetForCurrentView().BackRequested += BanInfoPage_BackRequested;
         }
 

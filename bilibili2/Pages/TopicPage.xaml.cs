@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Text.RegularExpressions;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Core;
@@ -29,13 +30,12 @@ namespace bilibili2.Pages
         public TopicPage()
         {
             this.InitializeComponent();
+            NavigationCacheMode = NavigationCacheMode.Enabled;
             SystemNavigationManager.GetForCurrentView().BackRequested += TopicPage_BackRequested;
         }
 
         private void TopicPage_BackRequested(object sender, BackRequestedEventArgs e)
         {
-
-           
             if (this.Frame.CanGoBack)
             {
                 e.Handled = true;
@@ -61,6 +61,7 @@ namespace bilibili2.Pages
         }
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
+            bg.Color = ((SolidColorBrush)this.Frame.Tag).Color;
             if (e.NavigationMode== NavigationMode.New)
             {
                 GetTopic();
@@ -83,6 +84,27 @@ namespace bilibili2.Pages
             finally
             {
                 pr_Load.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        private void list_Topic_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            if (Regex.IsMatch(((TopicModel)e.ClickedItem).link, "/video/av(.*)?[/|+](.*)?"))
+            {
+                string a = Regex.Match(((TopicModel)e.ClickedItem).link, "/video/av(.*)?[/|+](.*)?").Groups[1].Value;
+                this.Frame.Navigate(typeof(VideoInfoPage), a);
+            }
+            else
+            {
+                if (Regex.IsMatch(((TopicModel)e.ClickedItem).link, @"live.bilibili.com/(.*?)"))
+                {
+                    string a = Regex.Match(((TopicModel)e.ClickedItem).link + "a", "live.bilibili.com/(.*?)a").Groups[1].Value;
+                    // livePlayVideo(a);
+                }
+                else
+                {
+                    this.Frame.Navigate(typeof(WebViewPage), ((TopicModel)e.ClickedItem).link);
+                }
             }
         }
     }

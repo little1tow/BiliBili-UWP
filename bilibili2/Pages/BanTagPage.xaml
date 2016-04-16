@@ -9,13 +9,15 @@
     mc:Ignorable="d"
     Tag="番剧索引"
     >
-
+    <Page.Resources>
+        <SolidColorBrush x:Name="bg" x:Key="BG" Color="#FFDF85A0" />
+    </Page.Resources>
     <Grid Background="{ThemeResource Bili-Background}">
         <Grid.RowDefinitions>
             <RowDefinition Height="48"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <Grid Background="{ThemeResource Bili-ForeColor}" Grid.Row="0" Height="48" >
+        <Grid Background="{StaticResource BG}" Grid.Row="0" Height="48" >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="48"/>
                 <ColumnDefinition/>

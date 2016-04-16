@@ -25,6 +25,28 @@ namespace bilibili2.Pages
         public UserInfoPage()
         {
             this.InitializeComponent();
+            NavigationCacheMode = NavigationCacheMode.Enabled;
+        }
+        public delegate void GoBackHandler();
+        public event GoBackHandler BackEvent;
+        private void btn_Back_Click(object sender, RoutedEventArgs e)
+        {
+            if (this.Frame.CanGoBack)
+            {
+                this.Frame.GoBack();
+            }
+            else
+            {
+                BackEvent();
+            }
+        }
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            bg.Color = ((SolidColorBrush)this.Frame.Tag).Color;
+        }
+        private void ToggleMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

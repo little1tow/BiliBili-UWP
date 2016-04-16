@@ -33,7 +33,7 @@ namespace bilibili2
         public VideoInfoPage()
         {
             this.InitializeComponent();
-            NavigationCacheMode = NavigationCacheMode.Required;
+            NavigationCacheMode = NavigationCacheMode.Enabled;
             SystemNavigationManager.GetForCurrentView().BackRequested += VideoInfoPage_BackRequested;
         }
         string aid = "";
@@ -41,7 +41,7 @@ namespace bilibili2
         {
             // if (e.NavigationMode== NavigationMode.New)
             // {
-           
+            bg.Color = ((SolidColorBrush)this.Frame.Tag).Color;
             video_Error_Null.Visibility = Visibility.Collapsed;
                 video_Error_User.Visibility = Visibility.Collapsed;
                 aid = "";

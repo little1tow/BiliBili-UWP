@@ -9,6 +9,7 @@
     Tag="排行榜"
     >
     <Page.Resources>
+        <SolidColorBrush x:Key="BG" x:Name="bg" Color="#FFDF85A0"></SolidColorBrush>
         <Style x:Key="ListViewItemStyle" TargetType="ListViewItem">
             <Setter Property="BorderBrush" Value="#33000000"></Setter>
             <Setter Property="BorderThickness" Value="0,0,0,1"></Setter>
@@ -47,7 +48,7 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
        
-        <Grid Background="{ThemeResource Bili-ForeColor}" Grid.Row="0" Height="48" >
+        <Grid Background="{StaticResource BG}" Grid.Row="0" Height="48" >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="48"/>
                 <ColumnDefinition/>

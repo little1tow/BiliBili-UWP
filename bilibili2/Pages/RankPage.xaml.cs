@@ -35,7 +35,10 @@ namespace bilibili2.Pages
             this.InitializeComponent();
             SystemNavigationManager.GetForCurrentView().BackRequested += RankPage_BackRequested;
         }
-
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            bg.Color = ((SolidColorBrush)this.Frame.Tag).Color;
+        }
         private void RankPage_BackRequested(object sender, BackRequestedEventArgs e)
         {
            

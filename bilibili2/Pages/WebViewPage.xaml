@@ -8,13 +8,15 @@
     mc:Ignorable="d"
     Tag="网页浏览"
     >
-
+    <Page.Resources>
+        <SolidColorBrush x:Key="BG" x:Name="bg" Color="#FFDF85A0"  ></SolidColorBrush>
+    </Page.Resources>
     <Grid Background="{ThemeResource Bili-Background}">
         <Grid.RowDefinitions>
             <RowDefinition  Height="48"></RowDefinition>
             <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
-        <Grid Background="{ThemeResource Bili-ForeColor}">
+        <Grid Background="{StaticResource BG}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="48"/>
                 <ColumnDefinition/>

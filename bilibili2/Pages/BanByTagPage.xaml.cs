@@ -31,7 +31,7 @@ namespace bilibili2.Pages
         public BanByTagPage()
         {
             this.InitializeComponent();
-            NavigationCacheMode = NavigationCacheMode.Required;
+            NavigationCacheMode = NavigationCacheMode.Enabled;
             SystemNavigationManager.GetForCurrentView().BackRequested += BanInfoPage_BackRequested;
         }
         private void BanInfoPage_BackRequested(object sender, BackRequestedEventArgs e)
@@ -66,10 +66,10 @@ namespace bilibili2.Pages
         private int getType = 1;
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
+            bg.Color = ((SolidColorBrush)this.Frame.Tag).Color;
             if (e.NavigationMode== NavigationMode.New)
             {
                 getTid = e.Parameter as string[];
-
                 btn_type1.IsEnabled = false;
                 btn_type2.IsEnabled = true;
                 btn_type3.IsEnabled = true;

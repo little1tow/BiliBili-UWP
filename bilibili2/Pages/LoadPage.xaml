@@ -11,10 +11,12 @@
 
     <Grid Background="#FFDF85A0">
         <StackPanel VerticalAlignment="Center">
-            <Image Source="ms-appx:///Assets/StoreLogo.scale-200.png" Width="100" Height="100"></Image>
+            <Image Source="ms-appx:///Assets/StoreLogo.scale-200.png" Width="100" Height="100" ></Image>
         </StackPanel>
-        <TextBlock HorizontalAlignment="Center" FontSize="16" Foreground="White" VerticalAlignment="Bottom" Margin="0 30">你造吗,每60秒你生命就少了一分钟</TextBlock>
-
+        <StackPanel VerticalAlignment="Bottom" Margin="0 30">
+            <ProgressRing Width="50" Height="50" IsActive="True" Margin="0 5" Foreground="White"></ProgressRing>
+            <TextBlock HorizontalAlignment="Center"  Foreground="White" >孔子曰：要善用鼠标滚轮</TextBlock>
+        </StackPanel>
 
     </Grid>
 </Page>

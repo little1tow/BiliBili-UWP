@@ -36,23 +36,9 @@ namespace bilibili2
         {
             this.InitializeComponent();
             //BackEvent
-            SystemNavigationManager.GetForCurrentView().BackRequested += LoginPage_BackRequested;
+          
         }
-
-        private void LoginPage_BackRequested(object sender, BackRequestedEventArgs e)
-        {
-         
-            if (this.Frame.CanGoBack)
-            {
-                e.Handled = true;
-                this.Frame.GoBack();
-            }
-            else
-            {
-                e.Handled = true;
-                BackEvent();
-            }
-        }
+        
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             bg.Color = ((SolidColorBrush)this.Frame.Tag).Color;

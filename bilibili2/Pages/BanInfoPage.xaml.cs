@@ -36,23 +36,8 @@ namespace bilibili2.Pages
         {
             this.InitializeComponent();
             NavigationCacheMode = NavigationCacheMode.Enabled;
-            SystemNavigationManager.GetForCurrentView().BackRequested += BanInfoPage_BackRequested;
         }
-
-        private void BanInfoPage_BackRequested(object sender, BackRequestedEventArgs e)
-        {
-            
-            if (this.Frame.CanGoBack)
-            {
-                e.Handled = true;
-                this.Frame.GoBack();
-            }
-            else
-            {
-                e.Handled = true;
-                BackEvent();
-            }
-        }
+       
 
         private void btn_back_Click(object sender, RoutedEventArgs e)
         {
@@ -71,6 +56,7 @@ namespace bilibili2.Pages
         //bool IsBan = false;
         protected  override void OnNavigatedTo(NavigationEventArgs e)
         {
+            
             bg.Color = ((SolidColorBrush)this.Frame.Tag).Color;
             if (e.NavigationMode == NavigationMode.New)
             {
@@ -114,6 +100,7 @@ namespace bilibili2.Pages
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             wc = null;
+         
         }
         public async void GetBangumiInfo(string banID)
         {

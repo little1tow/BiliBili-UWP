@@ -30,15 +30,7 @@ namespace bilibili2.Pages
         {
             this.InitializeComponent();
             NavigationCacheMode = NavigationCacheMode.Enabled;
-            SystemNavigationManager.GetForCurrentView().BackRequested += WebViewPage_BackRequested; ;
         }
-
-        private void WebViewPage_BackRequested(object sender, BackRequestedEventArgs e)
-        {
-            e.Handled = true;
-            BackEvent();
-        }
-
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             // if (e.NavigationMode == NavigationMode.New)

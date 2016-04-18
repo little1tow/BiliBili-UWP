@@ -33,26 +33,15 @@ namespace bilibili2.Pages
         public RankPage()
         {
             this.InitializeComponent();
-            SystemNavigationManager.GetForCurrentView().BackRequested += RankPage_BackRequested;
+            NavigationCacheMode = NavigationCacheMode.Required;
+          
         }
+        
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             bg.Color = ((SolidColorBrush)this.Frame.Tag).Color;
         }
-        private void RankPage_BackRequested(object sender, BackRequestedEventArgs e)
-        {
-           
-            if (this.Frame.CanGoBack)
-            {
-                e.Handled = true;
-                this.Frame.GoBack();
-            }
-            else
-            {
-                e.Handled = true;
-                BackEvent();
-            }
-        }
+      
 
         private void btn_back_Click(object sender, RoutedEventArgs e)
         {

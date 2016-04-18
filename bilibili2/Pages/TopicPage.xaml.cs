@@ -31,22 +31,9 @@ namespace bilibili2.Pages
         {
             this.InitializeComponent();
             NavigationCacheMode = NavigationCacheMode.Enabled;
-            SystemNavigationManager.GetForCurrentView().BackRequested += TopicPage_BackRequested;
+           
         }
-
-        private void TopicPage_BackRequested(object sender, BackRequestedEventArgs e)
-        {
-            if (this.Frame.CanGoBack)
-            {
-                e.Handled = true;
-                this.Frame.GoBack();
-            }
-            else
-            {
-                e.Handled = true;
-                BackEvent();
-            }
-        }
+     
 
         private void btn_back_Click(object sender, RoutedEventArgs e)
         {

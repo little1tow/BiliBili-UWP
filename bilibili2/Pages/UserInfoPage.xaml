@@ -12,140 +12,225 @@
         <SolidColorBrush x:Key="BG" x:Name="bg" Color="#FFDF85A0"></SolidColorBrush>
     </Page.Resources>
     <Grid Background="{ThemeResource Bili-Background}">
-        <Grid.RowDefinitions>
-            <RowDefinition MinHeight="280"/>
-            <RowDefinition/>
-        </Grid.RowDefinitions>
-        <Grid>
-            <Grid.Background>
-                <ImageBrush Stretch="UniformToFill" ImageSource="ms-appx:///Assets/bg1.png"/>
-            </Grid.Background>
-            <StackPanel VerticalAlignment="Center" Margin="0,50" >
-                <Grid Width="100" >
-                    <Ellipse Width="100" Height="100" >
-                        <Ellipse.Fill>
-                            <ImageBrush Stretch="UniformToFill" ImageSource="ms-appx:///Assets/other/NoAvatar.png"/>
-                        </Ellipse.Fill>
-                    </Ellipse>
-                    <Border x:Name="bor_Level" VerticalAlignment="Bottom"  CornerRadius="5"  HorizontalAlignment="Right" Background="#CCFF3030" >
-                        <TextBlock Text="LV6" Foreground="White" Margin="5,0" FontSize="12"></TextBlock>
-                    </Border>
+        <SplitView x:Name="sp" PanePlacement="Right" OpenPaneLength="300">
+            <SplitView.Pane>
+                <Grid >
+                    <Grid x:Name="grid_AUser">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <ProgressBar x:Name="pr_Load_AUser" IsIndeterminate="True" VerticalAlignment="Top" Background="{x:Null}"></ProgressBar>
+                        <TextBlock FontSize="16" Margin="5">关注的人</TextBlock>
+                        <ScrollViewer x:Name="sv" Grid.Row="1" ViewChanged="sv_ViewChanged">
+                            <ListView x:Name="list_AUser" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled" SelectionMode="None" IsItemClickEnabled="True" ItemClick="list_AUser_ItemClick">
+                                <ListView.ItemContainerStyle>
+                                    <Style TargetType="ListViewItem">
+                                        <!--<Setter Property="BorderThickness" Value="0 0 0 1"></Setter>
+                                        <Setter Property="BorderBrush" Value="Gray"></Setter>-->
+                                        <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
+                                    </Style>
+                                </ListView.ItemContainerStyle>
+                                <ListView.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid Margin="5">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="auto"/>
+                                                <ColumnDefinition/>
+                                            </Grid.ColumnDefinitions>
+                                            <Ellipse  Width="48" Height="48">
+                                                <Ellipse.Fill>
+                                                    <ImageBrush ImageSource="{Binding face}"></ImageBrush>
+                                                </Ellipse.Fill>
+                                            </Ellipse>
+                                            <TextBlock Grid.Column="1" VerticalAlignment="Center" Margin="5" Text="{Binding uname}"></TextBlock>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                        </ScrollViewer>
+                    </Grid>
                 </Grid>
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" >
-                    <TextBlock Text="Xiaoyaocz" FontSize="16" FontWeight="Bold" Foreground="White"></TextBlock>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" >
-                    <TextBlock Text="关注" FontSize="14"  Foreground="White" Margin="5 0"></TextBlock>
-                    <TextBlock Text="105" FontSize="14"  Foreground="White" Margin="0,0,10,0"  FontWeight="Bold"></TextBlock>
-                    <TextBlock Text="粉丝" FontSize="14" Margin="5 0"  Foreground="White"></TextBlock>
-                    <TextBlock Text="0" FontSize="14"  Foreground="White"  FontWeight="Bold"></TextBlock>
-                </StackPanel>
-                <TextBlock Text="个性签名......" HorizontalAlignment="Center" FontSize="12"  Foreground="White" IsTextSelectionEnabled="True"></TextBlock>
-            </StackPanel>
-            <AppBarButton x:Name="btn_Back" Click="btn_Back_Click"  Width="48" Height="48" Icon="Back" Foreground="White"></AppBarButton>
-            <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Right">
-                <AppBarButton Width="48" Visibility="Collapsed" Height="48" ToolTipService.ToolTip="关注">
-                    <AppBarButton.Icon>
-                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE006;" Foreground="White" />
-                    </AppBarButton.Icon>
-                </AppBarButton>
-                <AppBarButton Icon="Edit" Width="48" Height="48" Foreground="White"></AppBarButton>
-                <AppBarButton Width="48" Height="48" Icon="More" HorizontalAlignment="Right" Foreground="White">
-                    <AppBarButton.Flyout>
-                        <MenuFlyout>
-                            <MenuFlyoutItem>编辑资料</MenuFlyoutItem>
-                            <MenuFlyoutItem>隐私设置</MenuFlyoutItem>
-                            <MenuFlyoutSubItem Text="更换背景">
-                                <ToggleMenuFlyoutItem x:Name="menu_One" Click="ToggleMenuFlyoutItem_Click" IsChecked="True">蓝</ToggleMenuFlyoutItem>
-                                <ToggleMenuFlyoutItem x:Name="menu_Two" Click="ToggleMenuFlyoutItem_Click">黄</ToggleMenuFlyoutItem>
-                                <ToggleMenuFlyoutItem x:Name="menu_Three" Click="ToggleMenuFlyoutItem_Click">绿</ToggleMenuFlyoutItem>
-                            </MenuFlyoutSubItem>
-                            <MenuFlyoutItem>退出登录</MenuFlyoutItem>
-                        </MenuFlyout>
-                    </AppBarButton.Flyout>
-                </AppBarButton>
-            </StackPanel>
-        </Grid>
-        <StackPanel Grid.Row="1" Margin="5 0">
-            <HyperlinkButton Foreground="{ThemeResource Bili-FontColor}">
-                <StackPanel Orientation="Horizontal">
-                    <Border Background="{StaticResource BG}" Width="10"  Height="24" ></Border>
-                    <TextBlock Text="个人信息" VerticalAlignment="Center" FontSize="16" Margin="5 0"></TextBlock>
-                </StackPanel>
-            </HyperlinkButton>
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition></RowDefinition>
-                    <RowDefinition></RowDefinition>
-                    <RowDefinition></RowDefinition>
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition MaxWidth="200"></ColumnDefinition>
-                    <ColumnDefinition></ColumnDefinition>
-                </Grid.ColumnDefinitions>
-                <StackPanel Orientation="Horizontal">
-                    <Image Source="/Assets/MiniIcon/uid.png" ></Image>
-                    <TextBlock Text="UID :" VerticalAlignment="Center" Margin="0,0,5,0"></TextBlock>
-                    <TextBlock x:Name="txt_id" Text="{Binding mid}" VerticalAlignment="Center" Foreground="#FF7A7A7A"></TextBlock>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal" Grid.Row="1">
+            </SplitView.Pane>
+            <ScrollViewer  VerticalScrollBarVisibility="Auto" >
+                <Grid x:Name="grid_Info" >
+                    <Grid.RowDefinitions>
+                        <RowDefinition MinHeight="280" Height="0.4*"/>
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Grid>
+                        <Grid.Background>
+                            <ImageBrush Stretch="UniformToFill" ImageSource="ms-appx:///Assets/bg1.png"/>
+                        </Grid.Background>
+                        <StackPanel VerticalAlignment="Center" Margin="0,50" >
+                            <Grid Width="100" >
+                                <Ellipse Width="100" Height="100" >
+                                    <Ellipse.Fill>
+                                        <ImageBrush Stretch="UniformToFill" ImageSource="{Binding face}"/>
+                                    </Ellipse.Fill>
+                                </Ellipse>
+                                <Border x:Name="bor_Level" VerticalAlignment="Bottom"  CornerRadius="5"  HorizontalAlignment="Right" Background="#CCFF3030" >
+                                    <TextBlock Text="{Binding current_level_string}" Foreground="White" Margin="5,0" FontSize="12"></TextBlock>
+                                </Border>
+                            </Grid>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" >
+                                <TextBlock Text="{Binding name}" FontSize="16" FontWeight="Bold" Foreground="White"></TextBlock>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" >
+                                <TextBlock Text="关注" FontSize="14"  Foreground="White" Margin="5 0"></TextBlock>
+                                <TextBlock Text="{Binding attention}" FontSize="14"  Foreground="White" Margin="0,0,10,0"  FontWeight="Bold"></TextBlock>
+                                <TextBlock Text="粉丝" FontSize="14" Margin="5 0"  Foreground="White"></TextBlock>
+                                <TextBlock Text="{Binding fans}" FontSize="14"  Foreground="White"  FontWeight="Bold"></TextBlock>
+                            </StackPanel>
+                            <TextBlock Text="{Binding sign}"  HorizontalAlignment="Center" FontSize="12"  Foreground="White" IsTextSelectionEnabled="True" TextWrapping="Wrap" TextAlignment="Center"></TextBlock>
+                        </StackPanel>
+                        <AppBarButton x:Name="btn_Back" Click="btn_Back_Click"  Width="48" Height="48" Icon="Back" Foreground="White"></AppBarButton>
+                        <StackPanel Orientation="Horizontal" Margin="10 0" VerticalAlignment="Top" HorizontalAlignment="Right">
+                            <AppBarButton x:Name="btn_Attention" Width="48" Visibility="Visible" Height="48" ToolTipService.ToolTip="关注">
+                                <AppBarButton.Icon>
+                                    <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE006;" Foreground="White" />
+                                </AppBarButton.Icon>
+                            </AppBarButton>
+                            <AppBarButton x:Name="btn_Edit" Icon="Edit" Width="48" Height="48" Foreground="White"></AppBarButton>
+                            <AppBarButton x:Name="btn_More" Width="48" Height="48" Icon="More" HorizontalAlignment="Right" Foreground="White">
+                                <AppBarButton.Flyout>
+                                    <MenuFlyout>
+                                        <MenuFlyoutItem Visibility="Collapsed">编辑资料</MenuFlyoutItem>
+                                        <MenuFlyoutItem Visibility="Collapsed">隐私设置</MenuFlyoutItem>
+                                        <MenuFlyoutSubItem Text="更换背景">
+                                            <ToggleMenuFlyoutItem x:Name="menu_One" Click="ToggleMenuFlyoutItem_Click" IsChecked="True">蓝</ToggleMenuFlyoutItem>
+                                            <ToggleMenuFlyoutItem x:Name="menu_Two" Click="ToggleMenuFlyoutItem_Click">黄</ToggleMenuFlyoutItem>
+                                            <ToggleMenuFlyoutItem x:Name="menu_Three" Click="ToggleMenuFlyoutItem_Click">绿</ToggleMenuFlyoutItem>
+                                        </MenuFlyoutSubItem>
+                                        <MenuFlyoutItem x:Name="btn_Exit">退出登录</MenuFlyoutItem>
+                                    </MenuFlyout>
+                                </AppBarButton.Flyout>
+                            </AppBarButton>
+                        </StackPanel>
+                    </Grid>
+                    <StackPanel Margin="5 0" Grid.Row="1" >
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Button x:Name="Ban_btn_MyBan" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Stretch" Margin="0 5 5 5" Background="{StaticResource BG}" Foreground="White" Content="全部投稿" />
+                            <Button x:Name="Ban_btn_User" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" Margin="5" Background="{StaticResource BG}" Foreground="White" Content="关注的人" Click="Ban_btn_User_Click"/>
+                            <Button x:Name="Ban_btn_Timeline" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Stretch" Margin="5 5 0 5" Background="{StaticResource BG}" Foreground="White" Content="最近投币"/>
+                        </Grid>
+                        <HyperlinkButton Foreground="{ThemeResource Bili-FontColor}">
+                            <StackPanel Orientation="Horizontal">
+                                <Border Background="{StaticResource BG}" Width="10"  Height="24" ></Border>
+                                <TextBlock Text="用户信息" VerticalAlignment="Center" FontSize="16" Margin="5 0"></TextBlock>
+                            </StackPanel>
+                        </HyperlinkButton>
+                        <Grid x:Name="grid_UserInfo">
+                            <Grid.RowDefinitions>
+                                <RowDefinition></RowDefinition>
+                                <RowDefinition></RowDefinition>
+                                <RowDefinition></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition MaxWidth="200"></ColumnDefinition>
+                                <ColumnDefinition></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="/Assets/MiniIcon/uid.png" ></Image>
+                                <TextBlock Text="UID :" VerticalAlignment="Center" Margin="0,0,5,0"></TextBlock>
+                                <TextBlock x:Name="txt_id" Text="{Binding mid}" VerticalAlignment="Center" Foreground="#FF7A7A7A"></TextBlock>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Grid.Row="1">
 
-                    <Image Source="/Assets/MiniIcon/Sex.png" ></Image>
-                    <TextBlock Text="性别:" VerticalAlignment="Center" Margin="0,0,5,0"></TextBlock>
-                    <TextBlock Text="{Binding sex}" VerticalAlignment="Center" Foreground="#FF7A7A7A"></TextBlock>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal" Grid.Row="2">
-                    <Image Source="/Assets/MiniIcon/硬币.png" ></Image>
-                    <TextBlock Text="硬币:" VerticalAlignment="Center" Margin="0,0,5,0"></TextBlock>
-                    <TextBlock Text="{Binding coins}" VerticalAlignment="Center" Foreground="#FF7A7A7A"></TextBlock>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal" Grid.Column="1">
-                    <Image Source="/Assets/MiniIcon/生日.png" ></Image>
-                    <TextBlock Text="生日:" VerticalAlignment="Center" Margin="0,0,5,0"></TextBlock>
-                    <TextBlock Text="{Binding birthday}" VerticalAlignment="Center" Foreground="#FF7A7A7A"></TextBlock>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1">
-                    <Image Source="/Assets/MiniIcon/注册时间.png" ></Image>
-                    <TextBlock Text="注册:" VerticalAlignment="Center" Margin="0,0,5,0"></TextBlock>
-                    <TextBlock Text="{Binding Regtime}" VerticalAlignment="Center" Foreground="#FF7A7A7A"></TextBlock>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="1">
-                    <Image Source="/Assets/MiniIcon/地址.png" ></Image>
-                    <TextBlock Text="地址:" VerticalAlignment="Center" Margin="0,0,5,0"></TextBlock>
-                    <TextBlock Text="{Binding place}" VerticalAlignment="Center" Foreground="#FF7A7A7A"></TextBlock>
-                </StackPanel>
-            </Grid>
-            <HyperlinkButton Foreground="{ThemeResource Bili-FontColor}">
-                <StackPanel Orientation="Horizontal">
-                    <Border Background="{StaticResource BG}" Width="10"  Height="24" ></Border>
-                    <TextBlock Text="投稿" VerticalAlignment="Center" FontSize="16" Margin="5 0"></TextBlock>
-                </StackPanel>
-            </HyperlinkButton>
-            <HyperlinkButton Foreground="{ThemeResource Bili-FontColor}">
-                <StackPanel Orientation="Horizontal">
-                    <Border Background="{StaticResource BG}" Width="10"  Height="24" ></Border>
-                    <TextBlock Text="追番" VerticalAlignment="Center" FontSize="16" Margin="5 0"></TextBlock>
-                </StackPanel>
-            </HyperlinkButton>
-            <HyperlinkButton Foreground="{ThemeResource Bili-FontColor}">
-                <StackPanel Orientation="Horizontal">
-                    <Border Background="{StaticResource BG}" Width="10"  Height="24" ></Border>
-                    <TextBlock Text="收藏夹" VerticalAlignment="Center" FontSize="16" Margin="5 0"></TextBlock>
-                </StackPanel>
-            </HyperlinkButton>
-            <HyperlinkButton Foreground="{ThemeResource Bili-FontColor}">
-                <StackPanel Orientation="Horizontal">
-                    <Border Background="{StaticResource BG}" Width="10"  Height="24" ></Border>
-                    <TextBlock Text="关注的人" VerticalAlignment="Center" FontSize="16" Margin="5 0"></TextBlock>
-                </StackPanel>
-            </HyperlinkButton>
-            <HyperlinkButton Foreground="{ThemeResource Bili-FontColor}">
-                <StackPanel Orientation="Horizontal">
-                    <Border Background="{StaticResource BG}" Width="10"  Height="24" ></Border>
-                    <TextBlock Text="最近投币" VerticalAlignment="Center" FontSize="16" Margin="5 0"></TextBlock>
-                </StackPanel>
-            </HyperlinkButton>
-            
-        </StackPanel>
+                                <Image Source="/Assets/MiniIcon/Sex.png" ></Image>
+                                <TextBlock Text="性别:" VerticalAlignment="Center" Margin="0,0,5,0"></TextBlock>
+                                <TextBlock Text="{Binding sex}" VerticalAlignment="Center" Foreground="#FF7A7A7A"></TextBlock>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Grid.Row="2">
+                                <Image Source="/Assets/MiniIcon/硬币.png" ></Image>
+                                <TextBlock Text="硬币:" VerticalAlignment="Center" Margin="0,0,5,0"></TextBlock>
+                                <TextBlock Text="{Binding coins}" VerticalAlignment="Center" Foreground="#FF7A7A7A"></TextBlock>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Grid.Column="1">
+                                <Image Source="/Assets/MiniIcon/生日.png" ></Image>
+                                <TextBlock Text="生日:" VerticalAlignment="Center" Margin="0,0,5,0"></TextBlock>
+                                <TextBlock Text="{Binding birthday}" VerticalAlignment="Center" Foreground="#FF7A7A7A"></TextBlock>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1">
+                                <Image Source="/Assets/MiniIcon/注册时间.png" ></Image>
+                                <TextBlock Text="注册:" VerticalAlignment="Center" Margin="0,0,5,0"></TextBlock>
+                                <TextBlock Text="{Binding Regtime}" VerticalAlignment="Center" Foreground="#FF7A7A7A"></TextBlock>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="1">
+                                <Image Source="/Assets/MiniIcon/地址.png" ></Image>
+                                <TextBlock Text="地址:" VerticalAlignment="Center" Margin="0,0,5,0"></TextBlock>
+                                <TextBlock Text="{Binding place}" VerticalAlignment="Center" Foreground="#FF7A7A7A"></TextBlock>
+                            </StackPanel>
+                        </Grid>
+                        <HyperlinkButton x:Name="fav" Foreground="{ThemeResource Bili-FontColor}">
+                            <StackPanel Orientation="Horizontal">
+                                <Border Background="{StaticResource BG}" Width="10"  Height="24" ></Border>
+                                <TextBlock Text="收藏夹" VerticalAlignment="Center" FontSize="16" Margin="5 0"></TextBlock>
+                            </StackPanel>
+                        </HyperlinkButton>
+                        <ScrollViewer HorizontalScrollBarVisibility="Hidden" HorizontalScrollMode="Enabled" VerticalScrollMode="Disabled" VerticalScrollBarVisibility="Disabled">
+                            <GridView x:Name="user_GridView_FovBox" SelectionMode="None" IsItemClickEnabled="True" HorizontalAlignment="Left" ItemClick="user_GridView_FovBox_ItemClick">
+                                <GridView.ItemContainerStyle>
+                                    <Style TargetType="GridViewItem">
+                                        <Setter Property="Margin" Value="10"></Setter>
+                                        <Setter Property="Width" Value="100"></Setter>
+                                        <Setter Property="BorderThickness" Value="1"></Setter>
+                                        <Setter Property="BorderBrush" Value="{ThemeResource Bili-Background}"></Setter>
+                                        <Setter Property="Background" Value="{ThemeResource Bili-List-Background}"></Setter>
+                                    </Style>
+                                </GridView.ItemContainerStyle>
+                                <GridView.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel>
+                                            <Image Source="/Assets/MiniIcon/scj.png" Width="100" HorizontalAlignment="Center"></Image>
+                                            <TextBlock Text="{Binding name}" HorizontalAlignment="Left" Margin="10,0"></TextBlock>
+                                            <TextBlock Text="{Binding Count}" HorizontalAlignment="Left" Margin="10,5" Foreground="#FF898989" FontSize="12" ></TextBlock>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </GridView.ItemTemplate>
+                            </GridView>
+                        </ScrollViewer>
+                        <HyperlinkButton x:Name="btn_AttBangumi" Foreground="{ThemeResource Bili-FontColor}" Click="btn_AttBangumi_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <Border Background="{StaticResource BG}" Width="10"  Height="24" ></Border>
+                                <TextBlock Text="追番" VerticalAlignment="Center" FontSize="16" Margin="5 0"></TextBlock>
+                            </StackPanel>
+                        </HyperlinkButton>
+                        <TextBlock x:Name="DT_0" HorizontalAlignment="Center" Foreground="Gray">╮(╯_╰)╭ 没有追番</TextBlock>
+                        <ScrollViewer HorizontalScrollBarVisibility="Hidden" HorizontalScrollMode="Enabled" VerticalScrollMode="Disabled" VerticalScrollBarVisibility="Disabled">
+                            <GridView x:Name="user_GridView_Bangumi"  ScrollViewer.VerticalScrollBarVisibility="Disabled"  HorizontalAlignment="Left" SelectionMode="None" IsItemClickEnabled="True" ItemClick="user_GridView_Bangumi_ItemClick">
+                                <GridView.ItemContainerStyle>
+                                    <Style TargetType="GridViewItem">
+                                        <Setter Property="Margin" Value="5 5 5 0"></Setter>
+                                        <Setter Property="Width" Value="100"></Setter>
+                                        <Setter Property="BorderThickness" Value="1"></Setter>
+                                        <Setter Property="BorderBrush" Value="{ThemeResource Bili-Background}"></Setter>
+                                        <Setter Property="Background" Value="{ThemeResource Bili-List-Background}"></Setter>
+                                    </Style>
+                                </GridView.ItemContainerStyle>
+                                <GridView.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel >
+                                            <Image Source="{Binding cover}" Width="100" Height="135" VerticalAlignment="Top" Stretch="Fill"></Image>
+                                            <TextBlock Text="{Binding title}"  Height="32" TextWrapping="Wrap" MaxLines="2" FontSize="12"  Margin="5,0" ></TextBlock>
+                                            <TextBlock Text="{Binding NewOver}" TextWrapping="Wrap" MaxLines="2" FontSize="12" Foreground="#FF898989" Margin="5"></TextBlock>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </GridView.ItemTemplate>
+                            </GridView>
+                        </ScrollViewer>
+                    </StackPanel>
+                    <ProgressBar  x:Name="pr_Load" VerticalAlignment="Top" Foreground="White" IsIndeterminate="True" Background="{x:Null}"></ProgressBar>
+                </Grid>
+                
+            </ScrollViewer>
+        </SplitView>
+       
     </Grid>
+   
 </Page>

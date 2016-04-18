@@ -292,6 +292,7 @@ namespace bilibili2
         public string like { get; set; }
         public string message { get; set; }
 
+
     }
     //视频相关
     public class RecommendModel
@@ -377,6 +378,48 @@ namespace bilibili2
         public int current_level { get; set; }
         public string place { get; set; }//地址
     }
+
+   public class GetUserFovBox
+    {
+        //Josn：http://space.bilibili.com/ajax/fav/getBoxList?mid=XXXXX
+        //第一层
+        public bool status { get; set; }//状态
+        public object data { get; set; }//数据，包含第二层
+                                        //第二层
+        public object list { get; set; }//结果，包含第三层
+                                        //第三层
+        public string fav_box { get; set; }//收藏夹ID，重要！！！
+        public int count { get; set; }//数量
+        public string Count
+        {
+            get
+            {
+                return count + "个视频";
+            }
+        }
+        public string name { get; set; }//标题
+        public long ctime { get; set; }//未转换创建时间
+        public int max_count { get; set; }//最大数量
+
+    }
+   public  class GetUserAttention
+    {
+        //Josn：http://space.bilibili.com/ajax/friend/GetAttentionList?mid=XXXX&pagesize=999
+        //第一层
+        public bool status { get; set; }//状态
+        public object data { get; set; }//数据，包含第二层
+                                        //第二层
+        public object list { get; set; }//结果，包含第三层
+                                        //第三层
+        public string record_id { get; set; }//记录ID，重要！！！
+        public string uname { get; set; }//昵称
+        public string face { get; set; }//头像
+        public string fid { get; set; }//FID
+        public long addtime { get; set; }//记录时间
+        public int pages { get; set; }
+
+    }
+
     //首页信息
     public class InfoModel
     {

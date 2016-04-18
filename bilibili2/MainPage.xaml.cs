@@ -82,24 +82,43 @@ namespace bilibili2
         bool IsClicks = false;
         private async void MainPage_BackRequested(object sender, BackRequestedEventArgs e)
         {
-            //Frame rootFrame = Window.Current.Content as Frame;
-            if (e.Handled == false&&infoFrame.Content==null)
+            if (infoFrame.Content!=null)
             {
-                if (IsClicks)
+                e.Handled = true;
+                if (infoFrame.CanGoBack)
                 {
-                    Application.Current.Exit();
+                    // e.Handled = true;
+                    infoFrame.GoBack();
                 }
                 else
                 {
-                    IsClicks = true;
-                    e.Handled = true;
-                    txt_GG.Text = "再按一次退出程序";
-                    grid_GG.Visibility = Visibility.Visible;
-                    await Task.Delay(1500);
-                    IsClicks = false;
-                    grid_GG.Visibility = Visibility.Collapsed;
+                    // e.Handled = true;
+                    tuic.To = this.ActualWidth;
+                    storyboardPopOut.Begin();
                 }
             }
+            else
+            {
+                if (e.Handled == false)
+                {
+                    if (IsClicks)
+                    {
+                        Application.Current.Exit();
+                    }
+                    else
+                    {
+                        IsClicks = true;
+                        e.Handled = true;
+                        txt_GG.Text = "再按一次退出程序";
+                        grid_GG.Visibility = Visibility.Visible;
+                        await Task.Delay(1500);
+                        IsClicks = false;
+                        grid_GG.Visibility = Visibility.Collapsed;
+                    }
+                }
+            }
+            //Frame rootFrame = Window.Current.Content as Frame;
+
         }
 
         //首页调整页面
@@ -398,19 +417,21 @@ namespace bilibili2
         //子页面后退
         private void MainPage_BackEvent()
         {
-           //storyboardPopOut.Completed += StoryboardPopOut_Completed;
+            //infoFrame.SetNavigationState(navInfo);
+            //storyboardPopOut.Completed += StoryboardPopOut_Completed;
             tuic.To = this.ActualWidth;
             storyboardPopOut.Begin();
+          
         }
         //子页面后退动画完成
         private void StoryboardPopOut_Completed(object sender, object e)
         {
             infoFrame.ContentTransitions = null;
             infoFrame.Content = null;
+            infoFrame.SetNavigationState(navInfo);
             //infoFrame.CacheSize = 0;
             //int i=  infoFrame.BackStackDepth;
             //string a = string.Empty;
-            infoFrame.SetNavigationState(navInfo);
             dh.TranslateX = 0;
         }
         //首页Banner选择改变
@@ -842,10 +863,10 @@ namespace bilibili2
             switch ((e.Content as Page).Tag.ToString())
             {
                 case "视频信息":
-                    (infoFrame.Content as VideoInfoPage).BackEvent += MainPage_BackEvent;
+                   (infoFrame.Content as VideoInfoPage).BackEvent += MainPage_BackEvent;
                     break;
                 case "网页浏览":
-                    (infoFrame.Content as WebViewPage).BackEvent += MainPage_BackEvent;
+                   (infoFrame.Content as WebViewPage).BackEvent += MainPage_BackEvent;
                     break;
                 case "登录":
                     (infoFrame.Content as LoginPage).BackEvent += MainPage_BackEvent;

@@ -12,8 +12,25 @@ namespace bilibili2.Class
 {
     class UserClass
     {
-        public static string Uid = string.Empty;
-
+        //public static string Uid = string.Empty;
+        private static string _uid;
+        public static string Uid
+        {
+            get
+            {
+                HttpBaseProtocolFilter hb = new HttpBaseProtocolFilter();
+                HttpCookieCollection cookieCollection = hb.CookieManager.GetCookies(new Uri("http://bilibili.com/"));
+                //hb.CookieManager.GetCookies(new Uri("http://bilibili.com/"));
+                foreach (HttpCookie item in cookieCollection)
+                {
+                    if (item.Name == "DedeUserID")
+                    {
+                        _uid = item.Value;
+                    }
+                }
+                return _uid;
+            }
+        }
         /// <summary>
         /// 用户信息
         /// </summary>
@@ -43,6 +60,24 @@ namespace bilibili2.Class
                 }
             }
             else
+            {
+                return null;
+            }
+        }
+        public async Task<GetLoginInfoModel> GetUserInfo(string uid)
+        {
+            try
+            {
+                WebClientClass wc = new WebClientClass();
+                string results = await wc.GetResults(new Uri("http://api.bilibili.com/userinfo?mid=" + uid + "&rd=" + new Random().Next(1, 1000)));
+                GetLoginInfoModel model = new GetLoginInfoModel();
+                model = JsonConvert.DeserializeObject<GetLoginInfoModel>(results);
+                JObject json = JObject.Parse(model.level_info.ToString());
+                model.current_level = (int)json["current_level"];
+                //model.current_level = "LV" + json["current_level"].ToString();
+                return model;
+            }
+            catch (Exception)
             {
                 return null;
             }
@@ -84,6 +119,32 @@ namespace bilibili2.Class
                 }
             }
             else
+            {
+                return null;
+            }
+        }
+        public async Task<List<GetUserBangumi>> GetUserBangumi(string uid)
+        {
+            try
+            {
+                WebClientClass wc = new WebClientClass();
+                string results = await wc.GetResults(new Uri("http://space.bilibili.com/ajax/Bangumi/getList?mid=" + uid + "&pagesize=20"));
+                //一层
+                GetUserBangumi model1 = JsonConvert.DeserializeObject<GetUserBangumi>(results);
+                if (model1.status)
+                {
+                    //二层
+                    GetUserBangumi model2 = JsonConvert.DeserializeObject<GetUserBangumi>(model1.data.ToString());
+                    //三层
+                    List<GetUserBangumi> lsModel = JsonConvert.DeserializeObject<List<GetUserBangumi>>(model2.result.ToString());
+                    return lsModel;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            catch (Exception)
             {
                 return null;
             }
@@ -138,6 +199,43 @@ namespace bilibili2.Class
                 return null;
             }
         }
+        /// <summary>
+        /// 收藏夹
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<GetUserFovBox>> GetUserFovBox()
+        {
+            if (IsLogin())
+            {
+                try
+                {
+                    WebClientClass wc = new WebClientClass();
+                    string results = await wc.GetResults(new Uri("http://space.bilibili.com/ajax/fav/getBoxList?mid=" + Uid));
+                    //一层
+                    GetUserFovBox model1 = JsonConvert.DeserializeObject<GetUserFovBox>(results);
+                    if (model1.status)
+                    {
+                        //二层
+                        GetUserFovBox model2 = JsonConvert.DeserializeObject<GetUserFovBox>(model1.data.ToString());
+                        //三层
+                        List<GetUserFovBox> lsModel = JsonConvert.DeserializeObject<List<GetUserFovBox>>(model2.list.ToString());
+                        return lsModel;
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
+                catch (Exception)
+                {
+                    return null;
+                }
+            }
+            else
+            {
+                return null;
+            }
+        }
         //是否登录
         public bool IsLogin()
         {
@@ -154,17 +252,20 @@ namespace bilibili2.Class
             }
             else
             {
+                //HttpBaseProtocolFilter hb = new HttpBaseProtocolFilter();
                 hb.CookieManager.GetCookies(new Uri("http://bilibili.com/"));
-                foreach (HttpCookie item in cookieCollection)
-                {
-                    if (item.Name == "DedeUserID")
-                    {
-                        Uid = item.Value;
-                    }
-                }
+                //foreach (HttpCookie item in cookieCollection)
+                //{
+                //    if (item.Name == "DedeUserID")
+                //    {
+                //        Uid = item.Value;
+                //    }
+                //}
                 return true;
 
             }
         }
+
+
     }
 }

@@ -43,13 +43,14 @@ namespace bilibili2
         {
             this.InitializeComponent();
             NavigationCacheMode = NavigationCacheMode.Enabled;
-            SystemNavigationManager.GetForCurrentView().BackRequested += VideoInfoPage_BackRequested;
         }
         string aid = "";
+       
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             // if (e.NavigationMode== NavigationMode.New)
             // {
+          
             bg.Color = ((SolidColorBrush)this.Frame.Tag).Color;
             video_Error_Null.Visibility = Visibility.Collapsed;
                 video_Error_User.Visibility = Visibility.Collapsed;
@@ -68,19 +69,7 @@ namespace bilibili2
             //}
 
         }
-        private void VideoInfoPage_BackRequested(object sender, BackRequestedEventArgs e)
-        {
-            if (this.Frame.CanGoBack)
-            {
-                e.Handled = true;
-                this.Frame.GoBack();
-            }
-            else
-            {
-                e.Handled = true;
-                BackEvent();
-            }
-        }
+
 
         private void btn_back_Click(object sender, RoutedEventArgs e)
         {
@@ -819,10 +808,11 @@ namespace bilibili2
             root = (e.ClickedItem as CommentModel).rpid;
             txt_Com_1.Text = "回复 @" + (e.ClickedItem as CommentModel).uname + ":";
         }
-
+        //头像点击
         private void HyperlinkButton_Click(object sender, RoutedEventArgs e)
         {
-
+            CommentModel model = (sender as HyperlinkButton).DataContext as CommentModel;
+            this.Frame.Navigate(typeof(UserInfoPage), model.mid);
         }
 
         private async void btn_Zan_Click(object sender, RoutedEventArgs e)
@@ -995,6 +985,11 @@ namespace bilibili2
                 //MessageDialog md = new MessageDialog("你造吗，你没有登录 (～￣▽￣)，先登录好伐~");
                 //await md.ShowAsync();
             }
+        }
+
+        private void btn_UP_Click(object sender, RoutedEventArgs e)
+        {
+            this.Frame.Navigate(typeof(UserInfoPage), ((VideoModel)Video_UP.DataContext).mid);
         }
     }
 }

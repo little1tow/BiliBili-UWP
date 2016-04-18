@@ -89,7 +89,7 @@
             <Button x:Name="btn_Coment" Grid.Column="1" FontSize="16"  Foreground="#B2FFFFFF" Tag="1"  Background="#00000000"  VerticalContentAlignment="Stretch" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="Button_Click" Content="评论"/>
             <Button x:Name="btn_About" Grid.Column="2" FontSize="16"  Foreground="#B2FFFFFF" Tag="2"  Background="#00000000"  VerticalContentAlignment="Stretch" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="Button_Click" Content="相关推荐"/>
         </Grid>
-        <SplitView x:Name="sp_Comment" Grid.Row="2" OpenPaneLength="400" PanePlacement="Right" >
+        <SplitView x:Name="sp_Comment"  Grid.Row="2" OpenPaneLength="350" PanePlacement="Right" >
             <SplitView.Pane>
                 <Grid>
                     <Grid.RowDefinitions>
@@ -237,9 +237,9 @@
                     </Border>
                 </Grid>
             </SplitView.Pane>
-            <Pivot x:Name="pivot" Style="{StaticResource PivotStyle1}" SelectionChanged="pivot_SelectionChanged">
+            <Pivot x:Name="pivot" Style="{StaticResource PivotStyle1}" Margin="0" SelectionChanged="pivot_SelectionChanged">
                 <PivotItem Margin="0">
-                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <ScrollViewer HorizontalScrollMode="Disabled" VerticalScrollBarVisibility="Auto">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition/>
@@ -272,7 +272,7 @@
                                         <!--<FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE102;" FontSize="80" />-->
                                     </HyperlinkButton>
                                     <Grid x:Name="Video_UP" Grid.Row="1">
-                                        <HyperlinkButton Foreground="{ThemeResource Bili-FontColor}" HorizontalContentAlignment="Stretch">
+                                        <HyperlinkButton x:Name="btn_UP" Foreground="{ThemeResource Bili-FontColor}" HorizontalContentAlignment="Stretch" Click="btn_UP_Click">
                                             <Grid >
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition/>
@@ -389,7 +389,7 @@
                                                     <ColumnDefinition Width="auto"></ColumnDefinition>
                                                     <ColumnDefinition ></ColumnDefinition>
                                                 </Grid.ColumnDefinitions>
-                                                <HyperlinkButton Grid.RowSpan="2" HorizontalAlignment="Left" >
+                                                <HyperlinkButton Grid.RowSpan="2" HorizontalAlignment="Left"  Click="HyperlinkButton_Click">
                                                     <Ellipse Width="32" Height="32"  Stroke="#7FC1C1C1" >
                                                         <Ellipse.Fill>
                                                             <ImageBrush ImageSource="{Binding avatar}"></ImageBrush>
@@ -458,7 +458,7 @@
                                                         <ColumnDefinition Width="auto"></ColumnDefinition>
                                                         <ColumnDefinition ></ColumnDefinition>
                                                     </Grid.ColumnDefinitions>
-                                                    <HyperlinkButton Grid.RowSpan="2" HorizontalAlignment="Left" >
+                                                    <HyperlinkButton Grid.RowSpan="2" HorizontalAlignment="Left" Click="HyperlinkButton_Click">
                                                         <Ellipse Width="32" Height="32"  Stroke="#7FC1C1C1" >
                                                             <Ellipse.Fill>
                                                                 <ImageBrush ImageSource="{Binding avatar}"></ImageBrush>

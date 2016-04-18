@@ -30,17 +30,10 @@ namespace bilibili2.Pages
         public TestPlayerPage()
         {
             this.InitializeComponent();
-            SystemNavigationManager.GetForCurrentView().BackRequested += TestPlayerPage_BackRequested; ;
         }
+
         private DisplayRequest dispRequest = null;
-        private void TestPlayerPage_BackRequested(object sender, BackRequestedEventArgs e)
-        {
-            if (this.Frame.CanGoBack)
-            {
-                e.Handled = true;
-                this.Frame.GoBack();
-            }
-        }
+
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {

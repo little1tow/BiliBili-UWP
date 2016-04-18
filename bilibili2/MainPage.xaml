@@ -324,8 +324,9 @@
                         </ListViewItem>
                         <ListViewItem >
                             <StackPanel Orientation="Horizontal" Tag="Chanage2">
-                                <SymbolIcon Symbol="Contact2" Width="26" Height="26" Foreground="Gray"/>
-                                <TextBlock Text="关注的人" VerticalAlignment="Center" Margin="20,0" Foreground="Gray" />
+                                <SymbolIcon Symbol="Mail" Width="26" Height="26" Foreground="Gray"/>
+                                <TextBlock Text="我的消息" VerticalAlignment="Center" Margin="20,0,0,0" Foreground="Gray" />
+                                <Ellipse x:Name="bor_HasMessage" Visibility="Collapsed" Fill="Red" Width="5" Height="5" VerticalAlignment="Top" Margin="3 8"></Ellipse>
                             </StackPanel>
                         </ListViewItem>
                         <ListViewItem >

@@ -41,12 +41,18 @@
                         <ColumnDefinition Width="auto"/>
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
-                    <HyperlinkButton Grid.RowSpan="2" HorizontalAlignment="Left" Margin="10 0 0 0">
-                        <Ellipse Width="32" Height="32"  Stroke="#7FC1C1C1" >
-                            <Ellipse.Fill>
-                                <ImageBrush ImageSource="{Binding avatar}"/>
-                            </Ellipse.Fill>
-                        </Ellipse>
+                    <HyperlinkButton Grid.RowSpan="2" HorizontalAlignment="Left" Margin="10 0 0 0" Click="HyperlinkButton_Click">
+                        <StackPanel>
+                            <Ellipse Width="32" Height="32"  Stroke="#7FC1C1C1" >
+                                <Ellipse.Fill>
+                                    <ImageBrush ImageSource="{Binding avatar}"/>
+                                </Ellipse.Fill>
+                            </Ellipse>
+                            <Border x:Name="bor_LV" Visibility="Collapsed" Background="Black" CornerRadius="5" Margin="0 2">
+                                <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="10" Foreground="White">LV6</TextBlock>
+                            </Border>
+                        </StackPanel>
+                       
                     </HyperlinkButton>
                     <TextBlock Margin="5,0" Text="{Binding uname}" Grid.Column="1"/>
                     <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2">
@@ -57,7 +63,7 @@
                         </StackPanel>
                         <TextBlock Text="{Binding time}" Foreground="#FFB6B6B6"/>
                     </StackPanel>
-                    <TextBlock Grid.ColumnSpan="3"  Grid.Column="0" Grid.Row="2" Margin="10 5" Text="{Binding message}" TextWrapping="Wrap"/>
+                    <TextBlock Grid.ColumnSpan="3"  Grid.Column="0" Grid.Row="2" Margin="10 5" Text="{Binding message}" TextWrapping="Wrap" IsTextSelectionEnabled="True"/>
                     <StackPanel Orientation="Horizontal" Margin="10 0 0 0" HorizontalAlignment="Left" Grid.ColumnSpan="2" Grid.Row="3">
                         <!--<SymbolIcon Symbol="Message" Foreground="#FF666666" />-->
                         <HyperlinkButton  HorizontalAlignment="Left" >

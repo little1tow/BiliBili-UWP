@@ -10,6 +10,21 @@
         Tag="视频信息"
     >
     <Page.Resources>
+        <Flyout x:Name="flyout_Favbox">
+            <ListView Width="200" x:Name="Video_ListView_Favbox" SelectionMode="None"  IsItemClickEnabled="True" ItemClick="Video_ListView_Favbox_ItemClick">
+                <ListView.Header>
+                    <TextBlock x:Name="FavBox_Header" Text="选择一个收藏夹" FontSize="16" Margin="10,5" Foreground="#FF858585"/>
+                </ListView.Header>
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Width="170">
+                            <TextBlock Text="{Binding name}"/>
+                            <TextBlock Text="{Binding Count}" HorizontalAlignment="Right" Foreground="#FF898989"/>
+                        </Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </Flyout>
         <SolidColorBrush x:Key="BG" x:Name="bg" Color="#FFDF85A0"></SolidColorBrush>
     </Page.Resources>
     <Grid  Background="{ThemeResource Bili-Background}">
@@ -74,144 +89,23 @@
             <Button x:Name="btn_Coment" Grid.Column="1" FontSize="16"  Foreground="#B2FFFFFF" Tag="1"  Background="#00000000"  VerticalContentAlignment="Stretch" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="Button_Click" Content="评论"/>
             <Button x:Name="btn_About" Grid.Column="2" FontSize="16"  Foreground="#B2FFFFFF" Tag="2"  Background="#00000000"  VerticalContentAlignment="Stretch" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="Button_Click" Content="相关推荐"/>
         </Grid>
-    
-        <Pivot x:Name="pivot" Style="{StaticResource PivotStyle1}" Grid.Row="2" SelectionChanged="pivot_SelectionChanged">
-            <PivotItem Margin="0">
-                <ScrollViewer VerticalScrollBarVisibility="Auto">
-                    <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition x:Name="width" Width="*"/>
-                    </Grid.ColumnDefinitions>
-                        
-                        <Grid >
-                            <Grid Margin="10 10 15 0" x:Name="Video_Grid_Info">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="auto"/>
-                                    <RowDefinition Height="auto"/>
-                                    <RowDefinition Height="auto"/>
-                                    <RowDefinition Height="auto"/>
-                                    <RowDefinition Height="auto"/>
-                                    <RowDefinition Height="auto"/>
-                                </Grid.RowDefinitions>
-                                <Image Source="{Binding pic}" />
-                                <Grid Grid.Row="0"  VerticalAlignment="Bottom" >
-                                    <Grid.Background>
-                                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                                            <GradientStop Color="#00000000" Offset="0"/>
-                                            <GradientStop Color="#7F000000" Offset="1"/>
-                                        </LinearGradientBrush>
-                                    </Grid.Background>
-                                    <HyperlinkButton Foreground="Black">
-                                        <TextBlock Text="{Binding title}" x:Name="Video_Title" Margin="10,0" FontSize="18" TextWrapping="Wrap" Foreground="White"/>
-                                    </HyperlinkButton>
-                                </Grid>
-                                <HyperlinkButton  x:Name="btn_playP1" Foreground="{ThemeResource Bili-ForeColor}" HorizontalAlignment="Stretch" ToolTipService.ToolTip="点击播放P1" VerticalAlignment="Stretch" Background="#00EAEAEA" Click="btn_playP1_Click">
-                                    <!--<FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE102;" FontSize="80" />-->
-                                </HyperlinkButton>
-                                <Grid Grid.Row="1">
-                                    <HyperlinkButton Foreground="{ThemeResource Bili-FontColor}" HorizontalContentAlignment="Stretch">
-                                        <Grid >
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition/>
-                                                <ColumnDefinition/>
-                                            </Grid.ColumnDefinitions>
-                                            <Grid.RowDefinitions>
-                                                <RowDefinition/>
-                                                <RowDefinition/>
-                                            </Grid.RowDefinitions>
-                                            <Ellipse Width="36" Grid.RowSpan="2" Height="36" Margin="0,0,10 0">
-                                                <Ellipse.Fill>
-                                                    <ImageBrush ImageSource="{Binding face}"/>
-                                                </Ellipse.Fill>
-                                            </Ellipse>
-                                            <TextBlock  Grid.Column="1" Text="{Binding author}" FontSize="16" />
-                                            <TextBlock Grid.Column="1" Grid.Row="1" FontSize="14" Foreground="Gray">
-									<Run Text="发表于"/>
-                                        <Run Text="{Binding Created_at}"></Run>
-                                            </TextBlock>
-                                        </Grid>
-                                    </HyperlinkButton>
-                                    <HyperlinkButton HorizontalAlignment="Right" Foreground="White">
-                                        <Border CornerRadius="5" Background="{StaticResource BG}"  >
-                                            <TextBlock Margin="10 5">
-									<Run Text="关注"/>
-                                            </TextBlock>
-                                        </Border>
-                                    </HyperlinkButton>
-
-                                </Grid>
-                                <StackPanel Grid.Row="3" Margin="0 5">
-                                    <TextBlock x:Name="txt_Desc"  IsTextSelectionEnabled="True" TextWrapping="Wrap" MaxLines="2" Foreground="Gray">
-							<Run Text="{Binding description}"/>
-                                    </TextBlock>
-                                    <HyperlinkButton x:Name="btn_Open" HorizontalAlignment="Right" Foreground="Gray" FontSize="12" Content="展开" Click="btn_Open_Click"/>
-                                </StackPanel>
-                                <ScrollViewer Grid.Row="2" Margin="0 5" VerticalScrollMode="Disabled" VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Hidden" HorizontalScrollMode="Enabled">
-                                    <StackPanel Orientation="Horizontal" >
-                                        <StackPanel  Orientation="Horizontal">
-                                            <TextBlock FontSize="14">播放：</TextBlock>
-                                            <TextBlock FontSize="14" Margin="0 0 10 0" Text="{Binding Play}"></TextBlock>
-                                        </StackPanel>
-                                        <StackPanel Grid.Column="1" Orientation="Horizontal">
-                                            <TextBlock FontSize="14">弹幕：</TextBlock>
-                                            <TextBlock FontSize="14" Margin="0 0 10 0" Text="{Binding Video_review}"></TextBlock>
-                                        </StackPanel>
-                                        <StackPanel Grid.Row="1" Orientation="Horizontal">
-                                            <TextBlock FontSize="14">收藏：</TextBlock>
-                                            <TextBlock FontSize="14" Margin="0 0 10 0" Text="{Binding Favorites}"></TextBlock>
-                                        </StackPanel>
-
-                                        <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
-                                            <TextBlock FontSize="14">硬币：</TextBlock>
-                                            <TextBlock FontSize="14" Margin="0 0 10 0" Text="{Binding Coins}"></TextBlock>
-                                        </StackPanel>
-                                    </StackPanel>
-                                </ScrollViewer>
-
-                                <ScrollViewer Grid.Row="4" Margin="0 5" VerticalScrollMode="Disabled" VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Hidden" HorizontalScrollMode="Enabled">
-                                    <StackPanel x:Name="grid_tag" Orientation="Horizontal">
-
-                                    </StackPanel>
-                                </ScrollViewer>
-                                <StackPanel Grid.Row="5" >
-                                    <TextBlock>全部剧集</TextBlock>
-                                    <ListView x:Name="Video_List" SelectionMode="None" IsItemClickEnabled="True" Margin="0 5" BorderThickness="0 0.5 0 0" BorderBrush="#7F808080" ItemClick="Video_List_ItemClick">
-                                        <ListView.ItemContainerStyle>
-                                            <Style TargetType="ListViewItem">
-                                                <Setter Property="Margin" Value="0 5"></Setter>
-                                                <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
-                                                <Setter Property="Background" Value="#7FFFFFFF"></Setter>
-                                            </Style>
-                                        </ListView.ItemContainerStyle>
-                                        <ListView.ItemTemplate>
-                                            <DataTemplate>
-                                                <StackPanel Orientation="Horizontal">
-                                                    <TextBlock Text="P"/>
-                                                    <TextBlock Text="{Binding page}" Margin="0,0,5,0"/>
-                                                    <TextBlock Text="{Binding part}"/>
-                                                </StackPanel>
-                                            </DataTemplate>
-                                        </ListView.ItemTemplate>
-                                    </ListView>
-                                </StackPanel>
-                            </Grid>
-                        </Grid>
-                   
-                    <Grid Grid.Column="1" x:Name="grid_HotComment">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="auto"/>
-                            <RowDefinition />
-                        </Grid.RowDefinitions>
-                            <StackPanel Orientation="Horizontal" Margin="0 10">
-                                <Border Background="{StaticResource BG}"   Width="10"  Height="24"  Margin="0 0 5 0"/>
-                                <TextBlock Text="热门评论" FontSize="18" VerticalAlignment="Center" />
-                            </StackPanel>
-                            <ListView x:Name="ListView_Comment_Hot" Grid.Row="1" ScrollViewer.VerticalScrollMode="Disabled" IsItemClickEnabled="True"   VerticalAlignment="Top" SelectionMode="None" >
+        <SplitView x:Name="sp_Comment" Grid.Row="2" OpenPaneLength="400" PanePlacement="Right" >
+            <SplitView.Pane>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+                    <ProgressBar x:Name="Comment_loading" Visibility="Collapsed" IsIndeterminate="True" VerticalAlignment="Top" Background="{x:Null}"></ProgressBar>
+                    <TextBlock Margin="10 5">查看回复</TextBlock>
+                    <Border Background="#7F808080" Height="1" VerticalAlignment="Bottom"></Border>
+                    <ScrollViewer x:Name="sv1" ScrollViewer.VerticalScrollBarVisibility="Auto" Grid.Row="1" ViewChanged="sv1_ViewChanged">
+                        <StackPanel HorizontalAlignment="Stretch">
+                            <ListView x:Name="ListView_Flyout" ScrollViewer.VerticalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollMode="Disabled"  SelectionMode="None" VerticalAlignment="Top" ItemClick="ListView_Flyout_ItemClick" IsItemClickEnabled="True">
                                 <ListView.ItemContainerStyle>
                                     <Style TargetType="ListViewItem">
                                         <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
-                                        <Setter Property="BorderThickness" Value="0 0 0.5 0"></Setter>
                                         <Setter Property="BorderBrush" Value="#7F808080"></Setter>
                                     </Style>
                                 </ListView.ItemContainerStyle>
@@ -228,8 +122,8 @@
                                                 <ColumnDefinition Width="auto"></ColumnDefinition>
                                                 <ColumnDefinition ></ColumnDefinition>
                                             </Grid.ColumnDefinitions>
-                                            <HyperlinkButton Grid.RowSpan="2" HorizontalAlignment="Left" >
-                                                <Ellipse Width="32" Height="32"  Stroke="#7FC1C1C1" >
+                                            <HyperlinkButton Grid.RowSpan="2" HorizontalAlignment="Left" Click="HyperlinkButton_Click">
+                                                <Ellipse Width="32" Height="32" Grid.RowSpan="2" Stroke="#7FC1C1C1" HorizontalAlignment="Left">
                                                     <Ellipse.Fill>
                                                         <ImageBrush ImageSource="{Binding avatar}"></ImageBrush>
                                                     </Ellipse.Fill>
@@ -247,12 +141,8 @@
                                             <TextBlock Grid.ColumnSpan="3" Grid.Column="0" Grid.Row="2" Margin="0,5" Text="{Binding message}" TextWrapping="Wrap"></TextBlock>
                                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Grid.ColumnSpan="2" Grid.Row="3">
                                                 <!--<SymbolIcon Symbol="Message" Foreground="#FF666666" />-->
-                                                <HyperlinkButton  HorizontalAlignment="Left" >
-                                                    <TextBlock Text="回复" VerticalAlignment="Center"  FontSize="12" Margin="5,0"></TextBlock>
-                                                </HyperlinkButton>
-                                                <TextBlock Text="{Binding rcount}" VerticalAlignment="Center"  FontSize="12" Margin="5,0"></TextBlock>
                                                 <!--<SymbolIcon Symbol="Like" Foreground="#FF666666" />-->
-                                                <HyperlinkButton x:Name="btn_Zan">
+                                                <HyperlinkButton  x:Name="btn_Zan" HorizontalAlignment="Left" Click="btn_Zan_Click">
                                                     <TextBlock Text="赞同" VerticalAlignment="Center"  FontSize="12" Margin="5,0"></TextBlock>
                                                 </HyperlinkButton>
                                                 <TextBlock Text="{Binding like}" VerticalAlignment="Center" FontSize="12" Margin="5,0"></TextBlock>
@@ -261,22 +151,224 @@
                                     </DataTemplate>
                                 </ListView.ItemTemplate>
                             </ListView>
+                            <HyperlinkButton Grid.Row="1" x:Name="btn_Load_More" HorizontalAlignment="Center" Click="btn_Load_More_Click">加载更多</HyperlinkButton>
+                        </StackPanel>
+                    </ScrollViewer>
+                    <Border Grid.Row="2" BorderThickness="0 1 0 0" BorderBrush="#7F808080">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="48"/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="48"/>
+                            </Grid.ColumnDefinitions>
+                            <AppBarButton Icon="Emoji" Height="48" Width="48">
+                                <AppBarButton.Flyout>
+                                    <Flyout>
+                                        <Flyout.FlyoutPresenterStyle>
+                                            <Style TargetType="FlyoutPresenter">
+                                                <Setter Property="ScrollViewer.ZoomMode" Value="Enabled"/>
+                                                <Setter Property="Background" Value="#FFF9F9F9"/>
+                                                <Setter Property="MinHeight" Value="300"/>
+                                                <Setter Property="MinWidth" Value="300"/>
+                                            </Style>
+                                        </Flyout.FlyoutPresenterStyle>
+                                        <Grid>
+                                            <Grid.Resources>
+                                                <Style x:Name="btn_Style1" TargetType="Button">
+                                                    <Setter Property="Width" Value="100"></Setter>
+                                                    <Setter Property="Background" Value="#FFF9F9F9"></Setter>
+                                                    <Setter Property="Foreground" Value="Black"></Setter>
+                                                </Style>
+                                            </Grid.Resources>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition></ColumnDefinition>
+                                                <ColumnDefinition></ColumnDefinition>
+                                                <ColumnDefinition></ColumnDefinition>
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel>
+                                                <Button Click="Button_Click_1" Style="{StaticResource btn_Style1}">(⌒▽⌒)</Button>
+                                                <Button Click="Button_Click_1" Style="{StaticResource btn_Style1}">（￣▽￣）</Button>
+                                                <Button Click="Button_Click_1" Style="{StaticResource btn_Style1}">(=・ω・=)</Button>
+                                                <Button Click="Button_Click_1" Style="{StaticResource btn_Style1}">(｀・ω・´)</Button>
+                                                <Button Click="Button_Click_1" Style="{StaticResource btn_Style1}">(〜￣△￣)〜</Button>
+                                                <Button Click="Button_Click_1" Style="{StaticResource btn_Style1}">(･∀･)</Button>
+                                                <Button Click="Button_Click_1" Style="{StaticResource btn_Style1}">(°∀°)ﾉ</Button>
+                                                <Button Click="Button_Click_1" Style="{StaticResource btn_Style1}">(｡･ω･｡)</Button>
+                                                <Button Click="Button_Click_1" Style="{StaticResource btn_Style1}">(●￣(ｴ)￣●)</Button>
+                                                <Button Click="Button_Click_1" Style="{StaticResource btn_Style1}">ε=ε=(ノ≧∇≦)ノ</Button>
+                                                <Button Click="Button_Click_1" Style="{StaticResource btn_Style1}">（#-_-)┯━┯</Button>
+                                                <Button Click="Button_Click_1" Style="{StaticResource btn_Style1}">_(:3」∠)_</Button>
+                                            </StackPanel>
+                                            <StackPanel Grid.Column="1">
+                                                <Button Click="Button_Click_1" Style="{StaticResource btn_Style1}">(￣3￣)</Button>
+                                                <Button Click="Button_Click_1" Style="{StaticResource btn_Style1}">╮(￣▽￣)╭</Button>
+                                                <Button Click="Button_Click_1" Style="{StaticResource btn_Style1}">( ´_ゝ｀)</Button>
+                                                <Button Click="Button_Click_1" Style="{StaticResource btn_Style1}">←_←</Button>
+                                                <Button Click="Button_Click_1" Style="{StaticResource btn_Style1}">→_→</Button>
+                                                <Button Click="Button_Click_1" Style="{StaticResource btn_Style1}">(&lt; _&lt; )</Button>
+                                                <Button Click="Button_Click_1" Style="{StaticResource btn_Style1}">(&gt; _&lt; )</Button>
+                                                <Button Click="Button_Click_1" Style="{StaticResource btn_Style1}">(´･_･`)</Button>
+                                                <Button Click="Button_Click_1" Style="{StaticResource btn_Style1}">(-_-#)</Button>
+                                                <Button Click="Button_Click_1" Style="{StaticResource btn_Style1}">（￣へ￣）</Button>
+                                                <Button Click="Button_Click_1" Style="{StaticResource btn_Style1}">(笑)</Button>
+                                                <Button Click="Button_Click_1" Style="{StaticResource btn_Style1}">(汗)</Button>
+                                            </StackPanel>
+                                            <StackPanel Grid.Column="2">
+                                                <Button Click="Button_Click_1" Style="{StaticResource btn_Style1}">("▔□▔)/</Button>
+                                                <Button Click="Button_Click_1" Style="{StaticResource btn_Style1}">(ﾟДﾟ≡ﾟдﾟ)!?</Button>
+                                                <Button Click="Button_Click_1" Style="{StaticResource btn_Style1}">Σ(ﾟдﾟ;)</Button>
+                                                <Button Click="Button_Click_1" Style="{StaticResource btn_Style1}">Σ( ￣□￣||)</Button>
+                                                <Button Click="Button_Click_1" Style="{StaticResource btn_Style1}">(´；ω；`)</Button>
+                                                <Button Click="Button_Click_1" Style="{StaticResource btn_Style1}">（/TДT)/</Button>
+                                                <Button Click="Button_Click_1" Style="{StaticResource btn_Style1}">(^・ω・^ )</Button>
+                                                <Button Click="Button_Click_1" Style="{StaticResource btn_Style1}">(￣ε(#￣) Σ</Button>
+                                                <Button Click="Button_Click_1" Style="{StaticResource btn_Style1}">ヽ(`Д´)ﾉ</Button>
+                                                <Button Click="Button_Click_1" Style="{StaticResource btn_Style1}">(╯°口°)╯(┴—┴</Button>
+                                                <Button Click="Button_Click_1" Style="{StaticResource btn_Style1}">(泣)</Button>
+                                                <Button Click="Button_Click_1" Style="{StaticResource btn_Style1}">(苦笑)</Button>
+                                            </StackPanel>
+                                        </Grid>
+                                    </Flyout>
+                                </AppBarButton.Flyout>
+                            </AppBarButton>
+                            <TextBox x:Name="txt_Com_1" PlaceholderText="说点什么吧..."  Grid.Column="1" BorderThickness="0" Margin="0 5" AcceptsReturn="True"></TextBox>
+                            <AppBarButton x:Name="brn_SendComment_1" Grid.Column="2" Icon="Send" Height="48" Width="48" Click="brn_SendComment_1_Click"></AppBarButton>
                         </Grid>
-                
-               </Grid>
+                    </Border>
+                </Grid>
+            </SplitView.Pane>
+            <Pivot x:Name="pivot" Style="{StaticResource PivotStyle1}" SelectionChanged="pivot_SelectionChanged">
+                <PivotItem Margin="0">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition x:Name="width" Width="*"/>
+                            </Grid.ColumnDefinitions>
 
-                </ScrollViewer>
-            </PivotItem>
-            <PivotItem Margin="0" >
-                <SplitView OpenPaneLength="300">
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition/>
-                            <RowDefinition Height="auto"/>
-                        </Grid.RowDefinitions>
-                        <ScrollViewer x:Name="sc" VerticalScrollBarVisibility="Auto" ViewChanged="ScrollViewer_ViewChanged">
-                            <StackPanel>
-                                <ListView x:Name="ListView_Comment_New" ScrollViewer.VerticalScrollMode="Disabled" IsItemClickEnabled="True"   VerticalAlignment="Top" SelectionMode="None" >
+                            <Grid >
+                                <Grid Margin="10 10 15 0" x:Name="Video_Grid_Info">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="auto"/>
+                                    </Grid.RowDefinitions>
+                                    <Image Source="{Binding pic}" />
+                                    <Grid Grid.Row="0"  VerticalAlignment="Bottom" >
+                                        <Grid.Background>
+                                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                                <GradientStop Color="#00000000" Offset="0"/>
+                                                <GradientStop Color="#7F000000" Offset="1"/>
+                                            </LinearGradientBrush>
+                                        </Grid.Background>
+                                        <HyperlinkButton Foreground="Black">
+                                            <TextBlock Text="{Binding title}" x:Name="Video_Title" Margin="10,0" FontSize="18" TextWrapping="Wrap" Foreground="White"/>
+                                        </HyperlinkButton>
+                                    </Grid>
+                                    <HyperlinkButton  x:Name="btn_playP1" Foreground="{ThemeResource Bili-ForeColor}" HorizontalAlignment="Stretch" ToolTipService.ToolTip="点击播放P1" VerticalAlignment="Stretch" Background="#00EAEAEA" Click="btn_playP1_Click">
+                                        <!--<FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE102;" FontSize="80" />-->
+                                    </HyperlinkButton>
+                                    <Grid x:Name="Video_UP" Grid.Row="1">
+                                        <HyperlinkButton Foreground="{ThemeResource Bili-FontColor}" HorizontalContentAlignment="Stretch">
+                                            <Grid >
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition/>
+                                                    <ColumnDefinition/>
+                                                </Grid.ColumnDefinitions>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition/>
+                                                    <RowDefinition/>
+                                                </Grid.RowDefinitions>
+                                                <Ellipse Width="36" Grid.RowSpan="2" Height="36" Margin="0,0,10 0">
+                                                    <Ellipse.Fill>
+                                                        <ImageBrush ImageSource="{Binding face}"/>
+                                                    </Ellipse.Fill>
+                                                </Ellipse>
+                                                <TextBlock  Grid.Column="1" Text="{Binding name}" FontSize="16" />
+                                                <TextBlock Grid.Column="1" Grid.Row="1" FontSize="14" Foreground="Gray">
+									<Run Text="发表于"/>
+                                        <Run Text="{Binding Created_at}"></Run>
+                                                </TextBlock>
+                                            </Grid>
+                                        </HyperlinkButton>
+                                        <HyperlinkButton x:Name="btn_AttUp" HorizontalAlignment="Right" Foreground="White" Click="btn_AttUp_Click">
+                                            <Border CornerRadius="5" Background="{StaticResource BG}"  >
+                                                <TextBlock x:Name="txt_guanzhu" Margin="10 5">
+									<Run Text="关注"/>
+                                                </TextBlock>
+                                            </Border>
+                                        </HyperlinkButton>
+
+                                    </Grid>
+                                    <StackPanel Grid.Row="3" Margin="0 5">
+                                        <TextBlock x:Name="txt_Desc"  IsTextSelectionEnabled="True" TextWrapping="Wrap" MaxLines="2" Foreground="Gray">
+							<Run Text="{Binding desc}"/>
+                                        </TextBlock>
+                                        <HyperlinkButton x:Name="btn_Open" HorizontalAlignment="Right" Foreground="Gray" FontSize="12" Content="展开" Click="btn_Open_Click"/>
+                                    </StackPanel>
+                                    <ScrollViewer Grid.Row="2" Margin="0 5" VerticalScrollMode="Disabled" VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Hidden" HorizontalScrollMode="Enabled">
+                                        <StackPanel x:Name="Video_data" Orientation="Horizontal" >
+                                            <StackPanel  Orientation="Horizontal">
+                                                <TextBlock FontSize="14">播放：</TextBlock>
+                                                <TextBlock FontSize="14" Margin="0 0 10 0" Text="{Binding Play}"></TextBlock>
+                                            </StackPanel>
+                                            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                                <TextBlock FontSize="14">弹幕：</TextBlock>
+                                                <TextBlock FontSize="14" Margin="0 0 10 0" Text="{Binding Video_review}"></TextBlock>
+                                            </StackPanel>
+                                            <StackPanel Grid.Row="1" Orientation="Horizontal">
+                                                <TextBlock FontSize="14">收藏：</TextBlock>
+                                                <TextBlock FontSize="14" Margin="0 0 10 0" Text="{Binding Favorites}"></TextBlock>
+                                            </StackPanel>
+
+                                            <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
+                                                <TextBlock FontSize="14">硬币：</TextBlock>
+                                                <TextBlock FontSize="14" Margin="0 0 10 0" Text="{Binding Coins}"></TextBlock>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </ScrollViewer>
+
+                                    <ScrollViewer Grid.Row="4" Margin="0 5" VerticalScrollMode="Disabled" VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Hidden" HorizontalScrollMode="Enabled">
+                                        <StackPanel x:Name="grid_tag" Orientation="Horizontal">
+
+                                        </StackPanel>
+                                    </ScrollViewer>
+                                    <StackPanel Grid.Row="5" >
+                                        <TextBlock>全部剧集</TextBlock>
+                                        <ListView x:Name="Video_List" SelectionMode="None" IsItemClickEnabled="True" Margin="0 5" BorderThickness="0 0.5 0 0" BorderBrush="#7F808080" ItemClick="Video_List_ItemClick">
+                                            <ListView.ItemContainerStyle>
+                                                <Style TargetType="ListViewItem">
+                                                    <Setter Property="Margin" Value="0 5"></Setter>
+                                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
+                                                    <Setter Property="Background" Value="#7FFFFFFF"></Setter>
+                                                </Style>
+                                            </ListView.ItemContainerStyle>
+                                            <ListView.ItemTemplate>
+                                                <DataTemplate>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Text="{Binding page}" Margin="0,0,5,0"/>
+                                                        <TextBlock Text="{Binding part}"/>
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </ListView.ItemTemplate>
+                                        </ListView>
+                                    </StackPanel>
+                                </Grid>
+                            </Grid>
+
+                            <Grid Grid.Column="1" x:Name="grid_HotComment">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+                                <StackPanel Orientation="Horizontal" Margin="0 10">
+                                    <Border Background="{StaticResource BG}"   Width="10"  Height="24"  Margin="0 0 5 0"/>
+                                    <TextBlock Text="热门评论" FontSize="18" VerticalAlignment="Center" />
+                                </StackPanel>
+                                <ListView x:Name="ListView_Comment_Hot" Grid.Row="1" ScrollViewer.VerticalScrollMode="Disabled" IsItemClickEnabled="True"   VerticalAlignment="Top" SelectionMode="None" ItemClick="ListView_Comment_New_ItemClick">
                                     <ListView.ItemContainerStyle>
                                         <Style TargetType="ListViewItem">
                                             <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
@@ -321,7 +413,7 @@
                                                     </HyperlinkButton>
                                                     <TextBlock Text="{Binding rcount}" VerticalAlignment="Center"  FontSize="12" Margin="5,0"></TextBlock>
                                                     <!--<SymbolIcon Symbol="Like" Foreground="#FF666666" />-->
-                                                    <HyperlinkButton x:Name="btn_Zan">
+                                                    <HyperlinkButton x:Name="btn_Zan" Click="btn_Zan_Click">
                                                         <TextBlock Text="赞同" VerticalAlignment="Center"  FontSize="12" Margin="5,0"></TextBlock>
                                                     </HyperlinkButton>
                                                     <TextBlock Text="{Binding like}" VerticalAlignment="Center" FontSize="12" Margin="5,0"></TextBlock>
@@ -330,68 +422,207 @@
                                         </DataTemplate>
                                     </ListView.ItemTemplate>
                                 </ListView>
-                                <TextBlock x:Name="txt_More" HorizontalAlignment="Center">加载更多</TextBlock>
-                            </StackPanel>
-                        </ScrollViewer>
-                        <Border Grid.Row="1" BorderThickness="0 1 0 0" BorderBrush="Gray">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="48"/>
-                                    <ColumnDefinition/>
-                                    <ColumnDefinition Width="48"/>
-                                </Grid.ColumnDefinitions>
-                                <AppBarButton Icon="Emoji" Height="48" Width="48"></AppBarButton>
-                                <TextBox PlaceholderText="说点什么吧..."  Grid.Column="1" BorderThickness="0" Margin="0 5" AcceptsReturn="True"></TextBox>
-                                <AppBarButton Grid.Column="2" Icon="Send" Height="48" Width="48"></AppBarButton>
                             </Grid>
-                        </Border>
-                    </Grid>
-                </SplitView>
-            </PivotItem>
-            <PivotItem Margin="0" >
-                <ListView x:Name="list_About" SelectionMode="None" IsItemClickEnabled="True" ItemClick="ListView_ItemClick">
-                    <ListView.ItemContainerStyle>
-                        <Style TargetType="ListViewItem">
-                            <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
-                            <Setter Property="Margin" Value="0 5"></Setter>
-                        </Style>
-                    </ListView.ItemContainerStyle>
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="100"/>
-                                    <ColumnDefinition/>
-                                </Grid.ColumnDefinitions>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition />
-                                    <RowDefinition/>
-                                    <RowDefinition />
-                                </Grid.RowDefinitions>
-                                <Image Grid.RowSpan="3" Source="{Binding pic}"></Image>
-                                <TextBlock Grid.Column="1" Margin="5 0" TextTrimming="CharacterEllipsis" MaxLines="2" TextWrapping="Wrap" Text="{Binding title}"></TextBlock>
-                                <StackPanel Grid.Column="1" Grid.Row="1" Margin="5 0"  Orientation="Horizontal">
-                                    <Image Source="ms-appx:///Assets/Icon/up.png"></Image>
-                                    <TextBlock Foreground="Gray" FontSize="14" Text="{Binding author_name}"></TextBlock>
-                                </StackPanel>
 
-                                <StackPanel Margin="5 0" Orientation="Horizontal" Grid.Column="1" Grid.Row="2" >
-                                    <StackPanel Orientation="Horizontal">
-                                        <Image Source="ms-appx:///Assets/Icon/Play.png"></Image>
-                                        <TextBlock  Foreground="Gray" FontSize="14" Text="{Binding click}"></TextBlock>
-                                    </StackPanel>
-                                    <StackPanel Orientation="Horizontal" Margin="10 0">
-                                        <Image Source="ms-appx:///Assets/Icon/DM.png"></Image>
-                                        <TextBlock  Foreground="Gray" FontSize="14" Text="{Binding dm_count}"></TextBlock>
-                                    </StackPanel>
+                        </Grid>
+
+                    </ScrollViewer>
+                </PivotItem>
+                <PivotItem Margin="0" >
+                    <SplitView OpenPaneLength="300">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition Height="auto"/>
+                            </Grid.RowDefinitions>
+                            <ScrollViewer x:Name="sc" VerticalScrollBarVisibility="Auto" ViewChanged="ScrollViewer_ViewChanged">
+                                <StackPanel>
+                                    <ListView x:Name="ListView_Comment_New" ScrollViewer.VerticalScrollMode="Disabled" IsItemClickEnabled="True"   VerticalAlignment="Top" SelectionMode="None" ItemClick="ListView_Comment_New_ItemClick">
+                                        <ListView.ItemContainerStyle>
+                                            <Style TargetType="ListViewItem">
+                                                <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
+                                                <Setter Property="BorderThickness" Value="0 0 0.5 0"></Setter>
+                                                <Setter Property="BorderBrush" Value="#7F808080"></Setter>
+                                            </Style>
+                                        </ListView.ItemContainerStyle>
+                                        <ListView.ItemTemplate>
+                                            <DataTemplate>
+                                                <Grid  BorderBrush="#33000000" Margin="0,5">
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition></RowDefinition>
+                                                        <RowDefinition></RowDefinition>
+                                                        <RowDefinition></RowDefinition>
+                                                        <RowDefinition></RowDefinition>
+                                                    </Grid.RowDefinitions>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="auto"></ColumnDefinition>
+                                                        <ColumnDefinition ></ColumnDefinition>
+                                                    </Grid.ColumnDefinitions>
+                                                    <HyperlinkButton Grid.RowSpan="2" HorizontalAlignment="Left" >
+                                                        <Ellipse Width="32" Height="32"  Stroke="#7FC1C1C1" >
+                                                            <Ellipse.Fill>
+                                                                <ImageBrush ImageSource="{Binding avatar}"></ImageBrush>
+                                                            </Ellipse.Fill>
+                                                        </Ellipse>
+                                                    </HyperlinkButton>
+                                                    <TextBlock Margin="5,0" Text="{Binding uname}" Grid.Column="1"></TextBlock>
+                                                    <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2">
+                                                        <StackPanel Orientation="Horizontal"  Margin="5,0">
+                                                            <TextBlock Text="#" Foreground="#FFB6B6B6" ></TextBlock>
+                                                            <TextBlock Text="{Binding floor}"  Foreground="#FFB6B6B6" ></TextBlock>
+                                                            <TextBlock Text="{Binding Plat}"  Foreground="#FFB6B6B6" Margin="5,0"></TextBlock>
+                                                        </StackPanel>
+                                                        <TextBlock Text="{Binding time}" Foreground="#FFB6B6B6"></TextBlock>
+                                                    </StackPanel>
+                                                    <TextBlock Grid.ColumnSpan="3" Grid.Column="0" Grid.Row="2" Margin="0,5" Text="{Binding message}" TextWrapping="Wrap"></TextBlock>
+                                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Grid.ColumnSpan="2" Grid.Row="3">
+                                                        <!--<SymbolIcon Symbol="Message" Foreground="#FF666666" />-->
+                                                        <HyperlinkButton  HorizontalAlignment="Left" >
+                                                            <TextBlock Text="回复" VerticalAlignment="Center"  FontSize="12" Margin="5,0"></TextBlock>
+                                                        </HyperlinkButton>
+                                                        <TextBlock Text="{Binding rcount}" VerticalAlignment="Center"  FontSize="12" Margin="5,0"></TextBlock>
+                                                        <!--<SymbolIcon Symbol="Like" Foreground="#FF666666" />-->
+                                                        <HyperlinkButton x:Name="btn_Zan" Click="btn_Zan_Click">
+                                                            <TextBlock Text="赞同" VerticalAlignment="Center"  FontSize="12" Margin="5,0"></TextBlock>
+                                                        </HyperlinkButton>
+                                                        <TextBlock Text="{Binding like}" VerticalAlignment="Center" FontSize="12" Margin="5,0"></TextBlock>
+                                                    </StackPanel>
+                                                </Grid>
+                                            </DataTemplate>
+                                        </ListView.ItemTemplate>
+                                    </ListView>
+                                    <TextBlock x:Name="txt_More" HorizontalAlignment="Center">加载更多</TextBlock>
                                 </StackPanel>
-                            </Grid>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                  
-                </ListView>
-            </PivotItem>
-        </Pivot>
+                            </ScrollViewer>
+                            <Border Grid.Row="1" BorderThickness="0 1 0 0" BorderBrush="Gray">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="48"/>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition Width="48"/>
+                                    </Grid.ColumnDefinitions>
+                                    <AppBarButton Icon="Emoji" Height="48" Width="48">
+                                        <AppBarButton.Flyout>
+                                            <Flyout>
+                                                <Flyout.FlyoutPresenterStyle>
+                                                    <Style TargetType="FlyoutPresenter">
+                                                        <Setter Property="ScrollViewer.ZoomMode" Value="Enabled"/>
+                                                        <Setter Property="Background" Value="#FFF9F9F9"/>
+                                                        <Setter Property="MinHeight" Value="300"/>
+                                                        <Setter Property="MinWidth" Value="300"/>
+                                                    </Style>
+                                                </Flyout.FlyoutPresenterStyle>
+                                                <Grid>
+                                                    <Grid.Resources>
+                                                        <Style x:Name="btn_Style2" TargetType="Button">
+                                                            <Setter Property="Width" Value="100"></Setter>
+                                                            <Setter Property="Background" Value="#FFF9F9F9"></Setter>
+                                                            <Setter Property="Foreground" Value="Black"></Setter>
+                                                        </Style>
+                                                    </Grid.Resources>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition></ColumnDefinition>
+                                                        <ColumnDefinition></ColumnDefinition>
+                                                        <ColumnDefinition></ColumnDefinition>
+                                                    </Grid.ColumnDefinitions>
+                                                    <StackPanel>
+                                                        <Button Click="Button_Click_2" Style="{StaticResource btn_Style2}">(⌒▽⌒)</Button>
+                                                        <Button Click="Button_Click_2" Style="{StaticResource btn_Style2}">（￣▽￣）</Button>
+                                                        <Button Click="Button_Click_2" Style="{StaticResource btn_Style2}">(=・ω・=)</Button>
+                                                        <Button Click="Button_Click_2" Style="{StaticResource btn_Style2}">(｀・ω・´)</Button>
+                                                        <Button Click="Button_Click_2" Style="{StaticResource btn_Style2}">(〜￣△￣)〜</Button>
+                                                        <Button Click="Button_Click_2" Style="{StaticResource btn_Style2}">(･∀･)</Button>
+                                                        <Button Click="Button_Click_2" Style="{StaticResource btn_Style2}">(°∀°)ﾉ</Button>
+                                                        <Button Click="Button_Click_2" Style="{StaticResource btn_Style2}">(｡･ω･｡)</Button>
+                                                        <Button Click="Button_Click_2" Style="{StaticResource btn_Style2}">(●￣(ｴ)￣●)</Button>
+                                                        <Button Click="Button_Click_2" Style="{StaticResource btn_Style2}">ε=ε=(ノ≧∇≦)ノ</Button>
+                                                        <Button Click="Button_Click_2" Style="{StaticResource btn_Style2}">（#-_-)┯━┯</Button>
+                                                        <Button Click="Button_Click_2" Style="{StaticResource btn_Style2}">_(:3」∠)_</Button>
+                                                    </StackPanel>
+                                                    <StackPanel Grid.Column="1">
+                                                        <Button Click="Button_Click_2" Style="{StaticResource btn_Style2}">(￣3￣)</Button>
+                                                        <Button Click="Button_Click_2" Style="{StaticResource btn_Style2}">╮(￣▽￣)╭</Button>
+                                                        <Button Click="Button_Click_2" Style="{StaticResource btn_Style2}">( ´_ゝ｀)</Button>
+                                                        <Button Click="Button_Click_2" Style="{StaticResource btn_Style2}">←_←</Button>
+                                                        <Button Click="Button_Click_2" Style="{StaticResource btn_Style2}">→_→</Button>
+                                                        <Button Click="Button_Click_2" Style="{StaticResource btn_Style2}">(&lt; _&lt; )</Button>
+                                                        <Button Click="Button_Click_2" Style="{StaticResource btn_Style2}">(&gt; _&lt; )</Button>
+                                                        <Button Click="Button_Click_2" Style="{StaticResource btn_Style2}">(´･_･`)</Button>
+                                                        <Button Click="Button_Click_2" Style="{StaticResource btn_Style2}">(-_-#)</Button>
+                                                        <Button Click="Button_Click_2" Style="{StaticResource btn_Style2}">（￣へ￣）</Button>
+                                                        <Button Click="Button_Click_2" Style="{StaticResource btn_Style2}">(笑)</Button>
+                                                        <Button Click="Button_Click_2" Style="{StaticResource btn_Style2}">(汗)</Button>
+                                                    </StackPanel>
+                                                    <StackPanel Grid.Column="2">
+                                                        <Button Click="Button_Click_2" Style="{StaticResource btn_Style2}">("▔□▔)/</Button>
+                                                        <Button Click="Button_Click_2" Style="{StaticResource btn_Style2}">(ﾟДﾟ≡ﾟдﾟ)!?</Button>
+                                                        <Button Click="Button_Click_2" Style="{StaticResource btn_Style2}">Σ(ﾟдﾟ;)</Button>
+                                                        <Button Click="Button_Click_2" Style="{StaticResource btn_Style2}">Σ( ￣□￣||)</Button>
+                                                        <Button Click="Button_Click_2" Style="{StaticResource btn_Style2}">(´；ω；`)</Button>
+                                                        <Button Click="Button_Click_2" Style="{StaticResource btn_Style2}">（/TДT)/</Button>
+                                                        <Button Click="Button_Click_2" Style="{StaticResource btn_Style2}">(^・ω・^ )</Button>
+                                                        <Button Click="Button_Click_2" Style="{StaticResource btn_Style2}">(￣ε(#￣) Σ</Button>
+                                                        <Button Click="Button_Click_2" Style="{StaticResource btn_Style2}">ヽ(`Д´)ﾉ</Button>
+                                                        <Button Click="Button_Click_2" Style="{StaticResource btn_Style2}">(╯°口°)╯(┴—┴</Button>
+                                                        <Button Click="Button_Click_2" Style="{StaticResource btn_Style2}">(泣)</Button>
+                                                        <Button Click="Button_Click_2" Style="{StaticResource btn_Style2}">(苦笑)</Button>
+                                                    </StackPanel>
+                                                </Grid>
+                                            </Flyout>
+                                        </AppBarButton.Flyout>
+                                    </AppBarButton>
+                                    <TextBox x:Name="txt_Com" PlaceholderText="说点什么吧..."  Grid.Column="1" BorderThickness="0" Margin="0 5" AcceptsReturn="True"></TextBox>
+                                    <AppBarButton x:Name="btn_SendComment" Grid.Column="2" Icon="Send" Height="48" Width="48" Click="btn_SendComment_Click"></AppBarButton>
+                                </Grid>
+                            </Border>
+                        </Grid>
+                    </SplitView>
+                </PivotItem>
+                <PivotItem Margin="0" >
+                    <ListView x:Name="list_About" SelectionMode="None" IsItemClickEnabled="True" ItemClick="ListView_ItemClick">
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
+                                <Setter Property="Margin" Value="0 5"></Setter>
+                            </Style>
+                        </ListView.ItemContainerStyle>
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="100"/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition />
+                                        <RowDefinition/>
+                                        <RowDefinition />
+                                    </Grid.RowDefinitions>
+                                    <Image Grid.RowSpan="3" Source="{Binding pic}"></Image>
+                                    <TextBlock Grid.Column="1" Margin="5 0" TextTrimming="CharacterEllipsis" MaxLines="2" TextWrapping="Wrap" Text="{Binding title}"></TextBlock>
+                                    <StackPanel Grid.Column="1" Grid.Row="1" Margin="5 0"  Orientation="Horizontal">
+                                        <Image Source="ms-appx:///Assets/Icon/up.png"></Image>
+                                        <TextBlock Foreground="Gray" FontSize="14" Text="{Binding author_name}"></TextBlock>
+                                    </StackPanel>
+
+                                    <StackPanel Margin="5 0" Orientation="Horizontal" Grid.Column="1" Grid.Row="2" >
+                                        <StackPanel Orientation="Horizontal">
+                                            <Image Source="ms-appx:///Assets/Icon/Play.png"></Image>
+                                            <TextBlock  Foreground="Gray" FontSize="14" Text="{Binding click}"></TextBlock>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal" Margin="10 0">
+                                            <Image Source="ms-appx:///Assets/Icon/DM.png"></Image>
+                                            <TextBlock  Foreground="Gray" FontSize="14" Text="{Binding dm_count}"></TextBlock>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+
+                    </ListView>
+                </PivotItem>
+            </Pivot>
+        </SplitView>
         <Grid x:Name="video_Error_Null" Grid.RowSpan="3" Grid.Row="1" Visibility="Collapsed" Background="{ThemeResource Bili-Background}">
             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
                 <TextBlock FontSize="24" HorizontalAlignment="Center">╮(╯_╰)╭</TextBlock>
@@ -407,43 +638,26 @@
         </Grid>
         <CommandBar x:Name="com_bar" Grid.Row="0" HorizontalAlignment="Right" Background="{StaticResource BG}"   Foreground="White">
             <CommandBar.SecondaryCommands>
-                <AppBarButton x:Name="Video_Refresh" Icon="Refresh"  Label="刷新"/>
-                <AppBarButton x:Name="btn_VideoInfo"  Icon="Important"   Label="视频信息"  />
-                <AppBarButton x:Name="btn_GoBrowser"  Icon="Go"   Label="浏览器打开"  />
-                <AppBarButton x:Name="btn_SaveImage"  Icon="Save" Label="保存封面" />
+                <AppBarButton x:Name="Video_Refresh" Icon="Refresh"  Label="刷新" Click="Video_Refresh_Click"/>
+                <AppBarButton x:Name="btn_VideoInfo"  Icon="Important"   Label="视频信息"  Click="btn_VideoInfo_Click"/>
+                <AppBarButton x:Name="btn_GoBrowser"  Icon="Go"   Label="浏览器打开"  Click="btn_GoBrowser_Click"/>
+                <AppBarButton x:Name="btn_SaveImage"  Icon="Save" Label="保存封面" Click="btn_SaveImage_Click"/>
                 <AppBarButton x:Name="btn_Share"  Icon="Go"   Label="分享" />
             </CommandBar.SecondaryCommands>
-            <AppBarButton Icon="Play" Foreground="White" Label="播放"></AppBarButton>
+            <AppBarButton Icon="Play" Foreground="White" Label="播放" Click="btn_playP1_Click"></AppBarButton>
             <AppBarButton Icon="Emoji2"  Label="投币" Foreground="White">
                 <AppBarButton.Flyout>
                     <Flyout x:Name="grid_Tb">
                         <StackPanel Width="150">
                             <TextBlock Text="确定要投币吗?" TextWrapping="Wrap" Margin="0,10" FontSize="16"/>
-                            <Button x:Name="btn_TB_1" Width="150" HorizontalAlignment="Center" Margin="0,1"  Content="确定，投1枚"/>
-                            <Button x:Name="btn_TB_2" Width="150" HorizontalAlignment="Center" Margin="0,1" Content="确定，投2枚"/>
-                            <Button x:Name="btn_No" Width="150" HorizontalAlignment="Center" Margin="0,1"  Content="不确定，取消"/>
+                            <Button x:Name="btn_TB_1" Width="150" HorizontalAlignment="Center" Margin="0,1"  Content="确定，投1枚" Click="btn_TB_1_Click"/>
+                            <Button x:Name="btn_TB_2" Width="150" HorizontalAlignment="Center" Margin="0,1" Content="确定，投2枚" Click="btn_TB_2_Click"/>
+                            <Button x:Name="btn_No" Width="150" HorizontalAlignment="Center" Margin="0,1"  Content="不确定，取消" Click="btn_No_Click"/>
                         </StackPanel>
                     </Flyout>
                 </AppBarButton.Flyout>
             </AppBarButton>
-            <AppBarButton Icon="OutlineStar"  Label="收藏" Foreground="White">
-                <AppBarButton.Flyout>
-                    <Flyout>
-                        <ListView Width="200" x:Name="Video_ListView_Favbox" SelectionMode="None"  IsItemClickEnabled="True">
-                            <ListView.Header>
-                                <TextBlock x:Name="FavBox_Header" Text="选择一个收藏夹" FontSize="16" Margin="10,5" Foreground="#FF858585"/>
-                            </ListView.Header>
-                            <ListView.ItemTemplate>
-                                <DataTemplate>
-                                    <Grid Width="170">
-                                        <TextBlock Text="{Binding name}"/>
-                                        <TextBlock Text="{Binding Count}" HorizontalAlignment="Right" Foreground="#FF898989"/>
-                                    </Grid>
-                                </DataTemplate>
-                            </ListView.ItemTemplate>
-                        </ListView>
-                    </Flyout>
-                </AppBarButton.Flyout>
+            <AppBarButton x:Name="btn_Favbox" Icon="OutlineStar"  Label="收藏" Foreground="White" Click="btn_Favbox_Click">
             </AppBarButton>
             <AppBarButton x:Name="btn_Download" Icon="Download"  Label="下载"  Foreground="White"/>
         </CommandBar>

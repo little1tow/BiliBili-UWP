@@ -875,6 +875,9 @@ namespace bilibili2
                 case "用户中心":
                     (infoFrame.Content as UserInfoPage).BackEvent += MainPage_BackEvent;
                     break;
+                case "查看评论":
+                    (infoFrame.Content as CommentPage).BackEvent += MainPage_BackEvent;
+                    break;
                 default:
                     break;
             }

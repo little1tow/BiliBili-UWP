@@ -121,6 +121,128 @@ namespace bilibili2
         }
 
     }
+    //视频信息
+    public class VideoModel
+    {
+        public int code { get; set; }
+        public object data { get; set; }
+        //视频信息
+        public string aid { get; set; }
+        public string copyright { get; set; }
+        public string pic { get; set; }
+        public string title { get; set; }
+        public string pubdate { get; set; }
+        public string desc { get; set; }
+        //UP信息
+        public object owner { get; set; }
+            public string mid { get; set; }
+            public string name { get; set; }
+            public string face { get; set; }
+        //视频数据
+        public object stat { get; set; }
+          public string view { get; set; }
+          public string danmaku { get; set; }
+          public string reply { get; set; }
+          public string favorite { get; set; }
+          public string coin { get; set; }
+          public string share { get; set; }
+        //TAG
+        public object tags { get; set; }
+        //视频P
+        public object pages { get; set; }
+            public string cid { get; set; }
+            public string page { get; set; }
+            public string from { get; set; }
+            public string part { get; set; }
+        //视频关注信息
+        public object req_user { get; set; }
+          public int attention { get; set; }//关注Up主,-999为关注,1已关注
+        //public int favorite { get; set; }//是否已经收藏，0为未收藏，1为已经收藏
+
+        public string Play
+        {
+            get
+            {
+                if (Convert.ToInt32(view) > 10000)
+                {
+                    double d = (double)Convert.ToDouble(view) / 10000;
+                    return d.ToString("0.0") + "万";
+                }
+                else
+                {
+                    return view;
+                }
+            }
+        }
+        public string Video_review
+        {
+            get
+            {
+                if (Convert.ToInt32(danmaku) > 10000)
+                {
+                    double d = (double)Convert.ToDouble(danmaku) / 10000;
+                    return d.ToString("0.0") + "万";
+                }
+                else
+                {
+                    return danmaku;
+                }
+            }
+        }
+        public string Favorites
+        {
+            get
+            {
+                if (Convert.ToInt32(favorite) > 10000)
+                {
+                    double d = (double)Convert.ToDouble(favorite) / 10000;
+                    return d.ToString("0.0") + "万";
+                }
+                else
+                {
+                    return favorite;
+                }
+            }
+        }
+        public string Coins
+        {
+            get
+            {
+                if (Convert.ToInt32(coin) > 10000)
+                {
+                    double d = (double)Convert.ToDouble(coin) / 10000;
+                    return d.ToString("0.0") + "万";
+                }
+                else
+                {
+                    return coin;
+                }
+            }
+        }
+
+        public string Created_at
+        {
+            get
+            {
+                DateTime dtStart = new DateTime(1970, 1, 1);
+                long lTime = long.Parse(pubdate+ "0000000");
+                //long lTime = long.Parse(textBox1.Text);
+                TimeSpan toNow = new TimeSpan(lTime);
+              
+                DateTime dt = dtStart.Add(toNow);
+                if (dt.Date == DateTime.Now.Date)
+                {
+                    TimeSpan ts = DateTime.Now - dt;
+                    return ts.Hours + "小时前";
+                }
+                else
+                {
+                    return dt.ToString();
+                }
+            }
+        }
+
+    }
     //评论
     public class CommentModel
     {
@@ -609,5 +731,26 @@ namespace bilibili2
         public string desc { get; set; }
         public string link { get; set; }
         public string cursor { get; set; }//以防万一数字太大，用string
+    }
+
+    public class FavboxModel
+    {
+        public object data { get; set; }
+
+        public int code { get; set; }
+
+        public string fid { get; set; }
+        public string mid { get; set; }
+        public string name { get; set; }
+        public int max_count { get; set; }//总数
+        public int cur_count { get; set; }//现存
+
+        public string Count
+        {
+            get
+            {
+                return cur_count + "/" + max_count;
+            }
+        }
     }
 }

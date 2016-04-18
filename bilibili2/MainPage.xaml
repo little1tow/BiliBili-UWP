@@ -348,7 +348,7 @@
                         </ListViewItem>
                         <ListViewItem>
                             <StackPanel Orientation="Horizontal">
-                                <SymbolIcon Symbol="Help" Width="26" Height="26" Foreground="Gray"/>
+                                <SymbolIcon Symbol="Mail" Width="26" Height="26" Foreground="Gray"/>
                                 <TextBlock Text="问题反馈" VerticalAlignment="Center" Margin="20,0" Foreground="Gray" />
                             </StackPanel>
                         </ListViewItem>

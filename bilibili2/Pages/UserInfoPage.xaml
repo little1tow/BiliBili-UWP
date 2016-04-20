@@ -12,16 +12,16 @@
         <SolidColorBrush x:Key="BG" x:Name="bg" Color="#FFDF85A0"></SolidColorBrush>
     </Page.Resources>
     <Grid Background="{ThemeResource Bili-Background}">
-        <SplitView x:Name="sp" PanePlacement="Right" OpenPaneLength="300">
+        <SplitView x:Name="sp" PanePlacement="Right" OpenPaneLength="320">
             <SplitView.Pane>
                 <Grid >
-                    <Grid x:Name="grid_AUser">
+                    <Grid x:Name="grid_AUser" Visibility="Collapsed">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="auto"/>
                             <RowDefinition />
                         </Grid.RowDefinitions>
                         <ProgressBar x:Name="pr_Load_AUser" IsIndeterminate="True" VerticalAlignment="Top" Background="{x:Null}"></ProgressBar>
-                        <TextBlock FontSize="16" Margin="5">关注的人</TextBlock>
+                        <TextBlock FontSize="18" Margin="10 5">关注的人</TextBlock>
                         <ScrollViewer x:Name="sv" Grid.Row="1" ViewChanged="sv_ViewChanged">
                             <ListView x:Name="list_AUser" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled" SelectionMode="None" IsItemClickEnabled="True" ItemClick="list_AUser_ItemClick">
                                 <ListView.ItemContainerStyle>
@@ -48,6 +48,57 @@
                                     </DataTemplate>
                                 </ListView.ItemTemplate>
                             </ListView>
+                        </ScrollViewer>
+                        
+                    </Grid>
+                    <Grid x:Name="grid_ASubit">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <ProgressBar x:Name="pr_Load_ASubit" IsIndeterminate="True" VerticalAlignment="Top" Background="{x:Null}"></ProgressBar>
+                        <TextBlock FontSize="18" Margin="10 5">投稿</TextBlock>
+                        <ScrollViewer x:Name="sv1" Grid.Row="1" ViewChanged="sv1_ViewChanged">
+                            <StackPanel>
+                                <ListView x:Name="list_ASubit" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled" SelectionMode="None" IsItemClickEnabled="True" ItemClick="list_ASubit_ItemClick">
+                                    <ListView.ItemContainerStyle>
+                                        <Style TargetType="ListViewItem">
+                                            <!--<Setter Property="BorderThickness" Value="0 0 0 1"></Setter>
+                                        <Setter Property="BorderBrush" Value="Gray"></Setter>-->
+                                            <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
+                                        </Style>
+                                    </ListView.ItemContainerStyle>
+                                    <ListView.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid Margin="0,5" >
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="auto"></ColumnDefinition>
+                                                    <ColumnDefinition Width="*"></ColumnDefinition>
+                                                </Grid.ColumnDefinitions>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition></RowDefinition>
+                                                    <RowDefinition></RowDefinition>
+                                                    <RowDefinition></RowDefinition>
+                                                </Grid.RowDefinitions>
+                                                <Image Source="{Binding pic}" Width="120"  Grid.RowSpan="4" VerticalAlignment="Center"></Image>
+                                                <TextBlock Text="{Binding title}" Grid.Column="1" FontSize="14" VerticalAlignment="Center" Margin="5,0" MaxLines="2" TextWrapping="Wrap" TextTrimming="CharacterEllipsis"></TextBlock>
+                                                <StackPanel Grid.Column="1" Grid.Row="2" Orientation="Horizontal" VerticalAlignment="Center">
+                                                    <TextBlock Text="上传于:" FontSize="12"  Foreground="Gray" Margin="5,0,0,0"></TextBlock>
+                                                    <TextBlock Text="{Binding created}" FontSize="12"  Foreground="Gray" Margin="0,0,5,0"></TextBlock>
+                                                </StackPanel>
+                                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Grid.Column="1" Grid.Row="1" Margin="5,0,0,0">
+                                                    <TextBlock Text="播放:" FontSize="12"  Foreground="Gray" Margin="0,0,5,0"></TextBlock>
+                                                    <TextBlock Text="{Binding play}" FontSize="12"  Foreground="Gray" Margin="0,0,5,0"></TextBlock>
+                                                    <TextBlock Text="弹幕:" FontSize="12"  Foreground="Gray" Margin="5,0,0,0"></TextBlock>
+                                                    <TextBlock Text="{Binding video_review}" FontSize="12"  Foreground="Gray" Margin="0,0,5,0"></TextBlock>
+                                                </StackPanel>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ListView.ItemTemplate>
+                                </ListView>
+                                <HyperlinkButton x:Name="txt_Load" Content="加载.中.."  HorizontalAlignment="Center"></HyperlinkButton>
+                            </StackPanel>
+                         
                         </ScrollViewer>
                     </Grid>
                 </Grid>
@@ -76,19 +127,25 @@
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" >
                                 <TextBlock Text="{Binding name}" FontSize="16" FontWeight="Bold" Foreground="White"></TextBlock>
                             </StackPanel>
+                            <TextBlock x:Name="txt_RZ" Visibility="Collapsed" HorizontalAlignment="Center" Foreground="#FFFFAE00">认证账号</TextBlock>
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" >
                                 <TextBlock Text="关注" FontSize="14"  Foreground="White" Margin="5 0"></TextBlock>
                                 <TextBlock Text="{Binding attention}" FontSize="14"  Foreground="White" Margin="0,0,10,0"  FontWeight="Bold"></TextBlock>
                                 <TextBlock Text="粉丝" FontSize="14" Margin="5 0"  Foreground="White"></TextBlock>
                                 <TextBlock Text="{Binding fans}" FontSize="14"  Foreground="White"  FontWeight="Bold"></TextBlock>
                             </StackPanel>
-                            <TextBlock Text="{Binding sign}"  HorizontalAlignment="Center" FontSize="12"  Foreground="White" IsTextSelectionEnabled="True" TextWrapping="Wrap" TextAlignment="Center"></TextBlock>
+                            <TextBlock Text="{Binding sign}" Margin="15 0" HorizontalAlignment="Center" FontSize="12"  Foreground="White" IsTextSelectionEnabled="True" TextWrapping="Wrap" TextAlignment="Center"></TextBlock>
                         </StackPanel>
                         <AppBarButton x:Name="btn_Back" Click="btn_Back_Click"  Width="48" Height="48" Icon="Back" Foreground="White"></AppBarButton>
                         <StackPanel Orientation="Horizontal" Margin="10 0" VerticalAlignment="Top" HorizontalAlignment="Right">
-                            <AppBarButton x:Name="btn_Attention" Width="48" Visibility="Visible" Height="48" ToolTipService.ToolTip="关注">
+                            <AppBarButton x:Name="btn_Attention" Width="48" Visibility="Collapsed" Height="48" ToolTipService.ToolTip="关注" Click="btn_Attention_Click">
                                 <AppBarButton.Icon>
                                     <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE006;" Foreground="White" />
+                                </AppBarButton.Icon>
+                            </AppBarButton>
+                            <AppBarButton x:Name="btn_CannelAttention" Width="48" Visibility="Collapsed" Height="48" ToolTipService.ToolTip="取消关注" Click="btn_CannelAttention_Click">
+                                <AppBarButton.Icon>
+                                    <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE00B;" Foreground="White" />
                                 </AppBarButton.Icon>
                             </AppBarButton>
                             <AppBarButton x:Name="btn_Edit" Icon="Edit" Width="48" Height="48" Foreground="White"></AppBarButton>
@@ -115,7 +172,7 @@
                                 <ColumnDefinition/>
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
-                            <Button x:Name="Ban_btn_MyBan" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Stretch" Margin="0 5 5 5" Background="{StaticResource BG}" Foreground="White" Content="全部投稿" />
+                            <Button x:Name="Ban_btn_Sub" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Stretch" Margin="0 5 5 5" Background="{StaticResource BG}" Foreground="White" Content="全部投稿" Click="Ban_btn_Sub_Click"/>
                             <Button x:Name="Ban_btn_User" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" Margin="5" Background="{StaticResource BG}" Foreground="White" Content="关注的人" Click="Ban_btn_User_Click"/>
                             <Button x:Name="Ban_btn_Timeline" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Stretch" Margin="5 5 0 5" Background="{StaticResource BG}" Foreground="White" Content="最近投币"/>
                         </Grid>

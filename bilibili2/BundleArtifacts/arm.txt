@@ -1,2 +1,4 @@
-MainPackage=F:\UWP开发\APP项目\bilibili2\bilibili2\bin\ARM\Release\bilibili2_1.0.6.0_ARM.appx
-SymbolPackage=F:\UWP开发\APP项目\bilibili2\bilibili2\AppPackages\bilibili2_1.0.6.0_Test\bilibili2_1.0.6.0_ARM.appxsym
+MainPackage=F:\UWP开发\APP项目\bilibili2\bilibili2\bin\ARM\Release\bilibili2_1.0.7.0_ARM.appx
+SymbolPackage=F:\UWP开发\APP项目\bilibili2\bilibili2\AppPackages\bilibili2_1.0.7.0_Test\bilibili2_1.0.7.0_ARM.appxsym
+ResourcePack=F:\UWP开发\APP项目\bilibili2\bilibili2\bin\ARM\Release\bilibili2_1.0.7.0_scale-100.appx
+ResourcePack=F:\UWP开发\APP项目\bilibili2\bilibili2\bin\ARM\Release\bilibili2_1.0.7.0_scale-125.appx

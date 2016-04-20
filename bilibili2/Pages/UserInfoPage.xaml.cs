@@ -1,5 +1,6 @@
 ﻿using bilibili2.Class;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -17,6 +18,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using Windows.Web.Http;
 
 // “空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=234238 上提供
 
@@ -31,9 +33,9 @@ namespace bilibili2.Pages
         {
             this.InitializeComponent();
             NavigationCacheMode = NavigationCacheMode.Enabled;
-           
+
         }
-      
+
 
         public delegate void GoBackHandler();
         public event GoBackHandler BackEvent;
@@ -52,22 +54,27 @@ namespace bilibili2.Pages
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
             Uid = "";
+            btn_Attention.Visibility = Visibility.Collapsed;
+            btn_CannelAttention.Visibility = Visibility.Collapsed;
+            user_GridView_FovBox.ItemsSource = null;
             bg.Color = ((SolidColorBrush)this.Frame.Tag).Color;
             sp.IsPaneOpen = false;
             if (e.Parameter == null)
             {
+                Uid = UserClass.Uid;
                 btn_Attention.Visibility = Visibility.Collapsed;
                 btn_More.Visibility = Visibility.Visible;
                 btn_Edit.Visibility = Visibility.Visible;
                 fav.Visibility = Visibility.Visible;
                 user_GridView_FovBox.Visibility = Visibility.Visible;
                 UserClass getUser = new UserClass();
-                user_GridView_FovBox.ItemsSource = null;
                 pr_Load.Visibility = Visibility.Visible;
                 await GetUserInfo();
                 await GetDt();
                 user_GridView_FovBox.ItemsSource = await getUser.GetUserFovBox();
                 pr_Load.Visibility = Visibility.Collapsed;
+
+
             }
             else
             {
@@ -77,13 +84,22 @@ namespace bilibili2.Pages
                 btn_Edit.Visibility = Visibility.Collapsed;
                 fav.Visibility = Visibility.Collapsed;
                 user_GridView_FovBox.Visibility = Visibility.Collapsed;
-                user_GridView_FovBox.ItemsSource = null;
                 pr_Load.Visibility = Visibility.Visible;
                 await GetUserInfo();
                 await GetDt();
+                if (UserClass.AttentionList.Contains(Uid))
+                {
+                    btn_Attention.Visibility = Visibility.Collapsed;
+                    btn_CannelAttention.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    btn_Attention.Visibility = Visibility.Visible;
+                    btn_CannelAttention.Visibility = Visibility.Collapsed;
+                }
                 pr_Load.Visibility = Visibility.Collapsed;
             }
-            
+
         }
 
         private async Task GetUserInfo()
@@ -97,6 +113,14 @@ namespace bilibili2.Pages
             else
             {
                 model = await getUser.GetUserInfo();
+            }
+            if (model.approve)
+            {
+                txt_RZ.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                txt_RZ.Visibility = Visibility.Collapsed;
             }
             grid_Info.DataContext = model;
             if (model.current_level <= 3)
@@ -136,7 +160,7 @@ namespace bilibili2.Pages
                 {
                     user_GridView_Bangumi.ItemsSource = await getLogin.GetUserBangumi();
                 }
-               
+
                 if (user_GridView_Bangumi.Items.Count == 0)
                 {
                     DT_0.Visibility = Visibility.Visible;
@@ -156,12 +180,12 @@ namespace bilibili2.Pages
 
         private void user_GridView_FovBox_ItemClick(object sender, ItemClickEventArgs e)
         {
-
+            this.Frame.Navigate(typeof(FavPage), (e.ClickedItem as GetUserFovBox).fav_box);
         }
 
         private void btn_AttBangumi_Click(object sender, RoutedEventArgs e)
         {
-            if (Uid.Length!=0)
+            if (Uid.Length != 0)
             {
                 this.Frame.Navigate(typeof(UserBangumiPage), Uid);
             }
@@ -181,8 +205,8 @@ namespace bilibili2.Pages
                     GetUserAttention(page);
                 }
             }
-           
-           
+
+
         }
 
         int page = 1;
@@ -195,7 +219,7 @@ namespace bilibili2.Pages
                 IsLoading = true;
                 WebClientClass wc = new WebClientClass();
                 string mid = "";
-                if (Uid.Length==0)
+                if (Uid.Length == 0)
                 {
                     mid = UserClass.Uid;
                 }
@@ -238,17 +262,178 @@ namespace bilibili2.Pages
         private void list_AUser_ItemClick(object sender, ItemClickEventArgs e)
         {
             this.Frame.Navigate(typeof(UserInfoPage), ((GetUserAttention)e.ClickedItem).fid);
-          
+
         }
 
         private void Ban_btn_User_Click(object sender, RoutedEventArgs e)
         {
             grid_AUser.Visibility = Visibility.Visible;
+            grid_ASubit.Visibility = Visibility.Collapsed;
             sp.IsPaneOpen = true;
             page = 1;
             MaxPage = 0;
             list_AUser.Items.Clear();
-            GetUserAttention( page);
+            GetUserAttention(page);
+        }
+
+        private async void Ban_btn_Sub_Click(object sender, RoutedEventArgs e)
+        {
+            grid_AUser.Visibility = Visibility.Collapsed;
+            grid_ASubit.Visibility = Visibility.Visible;
+            txt_Load.IsEnabled = true;
+            txt_Load.Content = "加载更多";
+
+            sp.IsPaneOpen = true;
+            getPage = 1;
+            list_ASubit.Items.Clear();
+            await GetSubInfo(1, Uid);
+        }
+
+        private int getPage = 1;
+        private async Task GetSubInfo(int page, string uid)
+        {
+            try
+            {
+                pr_Load_ASubit.Visibility = Visibility.Visible;
+                WebClientClass wc = new WebClientClass();
+                txt_Load.IsEnabled = false;
+                txt_Load.Content = "加载中...";
+                string results = await wc.GetResults(new Uri("http://space.bilibili.com/ajax/member/getSubmitVideos?mid=" + uid + "&pagesize=20" + "&page=" + page));
+                //一层
+                GetUserSubmit model1 = JsonConvert.DeserializeObject<GetUserSubmit>(results);
+                //二层
+                GetUserSubmit model2 = JsonConvert.DeserializeObject<GetUserSubmit>(model1.data.ToString());
+                //三层
+                List<GetUserSubmit> lsModel = JsonConvert.DeserializeObject<List<GetUserSubmit>>(model2.vlist.ToString());
+                foreach (GetUserSubmit item in lsModel)
+                {
+                    list_ASubit.Items.Add(item);
+                }
+                
+                getPage++;
+                if (model2.pages < getPage)
+                {
+                    txt_Load.IsEnabled = false;
+                    txt_Load.Content = "加载完了...";
+                }
+
+            }
+            catch (Exception)
+            {
+            }
+            finally
+            {
+                if (list_ASubit.Items.Count == 0)
+                {
+                    txt_Load.IsEnabled = false;
+                    txt_Load.Content = "没有投稿...";
+                }
+                pr_Load_ASubit.Visibility = Visibility.Collapsed;
+            }
+        }
+        bool subLoading = false;
+        private async void sv1_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
+        {
+            if (txt_Load.Content.ToString() == "加载完了..."|| txt_Load.Content.ToString() == "没有投稿...")
+            {
+                return;
+            }
+            if (sv1.VerticalOffset == sv1.ScrollableHeight)
+            {
+                if (!subLoading)
+                {
+                    subLoading = true;
+                    await GetSubInfo(getPage, Uid);
+                    subLoading = false;
+                }
+            }
+        }
+
+        private void list_ASubit_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            this.Frame.Navigate(typeof(VideoInfoPage), (e.ClickedItem as GetUserSubmit).aid);
+        }
+
+        private async void btn_Attention_Click(object sender, RoutedEventArgs e)
+        {
+            UserClass getUser = new UserClass();
+            if (getUser.IsLogin())
+            {
+                try
+                {
+                    Uri ReUri = new Uri("http://space.bilibili.com/ajax/friend/AddAttention");
+                    HttpClient hc = new HttpClient();
+                    hc.DefaultRequestHeaders.Referer = new Uri("http://space.bilibili.com/");
+                    var response = await hc.PostAsync(ReUri, new HttpStringContent("mid=" + Uid, Windows.Storage.Streams.UnicodeEncoding.Utf8, "application/x-www-form-urlencoded"));
+                    response.EnsureSuccessStatusCode();
+                    string result = await response.Content.ReadAsStringAsync();
+                    JObject json = JObject.Parse(result);
+                    if ((bool)json["status"])
+                    {
+                        btn_Attention.Visibility = Visibility.Collapsed;
+                        btn_CannelAttention.Visibility = Visibility.Visible;
+                        await getUser.GetUserInfo();
+                    }
+                    else
+                    {
+                        btn_Attention.Visibility = Visibility.Visible;
+                        btn_CannelAttention.Visibility = Visibility.Collapsed;
+                        MessageDialog md = new MessageDialog("关注失败！\r\n"+ result);
+                        await md.ShowAsync();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageDialog md = new MessageDialog("关注发生错误！\r\n"+ex.Message);
+                    await md.ShowAsync();
+                }
+            }
+            else
+            {
+                MessageDialog md = new MessageDialog("请先登录！");
+                await md.ShowAsync();
+            }
+        }
+
+        private async void btn_CannelAttention_Click(object sender, RoutedEventArgs e)
+        {
+            UserClass getUser = new UserClass();
+            if (getUser.IsLogin())
+            {
+                try
+                {
+                    Uri ReUri = new Uri("http://space.bilibili.com/ajax/friend/DelAttention");
+                    HttpClient hc = new HttpClient();
+                    hc.DefaultRequestHeaders.Referer = new Uri("http://space.bilibili.com/");
+                    var response = await hc.PostAsync(ReUri, new HttpStringContent("mid=" + Uid, Windows.Storage.Streams.UnicodeEncoding.Utf8, "application/x-www-form-urlencoded"));
+                    response.EnsureSuccessStatusCode();
+                    string result = await response.Content.ReadAsStringAsync();
+                    JObject json = JObject.Parse(result);
+                    if ((bool)json["status"])
+                    {
+                        btn_Attention.Visibility = Visibility.Visible;
+                        btn_CannelAttention.Visibility = Visibility.Collapsed;
+                        await getUser.GetUserInfo();
+                    }
+                    else
+                    {
+                        btn_Attention.Visibility = Visibility.Collapsed;
+                        btn_CannelAttention.Visibility = Visibility.Visible;
+                        MessageDialog md = new MessageDialog("关注失败！\r\n" + result);
+                        await md.ShowAsync();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageDialog md = new MessageDialog("取消关注发生错误！\r\n" + ex.Message);
+                    await md.ShowAsync();
+                }
+            }
+            else
+            {
+                MessageDialog md = new MessageDialog("请先登录！");
+                await md.ShowAsync();
+            }
         }
     }
 }

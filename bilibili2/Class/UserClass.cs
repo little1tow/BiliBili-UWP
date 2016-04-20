@@ -14,6 +14,7 @@ namespace bilibili2.Class
     {
         //public static string Uid = string.Empty;
         private static string _uid;
+        public static List<string> AttentionList = new List<string>();
         public static string Uid
         {
             get
@@ -48,6 +49,7 @@ namespace bilibili2.Class
                         string results = await hr.Content.ReadAsStringAsync();
                         GetLoginInfoModel model = new GetLoginInfoModel();
                         model = JsonConvert.DeserializeObject<GetLoginInfoModel>(results);
+                        AttentionList = JsonConvert.DeserializeObject<List<string>>(model.attentions.ToString());
                         JObject json = JObject.Parse(model.level_info.ToString());
                         model.current_level = (int)json["current_level"];
                         //model.current_level = "LV" + json["current_level"].ToString();
@@ -266,6 +268,46 @@ namespace bilibili2.Class
             }
         }
 
+        public async Task<List<GetFavouriteBoxsVideoModel>> GetFavouriteBoxVideo(string fid, int PageNum)
+        {
+            //啊啊啊啊，没心情啊，下面代码都是乱写的，啊啊啊啊啊 啊啊啊啊啊啊
+            if (IsLogin())
+            {
+                try
+                {
+
+                        string results = await new WebClientClass().GetResults(new Uri("http://space.bilibili.com/ajax/fav/getList?mid=" + Uid + "&pagesize=20&fid=" + fid + "&pid=" + PageNum));
+                        //一层
+                        GetFavouriteBoxsVideoModel model = JsonConvert.DeserializeObject<GetFavouriteBoxsVideoModel>(results);
+                        //二层
+                        if (model.status)
+                        {
+                            GetFavouriteBoxsVideoModel model2 = JsonConvert.DeserializeObject<GetFavouriteBoxsVideoModel>(model.data.ToString());
+                            //三层
+                            List<GetFavouriteBoxsVideoModel> lsModel = JsonConvert.DeserializeObject<List<GetFavouriteBoxsVideoModel>>(model2.vlist.ToString());
+                            List<GetFavouriteBoxsVideoModel> RelsModel = new List<GetFavouriteBoxsVideoModel>();
+                            foreach (GetFavouriteBoxsVideoModel item in lsModel)
+                            {
+                                item.pages = model2.pages;
+                                RelsModel.Add(item);
+                            }
+                            return RelsModel;
+                        }
+                        else
+                        {
+                            return null;
+                        }
+                }
+                catch (Exception)
+                {
+                    return null;
+                }
+            }
+            else
+            {
+                return null;
+            }
+        }
 
     }
 }

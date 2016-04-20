@@ -70,7 +70,13 @@ namespace bilibili2
 
         }
 
-
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            Video_Grid_Info.DataContext = null;
+            Video_UP.DataContext = null;
+            Video_data.DataContext = null;
+            ListView_Comment_Hot.Items.Clear();
+        }
         private void btn_back_Click(object sender, RoutedEventArgs e)
         {
             if (this.Frame.CanGoBack)
@@ -79,6 +85,10 @@ namespace bilibili2
             }
             else
             {
+                Video_Grid_Info.DataContext = null;
+                Video_UP.DataContext = null;
+                Video_data.DataContext = null;
+                ListView_Comment_Hot.Items.Clear();
                 BackEvent();
             }
              
@@ -232,7 +242,7 @@ namespace bilibili2
 
         private void Hy_Click(object sender, RoutedEventArgs e)
         {
-            throw new NotImplementedException();
+            this.Frame.Navigate(typeof(SearchPage), (sender as HyperlinkButton).Content.ToString());
         }
 
         private void btn_Open_Click(object sender, RoutedEventArgs e)
@@ -273,6 +283,7 @@ namespace bilibili2
                     model1 = JsonConvert.DeserializeObject<CommentModel>(item.member.ToString());
                     CommentModel model2 = new CommentModel();
                     model2 = JsonConvert.DeserializeObject<CommentModel>(item.content.ToString());
+                    CommentModel modelLV = JsonConvert.DeserializeObject<CommentModel>(model1.level_info.ToString());
                     CommentModel resultsModel = new CommentModel()
                     {
                         avatar = model1.avatar,
@@ -284,7 +295,8 @@ namespace bilibili2
                         ctime = item.ctime,
                         like = item.like,
                         rcount = item.rcount,
-                        rpid = item.rpid
+                        rpid = item.rpid,
+                        current_level=modelLV.current_level
                     };
                     ListView_Comment_New.Items.Add(resultsModel);
                 }
@@ -326,10 +338,9 @@ namespace bilibili2
                 List<CommentModel> ban = JsonConvert.DeserializeObject<List<CommentModel>>(model3.replies.ToString());
                 foreach (CommentModel item in ban)
                 {
-                    CommentModel model1 = new CommentModel();
-                    model1 = JsonConvert.DeserializeObject<CommentModel>(item.member.ToString());
-                    CommentModel model2 = new CommentModel();
-                    model2 = JsonConvert.DeserializeObject<CommentModel>(item.content.ToString());
+                    CommentModel model1 = JsonConvert.DeserializeObject<CommentModel>(item.member.ToString());
+                    CommentModel model2 = JsonConvert.DeserializeObject<CommentModel>(item.content.ToString());
+                    CommentModel modelLV = JsonConvert.DeserializeObject<CommentModel>(model1.level_info.ToString());
                     CommentModel resultsModel = new CommentModel()
                     {
                         avatar = model1.avatar,
@@ -341,7 +352,8 @@ namespace bilibili2
                         ctime = item.ctime,
                         like = item.like,
                         rcount = item.rcount,
-                        rpid = item.rpid
+                        rpid = item.rpid,
+                        current_level= modelLV.current_level
                     };
                     ListView_Comment_Hot.Items.Add(resultsModel);
                 }
@@ -647,6 +659,7 @@ namespace bilibili2
                     model1 = JsonConvert.DeserializeObject<CommentModel>(item.member.ToString());
                     CommentModel model2 = new CommentModel();
                     model2 = JsonConvert.DeserializeObject<CommentModel>(item.content.ToString());
+                    CommentModel modelLV = JsonConvert.DeserializeObject<CommentModel>(model1.level_info.ToString());
                     CommentModel resultsModel = new CommentModel()
                     {
                         avatar = model1.avatar,
@@ -658,7 +671,8 @@ namespace bilibili2
                         ctime = item.ctime,
                         like = item.like,
                         rcount = item.rcount,
-                        rpid = item.rpid
+                        rpid = item.rpid,
+                        current_level=modelLV.current_level
                     };
                     ListView_Flyout.Items.Add(resultsModel);
                     if (ban.Count == 0)
@@ -696,6 +710,7 @@ namespace bilibili2
                 CommentModel model = JsonConvert.DeserializeObject<CommentModel>(results);
                 CommentModel model3 = JsonConvert.DeserializeObject<CommentModel>(model.data.ToString());
                 //Video_Grid_Info.DataContext = model;
+              
                 List<CommentModel> ban = JsonConvert.DeserializeObject<List<CommentModel>>(model3.replies.ToString());
 
                 foreach (CommentModel item in ban)
@@ -704,6 +719,7 @@ namespace bilibili2
                     model1 = JsonConvert.DeserializeObject<CommentModel>(item.member.ToString());
                     CommentModel model2 = new CommentModel();
                     model2 = JsonConvert.DeserializeObject<CommentModel>(item.content.ToString());
+                    CommentModel modelLV = JsonConvert.DeserializeObject<CommentModel>(model1.level_info.ToString());
                     CommentModel resultsModel = new CommentModel()
                     {
                         avatar = model1.avatar,
@@ -715,7 +731,8 @@ namespace bilibili2
                         ctime = item.ctime,
                         like = item.like,
                         rcount = item.rcount,
-                        rpid = item.rpid
+                        rpid = item.rpid,
+                        current_level=modelLV.current_level
                     };
                     ListView_Flyout.Items.Add(resultsModel);
                 }
@@ -981,9 +998,6 @@ namespace bilibili2
             else
             {
                 messShow.Show("请先登录!",3000);
-
-                //MessageDialog md = new MessageDialog("你造吗，你没有登录 (～￣▽￣)，先登录好伐~");
-                //await md.ShowAsync();
             }
         }
 

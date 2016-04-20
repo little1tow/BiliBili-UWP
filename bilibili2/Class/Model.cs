@@ -251,6 +251,7 @@ namespace bilibili2
         public object replies { get; set; }
         public object member { get; set; }
         public object content { get; set; }
+        public object level_info { get; set; }
         public string avatar { get; set; }
         public string uname { get; set; }
         public string floor { get; set; }
@@ -285,14 +286,38 @@ namespace bilibili2
                 long lTime = long.Parse(ctime + "0000000");
                 //long lTime = long.Parse(textBox1.Text);
                 TimeSpan toNow = new TimeSpan(lTime);
-                return dtStart.Add(toNow).ToString();
+                return dtStart.Add(toNow).ToLocalTime().ToString();
             }
         }
         public string rcount { get; set; }
         public string like { get; set; }
         public string message { get; set; }
-
-
+        public int current_level { get; set; }
+        public string LV
+        {
+            get
+            {
+                switch (current_level)
+                {
+                    case 0:
+                        return "ms-appx:///Assets/MiniIcon/ic_lv0_large.png";
+                    case 1:
+                        return "ms-appx:///Assets/MiniIcon/ic_lv1_large.png";
+                    case 2:
+                        return "ms-appx:///Assets/MiniIcon/ic_lv2_large.png";
+                    case 3:
+                        return "ms-appx:///Assets/MiniIcon/ic_lv3_large.png";
+                    case 4:
+                        return "ms-appx:///Assets/MiniIcon/ic_lv4_large.png";
+                    case 5:
+                        return "ms-appx:///Assets/MiniIcon/ic_lv5_large.png";
+                    case 6:
+                        return "ms-appx:///Assets/MiniIcon/ic_lv6_large.png";
+                    default:
+                        return "";
+                }
+            }
+        }
     }
     //视频相关
     public class RecommendModel
@@ -328,7 +353,7 @@ namespace bilibili2
         public string sex { get; set; }//性别
         public string coins { get; set; }//硬币
         public string face { get; set; }//头像
-
+        public bool approve { get; set; }
         public int rank { get; set; }//用户级别
 
         public string RankStr
@@ -373,13 +398,30 @@ namespace bilibili2
         public int fans { get; set; }//粉丝
         public string attention { get; set; }//关注
         public object level_info { get; set; }//等级信息
-
+        public object attentions { get; set; }
         public string current_level_string { get { return "LV" + current_level; } }//等级
         public int current_level { get; set; }
         public string place { get; set; }//地址
     }
-
-   public class GetUserFovBox
+    public  class GetFavouriteBoxsVideoModel
+    {
+        //Josn：http://space.bilibili.com/ajax/fav/getList?mid=用户ID&pagesize=30&fid=收藏夹编号
+        //第一层
+        public bool status { get; set; }//标题
+        public object data { get; set; }//包含第二层
+                                        //第二层
+        public int pages { get; set; }//页数
+        public int count { get; set; }//数量
+        public object vlist { get; set; }//包含第三层
+                                         //第三层
+        public string aid { get; set; }//AID
+        public string typename { get; set; }//类型
+        public string title { get; set; }//标题
+        public string author { get; set; }//作者
+        public string pic { get; set; }//封面
+        public string fav_create_at { get; set; }
+    }
+    public class GetUserFovBox
     {
         //Josn：http://space.bilibili.com/ajax/fav/getBoxList?mid=XXXXX
         //第一层
@@ -419,7 +461,26 @@ namespace bilibili2
         public int pages { get; set; }
 
     }
-
+   public class GetUserSubmit
+    {
+        //Josn：http://space.bilibili.com/ajax/friend/GetAttentionList?mid=XXXX&pagesize=999
+        //第一层
+        public bool status { get; set; }//状态
+        public object data { get; set; }//数据，包含第二层
+                                        //第二层
+        public object vlist { get; set; }//结果，包含第三层
+                                         //第三层
+        public string aid { get; set; }//视频ID
+        public string title { get; set; }//标题
+        public string pic { get; set; }//图片
+        public string video_review { get; set; }//弹幕
+        public string play { get; set; }//播放
+        public string created { get; set; }//上传时间
+        public string length { get; set; }//长度
+        public string description { get; set; }
+        public int count { get; set; }
+        public int pages { get; set; }
+    }
     //首页信息
     public class InfoModel
     {
@@ -796,4 +857,79 @@ namespace bilibili2
             }
         }
     }
+
+    public class SVideoModel
+    {
+        //第一层
+        public int code { get; set; }
+        public int page { get; set; }//页数
+        public int numResults { get; set; }//结果数量
+        public int numPages { get; set; }//结果
+        public object result { get; set; }//结果
+        //第二层
+        public long id { get; set; }//视频AID
+        public string mid { get; set; }//用户Mid
+        public string author { get; set; }//作者
+        public string typename { get; set; }
+        public string aid { get; set; }
+        public string description { get; set; }
+        public string title { get; set; }//标题
+        public string pic { get; set; }//封面
+        public string play { get; set; }//播放
+        public string video_review { get; set; }//弹幕
+        public string duration { get; set; }//时长
+    }
+
+    public class SUpModel
+    {
+        //第一层
+        public int code { get; set; }
+        public int page { get; set; }//页数
+        public int numResults { get; set; }//结果数量
+        public int numPages { get; set; }//结果
+        public object result { get; set; }//结果
+        //第二层
+        public string mid { get; set; }//用户Mid
+        public string uname { get; set; }//作者
+        public string usign { get; set; }
+        public string upic { get; set; }
+    }
+
+    public class SBanModel
+    {
+        //第一层
+        public int code { get; set; }
+        public int page { get; set; }//页数
+        public int numResults { get; set; }//结果数量
+        public int numPages { get; set; }//结果
+        public object result { get; set; }//结果
+
+        public string title { get; set; }
+        public string season_id { get; set; }
+        public string bangumi_id { get; set; }
+        public string spid { get; set; }
+        public string evaluate { get; set; }
+        public string cover { get; set; }
+        public int is_finish { get; set; }
+        public string newest_ep_index { get; set; }
+        public int total_count { get; set; }
+    }
+
+    public class SSpModel
+    {
+        //第一层
+        public int code { get; set; }
+        public int page { get; set; }//页数
+        public int numResults { get; set; }//结果数量
+        public int numPages { get; set; }
+        public object result { get; set; }//结果
+
+        //第三层
+        public string id { get; set; }//id
+        public string spid { get; set; }
+        public string title { get; set; }
+        public string description { get; set; }//标题
+        public string pic { get; set; }//封面
+    }
+
 }

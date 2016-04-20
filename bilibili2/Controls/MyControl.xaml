@@ -150,96 +150,157 @@
         <Border x:Name="ViewBox_num" Background="Gray" Width="200"></Border>
         <Border x:Name="ViewBox2_num" Background="Gray" Width="200"></Border>
         <ProgressBar x:Name="pr_Load" Visibility="Collapsed"  Background="{x:Null}" IsIndeterminate="True"></ProgressBar>
-        <HyperlinkButton x:Name="Btn_FJ_More" Margin="10 0" Foreground="{ThemeResource Bili-FontColor}" >
-            <StackPanel Orientation="Horizontal">
-                <Image Source="ms-appx:///Assets/PartIcon/BFJ.png" Width="24" Height="24" Margin="0,0,5,0"></Image>
-                <TextBlock Text="番剧" VerticalAlignment="Center" FontSize="16"></TextBlock>
-            </StackPanel>
-        </HyperlinkButton>
-
+        <Grid>
+            <HyperlinkButton x:Name="Btn_FJ_More" Margin="10 0" Foreground="{ThemeResource Bili-FontColor}" >
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="ms-appx:///Assets/PartIcon/BFJ.png" Width="24" Height="24" Margin="0,0,5,0"></Image>
+                    <TextBlock Text="番剧" VerticalAlignment="Center" FontSize="16"></TextBlock>
+                </StackPanel>
+            </HyperlinkButton>
+            <HyperlinkButton Tag="FJ" HorizontalAlignment="Right" Margin="15 0" Foreground="{ThemeResource Bili-FontColor}" Click="btn_Refresh_Click">
+                <SymbolIcon Symbol="Refresh" ></SymbolIcon>
+            </HyperlinkButton>
+        </Grid>
         <GridView x:Name="home_GridView_FJ"  ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled" Height="200" ItemTemplate="{StaticResource HomeItemTemplate}" IsItemClickEnabled="True" HorizontalAlignment="Center"  SelectionMode="None" ItemContainerStyle="{StaticResource GridViewItemStyle}" ItemClick="home_GridView_FJ_ItemClick" ></GridView>
-        <HyperlinkButton Margin="10 0" Foreground="{ThemeResource Bili-FontColor}" >
-            <StackPanel Orientation="Horizontal">
-                <Image Source="ms-appx:///Assets/PartIcon/BDH.png" Width="24" Height="24" Margin="0 0 5 0"></Image>
-                <TextBlock Text="动画" VerticalAlignment="Center" FontSize="16"></TextBlock>
-            </StackPanel>
-        </HyperlinkButton>
+        <Grid>
+            <HyperlinkButton Margin="10 0" Foreground="{ThemeResource Bili-FontColor}" >
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="ms-appx:///Assets/PartIcon/BDH.png" Width="24" Height="24" Margin="0 0 5 0"></Image>
+                    <TextBlock Text="动画" VerticalAlignment="Center" FontSize="16"></TextBlock>
+                </StackPanel>
+            </HyperlinkButton>
+            <HyperlinkButton Tag="DH" HorizontalAlignment="Right" Margin="15 0" Foreground="{ThemeResource Bili-FontColor}" Click="btn_Refresh_Click">
+                <SymbolIcon Symbol="Refresh" ></SymbolIcon>
+            </HyperlinkButton>
+        </Grid>
+     
         <GridView x:Name="home_GridView_DH"  ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled" Height="200" ItemTemplate="{StaticResource HomeItemTemplate}" IsItemClickEnabled="True" ItemClick="home_GridView_FJ_ItemClick" HorizontalAlignment="Center"  SelectionMode="None" ItemContainerStyle="{StaticResource GridViewItemStyle}">
         </GridView>
-
-        <HyperlinkButton Margin="10 0" Foreground="{ThemeResource Bili-FontColor}" >
-            <StackPanel Orientation="Horizontal">
-                <Image Source="ms-appx:///Assets/PartIcon/BYY.png" Width="24" Height="24" Margin="0 0 5 0"></Image>
-                <TextBlock Text="音乐" VerticalAlignment="Center" FontSize="16"></TextBlock>
-            </StackPanel>
-        </HyperlinkButton>
+        <Grid>
+            <HyperlinkButton Margin="10 0" Foreground="{ThemeResource Bili-FontColor}" >
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="ms-appx:///Assets/PartIcon/BYY.png" Width="24" Height="24" Margin="0 0 5 0"></Image>
+                    <TextBlock Text="音乐" VerticalAlignment="Center" FontSize="16"></TextBlock>
+                </StackPanel>
+            </HyperlinkButton>
+            
+            <HyperlinkButton Tag="YY" HorizontalAlignment="Right" Margin="15 0" Foreground="{ThemeResource Bili-FontColor}" Click="btn_Refresh_Click">
+                <SymbolIcon Symbol="Refresh" ></SymbolIcon>
+            </HyperlinkButton>
+        </Grid>
+        
 
 
         <GridView x:Name="home_GridView_YYWD" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled" Height="200" ItemTemplate="{StaticResource HomeItemTemplate}" IsItemClickEnabled="True" ItemClick="home_GridView_FJ_ItemClick" HorizontalAlignment="Center"  SelectionMode="None" ItemContainerStyle="{StaticResource GridViewItemStyle}"></GridView>
-
-        <HyperlinkButton Margin="10 0" Foreground="{ThemeResource Bili-FontColor}" >
-            <StackPanel Orientation="Horizontal">
-                <Image Source="ms-appx:///Assets/PartIcon/BWD.png" Width="24" Height="24" Margin="0 0 5 0"></Image>
-                <TextBlock Text="舞蹈" VerticalAlignment="Center" FontSize="16"></TextBlock>
-            </StackPanel>
-        </HyperlinkButton>
-
+        <Grid>
+            <HyperlinkButton Margin="10 0" Foreground="{ThemeResource Bili-FontColor}" >
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="ms-appx:///Assets/PartIcon/BWD.png" Width="24" Height="24" Margin="0 0 5 0"></Image>
+                    <TextBlock Text="舞蹈" VerticalAlignment="Center" FontSize="16"></TextBlock>
+                </StackPanel>
+            </HyperlinkButton>
+            
+            <HyperlinkButton Tag="WD" HorizontalAlignment="Right" Margin="15 0" Foreground="{ThemeResource Bili-FontColor}" Click="btn_Refresh_Click">
+                <SymbolIcon Symbol="Refresh" ></SymbolIcon>
+            </HyperlinkButton>
+        </Grid>
 
         <GridView x:Name="home_GridView_WD" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled" Height="200" ItemTemplate="{StaticResource HomeItemTemplate}" IsItemClickEnabled="True" ItemClick="home_GridView_FJ_ItemClick" HorizontalAlignment="Center"  SelectionMode="None" ItemContainerStyle="{StaticResource GridViewItemStyle}"></GridView>
-
-        <HyperlinkButton Margin="10 0" Foreground="{ThemeResource Bili-FontColor}" >
-            <StackPanel Orientation="Horizontal">
-                <Image Source="ms-appx:///Assets/PartIcon/BYX.png" Width="24" Height="24" Margin="0 0 5 0"></Image>
-                <TextBlock Text="游戏" VerticalAlignment="Center" FontSize="16"></TextBlock>
-            </StackPanel>
-        </HyperlinkButton>
+        <Grid>
+            <HyperlinkButton Margin="10 0" Foreground="{ThemeResource Bili-FontColor}" >
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="ms-appx:///Assets/PartIcon/BYX.png" Width="24" Height="24" Margin="0 0 5 0"></Image>
+                    <TextBlock Text="游戏" VerticalAlignment="Center" FontSize="16"></TextBlock>
+                </StackPanel>
+            </HyperlinkButton>
+            
+            <HyperlinkButton Tag="YX" HorizontalAlignment="Right" Margin="15 0" Foreground="{ThemeResource Bili-FontColor}" Click="btn_Refresh_Click">
+                <SymbolIcon Symbol="Refresh" ></SymbolIcon>
+            </HyperlinkButton>
+        </Grid>
+       
 
         <GridView x:Name="home_GridView_YX"  ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled" Height="200" ItemTemplate="{StaticResource HomeItemTemplate}" IsItemClickEnabled="True" ItemClick="home_GridView_FJ_ItemClick" HorizontalAlignment="Center"  SelectionMode="None" ItemContainerStyle="{StaticResource GridViewItemStyle}"></GridView>
-
-        <HyperlinkButton Margin="10 0" Foreground="{ThemeResource Bili-FontColor}" >
-            <StackPanel Orientation="Horizontal">
-                <Image Source="ms-appx:///Assets/PartIcon/BKJ.png" Width="24" Height="24" Margin="0 0 5 0"></Image>
-                <TextBlock Text="科技" VerticalAlignment="Center" FontSize="16"></TextBlock>
-            </StackPanel>
-        </HyperlinkButton>
-
+        <Grid>
+            <HyperlinkButton Margin="10 0" Foreground="{ThemeResource Bili-FontColor}" >
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="ms-appx:///Assets/PartIcon/BKJ.png" Width="24" Height="24" Margin="0 0 5 0"></Image>
+                    <TextBlock Text="科技" VerticalAlignment="Center" FontSize="16"></TextBlock>
+                </StackPanel>
+            </HyperlinkButton>
+            
+            <HyperlinkButton Tag="KJ" HorizontalAlignment="Right" Margin="15 0" Foreground="{ThemeResource Bili-FontColor}" Click="btn_Refresh_Click">
+                <SymbolIcon Symbol="Refresh" ></SymbolIcon>
+            </HyperlinkButton>
+        </Grid>
+        
         <GridView x:Name="home_GridView_KJ" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled" Height="200" ItemTemplate="{StaticResource HomeItemTemplate}" IsItemClickEnabled="True" ItemClick="home_GridView_FJ_ItemClick" HorizontalAlignment="Center"  SelectionMode="None" ItemContainerStyle="{StaticResource GridViewItemStyle}"></GridView>
-
-        <HyperlinkButton Margin="10 0" Foreground="{ThemeResource Bili-FontColor}" >
-            <StackPanel Orientation="Horizontal">
-                <Image Source="ms-appx:///Assets/PartIcon/BYL.png" Width="24" Height="24" Margin="0 0 5 0"></Image>
-                <TextBlock Text="娱乐" VerticalAlignment="Center" FontSize="16"></TextBlock>
-            </StackPanel>
-        </HyperlinkButton>
+        <Grid>
+            <HyperlinkButton Margin="10 0" Foreground="{ThemeResource Bili-FontColor}" >
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="ms-appx:///Assets/PartIcon/BYL.png" Width="24" Height="24" Margin="0 0 5 0"></Image>
+                    <TextBlock Text="娱乐" VerticalAlignment="Center" FontSize="16"></TextBlock>
+                </StackPanel>
+            </HyperlinkButton>
+            <HyperlinkButton Tag="YL" HorizontalAlignment="Right" Margin="15 0" Foreground="{ThemeResource Bili-FontColor}" Click="btn_Refresh_Click">
+                <SymbolIcon Symbol="Refresh" ></SymbolIcon>
+            </HyperlinkButton>
+        </Grid>
+      
 
 
         <GridView x:Name="home_GridView_YL" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled" Height="200" ItemTemplate="{StaticResource HomeItemTemplate}" IsItemClickEnabled="True" ItemClick="home_GridView_FJ_ItemClick" HorizontalAlignment="Center"  SelectionMode="None" ItemContainerStyle="{StaticResource GridViewItemStyle}"></GridView>
-
-        <HyperlinkButton Margin="10 0" Foreground="{ThemeResource Bili-FontColor}" >
-            <StackPanel Orientation="Horizontal">
-                <Image Source="ms-appx:///Assets/PartIcon/BGC.png" Width="24" Height="24" Margin="0 0 5 0"></Image>
-                <TextBlock Text="鬼畜" VerticalAlignment="Center" FontSize="16"></TextBlock>
-            </StackPanel>
-        </HyperlinkButton>
-
+        <Grid>
+            <HyperlinkButton Margin="10 0" Foreground="{ThemeResource Bili-FontColor}" >
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="ms-appx:///Assets/PartIcon/BGC.png" Width="24" Height="24" Margin="0 0 5 0"></Image>
+                    <TextBlock Text="鬼畜" VerticalAlignment="Center" FontSize="16"></TextBlock>
+                </StackPanel>
+            </HyperlinkButton>
+            <HyperlinkButton Tag="GC" HorizontalAlignment="Right" Margin="15 0" Foreground="{ThemeResource Bili-FontColor}" Click="btn_Refresh_Click">
+                <SymbolIcon Symbol="Refresh" ></SymbolIcon>
+            </HyperlinkButton>
+        </Grid>
+    
+        
         <GridView x:Name="home_GridView_GC" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled"  Height="200" ItemTemplate="{StaticResource HomeItemTemplate}" IsItemClickEnabled="True" ItemClick="home_GridView_FJ_ItemClick" HorizontalAlignment="Center"  SelectionMode="None" ItemContainerStyle="{StaticResource GridViewItemStyle}"></GridView>
-
-        <HyperlinkButton Margin="10 0" Foreground="{ThemeResource Bili-FontColor}">
-            <StackPanel Orientation="Horizontal">
-                <Image Source="ms-appx:///Assets/PartIcon/BDY.png" Width="24" Height="24" Margin="0 0 5 0"></Image>
-                <TextBlock Text="电影" VerticalAlignment="Center" FontSize="16"></TextBlock>
-            </StackPanel>
-        </HyperlinkButton>
+        <Grid>
+            <HyperlinkButton Margin="10 0" Foreground="{ThemeResource Bili-FontColor}">
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="ms-appx:///Assets/PartIcon/BDY.png" Width="24" Height="24" Margin="0 0 5 0"></Image>
+                    <TextBlock Text="电影" VerticalAlignment="Center" FontSize="16"></TextBlock>
+                </StackPanel>
+            </HyperlinkButton>
+            <HyperlinkButton Tag="DY" HorizontalAlignment="Right" Margin="15 0" Foreground="{ThemeResource Bili-FontColor}" Click="btn_Refresh_Click">
+                <SymbolIcon Symbol="Refresh" ></SymbolIcon>
+            </HyperlinkButton>
+        </Grid>
+       
 
         <GridView x:Name="home_GridView_DY" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled"  Height="200" ItemTemplate="{StaticResource HomeItemTemplate}" IsItemClickEnabled="True" ItemClick="home_GridView_FJ_ItemClick" HorizontalAlignment="Center"  SelectionMode="None" ItemContainerStyle="{StaticResource GridViewItemStyle}"></GridView>
-
-        <HyperlinkButton Margin="10 0" Foreground="{ThemeResource Bili-FontColor}" >
-            <StackPanel Orientation="Horizontal">
-                <Image Source="ms-appx:///Assets/PartIcon/BDSJ.png" Width="24" Height="24" Margin="0 0 5 0"></Image>
-                <TextBlock Text="电视剧" VerticalAlignment="Center" FontSize="16"></TextBlock>
-            </StackPanel>
-        </HyperlinkButton>
-
+        <Grid>
+            <HyperlinkButton Margin="10 0" Foreground="{ThemeResource Bili-FontColor}" >
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="ms-appx:///Assets/PartIcon/BDSJ.png" Width="24" Height="24" Margin="0 0 5 0"></Image>
+                    <TextBlock Text="电视剧" VerticalAlignment="Center" FontSize="16"></TextBlock>
+                </StackPanel>
+            </HyperlinkButton>
+            <HyperlinkButton Tag="DSJ" HorizontalAlignment="Right" Margin="15 0" Foreground="{ThemeResource Bili-FontColor}" Click="btn_Refresh_Click">
+                <SymbolIcon Symbol="Refresh" ></SymbolIcon>
+            </HyperlinkButton>
+        </Grid>
         <GridView x:Name="home_GridView_DSJ" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled" Height="200" ItemTemplate="{StaticResource HomeItemTemplate}" IsItemClickEnabled="True" ItemClick="home_GridView_FJ_ItemClick" HorizontalAlignment="Center"  SelectionMode="None" ItemContainerStyle="{StaticResource GridViewItemStyle}"></GridView>
+        <Grid>
+            <HyperlinkButton Margin="10 0" Foreground="{ThemeResource Bili-FontColor}" >
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="ms-appx:///Assets/PartIcon/BSS.png" Width="24" Height="24" Margin="0 0 5 0"></Image>
+                    <TextBlock Text="时尚" VerticalAlignment="Center" FontSize="16"></TextBlock>
+                </StackPanel>
+            </HyperlinkButton>
+            <HyperlinkButton Tag="SS" HorizontalAlignment="Right" Margin="15 0" Foreground="{ThemeResource Bili-FontColor}" Click="btn_Refresh_Click">
+                <SymbolIcon Symbol="Refresh" ></SymbolIcon>
+            </HyperlinkButton>
+        </Grid>
+        <GridView x:Name="home_GridView_SS" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled" Height="200" ItemTemplate="{StaticResource HomeItemTemplate}" IsItemClickEnabled="True" ItemClick="home_GridView_FJ_ItemClick" HorizontalAlignment="Center"  SelectionMode="None" ItemContainerStyle="{StaticResource GridViewItemStyle}"></GridView>
     </StackPanel>
 </UserControl>

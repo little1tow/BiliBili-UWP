@@ -123,14 +123,17 @@
                                                 <ColumnDefinition ></ColumnDefinition>
                                             </Grid.ColumnDefinitions>
                                             <HyperlinkButton Grid.RowSpan="2" HorizontalAlignment="Left" Click="HyperlinkButton_Click">
-                                                <Ellipse Width="32" Height="32" Grid.RowSpan="2" Stroke="#7FC1C1C1" HorizontalAlignment="Left">
-                                                    <Ellipse.Fill>
-                                                        <ImageBrush ImageSource="{Binding avatar}"></ImageBrush>
-                                                    </Ellipse.Fill>
-                                                </Ellipse>
+                                                <StackPanel>
+                                                    <Ellipse Width="32" Height="32" Stroke="#7FC1C1C1" HorizontalAlignment="Left">
+                                                        <Ellipse.Fill>
+                                                            <ImageBrush ImageSource="{Binding avatar}"/>
+                                                        </Ellipse.Fill>
+                                                    </Ellipse>
+                                                    <Image Source="{Binding LV}" Width="24" Margin="0 2"></Image>
+                                                </StackPanel>
                                             </HyperlinkButton>
-                                            <TextBlock Margin="5,0" Text="{Binding uname}" Grid.Column="1"></TextBlock>
-                                            <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2">
+                                            <TextBlock Margin="5,0" Text="{Binding uname}" Grid.Column="1" VerticalAlignment="Bottom"></TextBlock>
+                                            <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2" VerticalAlignment="Top">
                                                 <StackPanel Orientation="Horizontal"  Margin="5,0">
                                                     <TextBlock Text="#" Foreground="#FFB6B6B6" ></TextBlock>
                                                     <TextBlock Text="{Binding floor}"  Foreground="#FFB6B6B6" ></TextBlock>
@@ -390,14 +393,17 @@
                                                     <ColumnDefinition ></ColumnDefinition>
                                                 </Grid.ColumnDefinitions>
                                                 <HyperlinkButton Grid.RowSpan="2" HorizontalAlignment="Left"  Click="HyperlinkButton_Click">
-                                                    <Ellipse Width="32" Height="32"  Stroke="#7FC1C1C1" >
-                                                        <Ellipse.Fill>
-                                                            <ImageBrush ImageSource="{Binding avatar}"></ImageBrush>
-                                                        </Ellipse.Fill>
-                                                    </Ellipse>
+                                                    <StackPanel>
+                                                        <Ellipse Width="32" Height="32" Stroke="#7FC1C1C1" HorizontalAlignment="Left">
+                                                            <Ellipse.Fill>
+                                                                <ImageBrush ImageSource="{Binding avatar}"/>
+                                                            </Ellipse.Fill>
+                                                        </Ellipse>
+                                                        <Image Source="{Binding LV}" Width="24" Margin="0 2"></Image>
+                                                    </StackPanel>
                                                 </HyperlinkButton>
-                                                <TextBlock Margin="5,0" Text="{Binding uname}" Grid.Column="1"></TextBlock>
-                                                <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2">
+                                                <TextBlock Margin="5,0" Text="{Binding uname}" Grid.Column="1" VerticalAlignment="Bottom"></TextBlock>
+                                                <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2" VerticalAlignment="Top">
                                                     <StackPanel Orientation="Horizontal"  Margin="5,0">
                                                         <TextBlock Text="#" Foreground="#FFB6B6B6" ></TextBlock>
                                                         <TextBlock Text="{Binding floor}"  Foreground="#FFB6B6B6" ></TextBlock>
@@ -459,14 +465,17 @@
                                                         <ColumnDefinition ></ColumnDefinition>
                                                     </Grid.ColumnDefinitions>
                                                     <HyperlinkButton Grid.RowSpan="2" HorizontalAlignment="Left" Click="HyperlinkButton_Click">
-                                                        <Ellipse Width="32" Height="32"  Stroke="#7FC1C1C1" >
-                                                            <Ellipse.Fill>
-                                                                <ImageBrush ImageSource="{Binding avatar}"></ImageBrush>
-                                                            </Ellipse.Fill>
-                                                        </Ellipse>
+                                                        <StackPanel>
+                                                            <Ellipse Width="32" Height="32" Stroke="#7FC1C1C1" HorizontalAlignment="Left">
+                                                                <Ellipse.Fill>
+                                                                    <ImageBrush ImageSource="{Binding avatar}"/>
+                                                                </Ellipse.Fill>
+                                                            </Ellipse>
+                                                            <Image Source="{Binding LV}" Width="24" Margin="0 2"></Image>
+                                                        </StackPanel>
                                                     </HyperlinkButton>
-                                                    <TextBlock Margin="5,0" Text="{Binding uname}" Grid.Column="1"></TextBlock>
-                                                    <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2">
+                                                    <TextBlock Margin="5,0" Text="{Binding uname}" Grid.Column="1" VerticalAlignment="Bottom"></TextBlock>
+                                                    <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2" VerticalAlignment="Top">
                                                         <StackPanel Orientation="Horizontal"  Margin="5,0">
                                                             <TextBlock Text="#" Foreground="#FFB6B6B6" ></TextBlock>
                                                             <TextBlock Text="{Binding floor}"  Foreground="#FFB6B6B6" ></TextBlock>

@@ -84,6 +84,7 @@ namespace bilibili2.Pages
                     model1 = JsonConvert.DeserializeObject<CommentModel>(item.member.ToString());
                     CommentModel model2 = new CommentModel();
                     model2 = JsonConvert.DeserializeObject<CommentModel>(item.content.ToString());
+                    CommentModel modelLV = JsonConvert.DeserializeObject<CommentModel>(model1.level_info.ToString());
                     CommentModel resultsModel = new CommentModel()
                     {
                         avatar = model1.avatar,
@@ -95,7 +96,8 @@ namespace bilibili2.Pages
                         ctime = item.ctime,
                         like = item.like,
                         rcount = item.rcount,
-                        rpid = item.rpid
+                        rpid = item.rpid,
+                        current_level=modelLV.current_level
                     };
                     ListView_Flyout.Items.Add(resultsModel);
                     if (ban.Count == 0)
@@ -141,6 +143,7 @@ namespace bilibili2.Pages
                     model1 = JsonConvert.DeserializeObject<CommentModel>(item.member.ToString());
                     CommentModel model2 = new CommentModel();
                     model2 = JsonConvert.DeserializeObject<CommentModel>(item.content.ToString());
+                    CommentModel modelLV = JsonConvert.DeserializeObject<CommentModel>(model1.level_info.ToString());
                     CommentModel resultsModel = new CommentModel()
                     {
                         avatar = model1.avatar,
@@ -152,7 +155,8 @@ namespace bilibili2.Pages
                         ctime = item.ctime,
                         like = item.like,
                         rcount = item.rcount,
-                        rpid = item.rpid
+                        rpid = item.rpid,
+                        current_level=modelLV.current_level
                     };
                     ListView_Flyout.Items.Add(resultsModel);
                 }

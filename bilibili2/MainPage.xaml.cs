@@ -40,7 +40,7 @@ namespace bilibili2
     {
         ApplicationDataContainer container = ApplicationData.Current.LocalSettings;
         Frame rootFrame = (Window.Current.Content as Frame);
-        
+
         public MainPage()
         {
             this.InitializeComponent();
@@ -52,7 +52,7 @@ namespace bilibili2
             //this.RequestedTheme = ElementTheme.Dark;
         }
         string navInfo = string.Empty;
-
+        private SettingHelper settings = new SettingHelper();
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             if (e.NavigationMode == NavigationMode.New)
@@ -62,19 +62,24 @@ namespace bilibili2
                 SetWeekInfo();
                 home_Items.SetHomeInfo();
             }
-            navInfo =  infoFrame.GetNavigationState();
+            ChangeTheme();
+            navInfo = infoFrame.GetNavigationState();
             infoFrame.Tag = (SolidColorBrush)top_grid.Background;
+        }
+        private void GetSetting()
+        {
+           
         }
         //首页错误
         private void Home_Items_ErrorEvent(string aid)
         {
-            messShow.Show("读取首页信息失败\r\n"+aid, 3000);
+            messShow.Show("读取首页信息失败\r\n" + aid, 3000);
         }
         //首页跳转
         private void Home_Items_PlayEvent(string aid)
         {
-            infoFrame.Navigate(typeof(VideoInfoPage),aid);
-          
+            infoFrame.Navigate(typeof(VideoInfoPage), aid);
+
             //jinr.From = this.ActualWidth;
             //storyboardPopIn.Begin();
         }
@@ -82,7 +87,7 @@ namespace bilibili2
         bool IsClicks = false;
         private async void MainPage_BackRequested(object sender, BackRequestedEventArgs e)
         {
-            if (infoFrame.Content!=null)
+            if (infoFrame.Content != null)
             {
                 e.Handled = true;
                 if (infoFrame.CanGoBack)
@@ -318,7 +323,7 @@ namespace bilibili2
                 ct.TranslateX = 0;
             }
         }
-     
+
 
         public static T FindVisualChild<T>(DependencyObject obj) where T : DependencyObject
         {
@@ -345,7 +350,7 @@ namespace bilibili2
         private void Page_SizeChanged(object sender, SizeChangedEventArgs e)
         {
 
-           
+
             if (this.ActualWidth <= 640)
             {
                 fvLeft.Visibility = Visibility.Collapsed;
@@ -382,14 +387,14 @@ namespace bilibili2
                 top_txt_Header.HorizontalAlignment = HorizontalAlignment.Center;
             }
 
-            if (this.ActualWidth<640)
+            if (this.ActualWidth < 640)
             {
-               //double i = (double)test.ActualWidth;
+                //double i = (double)test.ActualWidth;
                 test.Width = double.NaN;
             }
             else
             {
-                int i=  Convert.ToInt32(pivot_Home.ActualWidth / 500);
+                int i = Convert.ToInt32(pivot_Home.ActualWidth / 500);
                 test.Width = pivot_Home.ActualWidth / i - 20;
             }
         }
@@ -417,11 +422,8 @@ namespace bilibili2
         //子页面后退
         private void MainPage_BackEvent()
         {
-            //infoFrame.SetNavigationState(navInfo);
-            //storyboardPopOut.Completed += StoryboardPopOut_Completed;
             tuic.To = this.ActualWidth;
             storyboardPopOut.Begin();
-          
         }
         //子页面后退动画完成
         private void StoryboardPopOut_Completed(object sender, object e)
@@ -540,7 +542,7 @@ namespace bilibili2
             }
             catch (Exception ex)
             {
-                messShow.Show("读取Banner失败！\r\n" + ex.Message,3000);
+                messShow.Show("读取Banner失败！\r\n" + ex.Message, 3000);
                 //MessageDialog md = new MessageDialog("读取首页信息失败！\r\n"+ex.Message);
                 //await md.ShowAsync();
             }
@@ -548,12 +550,12 @@ namespace bilibili2
             // GetZBInfo();
         }
         //用户登录或跳转
-        private  void btn_UserInfo_Click(object sender, RoutedEventArgs e)
+        private void btn_UserInfo_Click(object sender, RoutedEventArgs e)
         {
-            if (txt_UserName.Text=="请登录")
+            if (txt_UserName.Text == "请登录")
             {
                 infoFrame.Navigate(typeof(LoginPage));
-               
+
                 //jinr.From = this.ActualWidth;
                 //storyboardPopIn.Begin();
             }
@@ -564,12 +566,12 @@ namespace bilibili2
             //this.Frame.Navigate(typeof(LoginPage));
         }
         //用户登录成功，读取用户信息
-        private  void MainPage_LoginEd()
+        private void MainPage_LoginEd()
         {
             GetLoadInfo();
         }
         //读取用户信息
-      private async void GetLoadInfo()
+        private async void GetLoadInfo()
         {
             UserClass getLogin = new UserClass();
             if (!getLogin.IsLogin())
@@ -661,7 +663,7 @@ namespace bilibili2
                 }
                 catch (Exception)
                 {
-                    messShow.Show("读取动态失败",3000);
+                    messShow.Show("读取动态失败", 3000);
                 }
                 finally
                 {
@@ -675,78 +677,193 @@ namespace bilibili2
                 LoadDT = false;
                 DT_PageNum = 1;
             }
-       }
+        }
         //读取搜索热词
         bool LoadHot = false;
         public async void GetHotKeyword()
         {
             try
             {
-                
+
                 WebClientClass wc = new WebClientClass();
                 string results = await wc.GetResults(new Uri("http://www.bilibili.com/search?action=hotword&main_ver=v1"));
                 HotModel model = JsonConvert.DeserializeObject<HotModel>(results);
                 List<HotModel> ban = JsonConvert.DeserializeObject<List<HotModel>>(model.list.ToString());
 
                 list_Hot.ItemsSource = ban;
-                LoadHot=true;
+                LoadHot = true;
             }
             catch (Exception ex)
             {
-                messShow.Show("读取搜索热词失败\r\n"+ex.Message, 3000);
+                messShow.Show("读取搜索热词失败\r\n" + ex.Message, 3000);
                 LoadHot = false;
             }
-         
+
         }
         //汉堡菜单的点击
         private void list_Menu_ItemClick(object sender, ItemClickEventArgs e)
         {
-            if ((e.ClickedItem as StackPanel).Tag==null)
+            if ((e.ClickedItem as StackPanel).Tag == null)
             {
                 return;
             }
-            if ((e.ClickedItem as StackPanel).Tag.ToString()== "M_Drak_Light")
+            bool isLogin = new UserClass().IsLogin();
+            switch ((e.ClickedItem as StackPanel).Tag.ToString())
             {
-                if (txt_D_L.Text=="夜间模式")
-                {
-                    txt_D_L.Text = "日间模式";
-                    RequestedTheme = ElementTheme.Dark;
-                    font_D_L.Glyph = "\uE706";
-                }
-                else
-                {
-                    txt_D_L.Text = "夜间模式";
-                    RequestedTheme = ElementTheme.Light;
-                    font_D_L.Glyph = "\uE708";
-                }
+                case "M_Drak_Light":
+                    if (txt_D_L.Text == "夜间模式")
+                    {
+                        txt_D_L.Text = "日间模式";
+                        RequestedTheme = ElementTheme.Dark;
+
+                        font_D_L.Glyph = "\uE706";
+                        ChangeTitbarColor();
+                    }
+                    else
+                    {
+                        txt_D_L.Text = "夜间模式";
+                        RequestedTheme = ElementTheme.Light;
+                       
+                        font_D_L.Glyph = "\uE708";
+                        ChangeTitbarColor();
+                    }
+                    break;
+                case "Favbox":
+                    if (isLogin)
+                    {
+                        infoFrame.Navigate(typeof(FavPage));
+                    }
+                    else
+                    {
+                        messShow.Show("请先登录！", 3000);
+                    }
+                    break;
+                case "History":
+                    break;
+                case "Message":
+                    break;
+                case "Download":
+                    break;
+                case "Setting":
+                    infoFrame.Navigate(typeof(SettingPage));
+                    (infoFrame.Content as SettingPage).ChangeTheme += MainPage_ChangeTheme;
+                    break;
+                case "Feedback":
+                    break;
+                default:
+                    break;
             }
-            if ((e.ClickedItem as StackPanel).Tag.ToString()=="Chanage")
+
+        }
+        //改变主题
+        private void ChangeTheme()
+        {
+            string ThemeName = string.Empty;
+            if (settings.SettingContains("Theme"))
             {
-                ResourceDictionary newDictionary = new ResourceDictionary();
-                newDictionary.Source = new Uri("ms-appx:///Theme/BlueTheme.xaml", UriKind.RelativeOrAbsolute);
-                Application.Current.Resources.MergedDictionaries.Clear();
-                Application.Current.Resources.MergedDictionaries.Add(newDictionary);
-                RequestedTheme = ElementTheme.Dark;
-                RequestedTheme = ElementTheme.Light;
+                ThemeName = settings.GetSettingValue("Theme") as string;
             }
-            if ((e.ClickedItem as StackPanel).Tag.ToString() == "Chanage1")
+            else
             {
-                ResourceDictionary newDictionary = new ResourceDictionary();
-                newDictionary.Source = new Uri("ms-appx:///Theme/PinkTheme.xaml", UriKind.RelativeOrAbsolute);
-                Application.Current.Resources.MergedDictionaries.Clear();
-                Application.Current.Resources.MergedDictionaries.Add(newDictionary);
-                RequestedTheme = ElementTheme.Dark;
-                RequestedTheme = ElementTheme.Light;
+                ThemeName = "Pink";
+                settings.SetSettingValue("Theme", "Pink");
             }
-            if ((e.ClickedItem as StackPanel).Tag.ToString() == "Chanage2")
+            ResourceDictionary newDictionary = new ResourceDictionary();
+            switch (ThemeName)
             {
-                ResourceDictionary newDictionary = new ResourceDictionary();
-                newDictionary.Source = new Uri("ms-appx:///Theme/GreenTheme.xaml", UriKind.RelativeOrAbsolute);
-                Application.Current.Resources.MergedDictionaries.Clear();
-                Application.Current.Resources.MergedDictionaries.Add(newDictionary);
-                RequestedTheme = ElementTheme.Dark;
-                RequestedTheme = ElementTheme.Light;
+                case "Red":
+                    newDictionary.Source = new Uri("ms-appx:///Theme/RedTheme.xaml", UriKind.RelativeOrAbsolute);
+                    Application.Current.Resources.MergedDictionaries.Clear();
+                    Application.Current.Resources.MergedDictionaries.Add(newDictionary);
+                    if (txt_D_L.Text == "日间模式")
+                    {
+                        RequestedTheme = ElementTheme.Dark;
+                    }
+                    else
+                    {
+                        RequestedTheme = ElementTheme.Dark;
+                        RequestedTheme = ElementTheme.Light;
+                    }
+                    break;
+                case "Blue":
+                    newDictionary.Source = new Uri("ms-appx:///Theme/BlueTheme.xaml", UriKind.RelativeOrAbsolute);
+                    Application.Current.Resources.MergedDictionaries.Clear();
+                    Application.Current.Resources.MergedDictionaries.Add(newDictionary);
+                    if (txt_D_L.Text == "日间模式")
+                    {
+                        RequestedTheme = ElementTheme.Dark;
+                    }
+                    else
+                    {
+                        RequestedTheme = ElementTheme.Dark;
+                        RequestedTheme = ElementTheme.Light;
+                    }
+                    break;
+                case "Green":
+                    newDictionary.Source = new Uri("ms-appx:///Theme/GreenTheme.xaml", UriKind.RelativeOrAbsolute);
+                    Application.Current.Resources.MergedDictionaries.Clear();
+                    Application.Current.Resources.MergedDictionaries.Add(newDictionary);
+                    if (txt_D_L.Text == "日间模式")
+                    {
+                        RequestedTheme = ElementTheme.Dark;
+                    }
+                    else
+                    {
+                        RequestedTheme = ElementTheme.Dark;
+                        RequestedTheme = ElementTheme.Light;
+                    }
+                    break;
+                case "Pink":
+                    newDictionary.Source = new Uri("ms-appx:///Theme/PinkTheme.xaml", UriKind.RelativeOrAbsolute);
+                    Application.Current.Resources.MergedDictionaries.Clear();
+                    Application.Current.Resources.MergedDictionaries.Add(newDictionary);
+                    if (txt_D_L.Text == "日间模式")
+                    {
+                        RequestedTheme = ElementTheme.Dark;
+                    }
+                    else
+                    {
+                        RequestedTheme = ElementTheme.Dark;
+                        RequestedTheme = ElementTheme.Light;
+                    }
+                    break;
+                case "Purple":
+                    newDictionary.Source = new Uri("ms-appx:///Theme/PurpleTheme.xaml", UriKind.RelativeOrAbsolute);
+                    Application.Current.Resources.MergedDictionaries.Clear();
+                    Application.Current.Resources.MergedDictionaries.Add(newDictionary);
+                    if (txt_D_L.Text == "日间模式")
+                    {
+                        RequestedTheme = ElementTheme.Dark;
+                    }
+                    else
+                    {
+                        RequestedTheme = ElementTheme.Dark;
+                        RequestedTheme = ElementTheme.Light;
+                    }
+                    break;
+                case "Yellow":
+                    newDictionary.Source = new Uri("ms-appx:///Theme/YellowTheme.xaml", UriKind.RelativeOrAbsolute);
+                    Application.Current.Resources.MergedDictionaries.Clear();
+                    Application.Current.Resources.MergedDictionaries.Add(newDictionary);
+                    if (txt_D_L.Text == "日间模式")
+                    {
+                        RequestedTheme = ElementTheme.Dark;
+                    }
+                    else
+                    {
+                        RequestedTheme = ElementTheme.Dark;
+                        RequestedTheme = ElementTheme.Light;
+                    }
+                    break;
+                default:
+                    break;
             }
+            tuic.To = this.ActualWidth;
+            storyboardPopOut.Begin();
+            ChangeTitbarColor();
+        }
+        private void ChangeTitbarColor()
+        {
             if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.UI.ViewManagement.StatusBar"))
             {
                 // StatusBar.GetForCurrentView().HideAsync();
@@ -795,7 +912,7 @@ namespace bilibili2
                         User_load_more.IsEnabled = false;
                         User_load_more.Content = "没有更多了...";
                     }
-                    
+
                     Moreing = true;
                 }
             }
@@ -825,7 +942,7 @@ namespace bilibili2
         //打开话题
         private void Find_btn_Topic_Click(object sender, RoutedEventArgs e)
         {
-            if (this.ActualWidth>500)
+            if (this.ActualWidth > 500)
             {
                 sp_Find.IsPaneOpen = true;
                 GetTopic();
@@ -835,7 +952,7 @@ namespace bilibili2
                 infoFrame.Navigate(typeof(TopicPage));
                 //jinr.From = this.ActualWidth;
             }
-        
+
         }
         //读取话题
         private async void GetTopic()
@@ -850,7 +967,7 @@ namespace bilibili2
             }
             catch (Exception ex)
             {
-                messShow.Show("读取话题失败\r\n"+ex.Message,3000);
+                messShow.Show("读取话题失败\r\n" + ex.Message, 3000);
             }
             finally
             {
@@ -863,10 +980,10 @@ namespace bilibili2
             switch ((e.Content as Page).Tag.ToString())
             {
                 case "视频信息":
-                   (infoFrame.Content as VideoInfoPage).BackEvent += MainPage_BackEvent;
+                    (infoFrame.Content as VideoInfoPage).BackEvent += MainPage_BackEvent;
                     break;
                 case "网页浏览":
-                   (infoFrame.Content as WebViewPage).BackEvent += MainPage_BackEvent;
+                    (infoFrame.Content as WebViewPage).BackEvent += MainPage_BackEvent;
                     break;
                 case "登录":
                     (infoFrame.Content as LoginPage).BackEvent += MainPage_BackEvent;
@@ -899,14 +1016,29 @@ namespace bilibili2
                 case "查看评论":
                     (infoFrame.Content as CommentPage).BackEvent += MainPage_BackEvent;
                     break;
+                case "搜索结果":
+                    (infoFrame.Content as SearchPage).BackEvent += MainPage_BackEvent;
+                    break;
+                case "收藏夹":
+                    (infoFrame.Content as FavPage).BackEvent += MainPage_BackEvent;
+                    break;
+                case "设置":
+                    (infoFrame.Content as SettingPage).BackEvent += MainPage_BackEvent;
+                    break;
                 default:
                     break;
             }
         }
+        //主题更换
+        private void MainPage_ChangeTheme()
+        {
+            ChangeTheme();
+        }
+
         //试试手气
         private void Find_btn_Random_Click(object sender, RoutedEventArgs e)
         {
-            infoFrame.Navigate(typeof(VideoInfoPage),new Random().Next(2000000,4999999).ToString());
+            infoFrame.Navigate(typeof(VideoInfoPage), new Random().Next(2000000, 4999999).ToString());
             //jinr.From = this.ActualWidth;
             //storyboardPopIn.Begin();
         }
@@ -931,7 +1063,7 @@ namespace bilibili2
         //番剧时间表点击
         private void list_0_ItemClick(object sender, ItemClickEventArgs e)
         {
-            infoFrame.Navigate(typeof(BanInfoPage),(e.ClickedItem as BangumiTimeLineModel).season_id);
+            infoFrame.Navigate(typeof(BanInfoPage), (e.ClickedItem as BangumiTimeLineModel).season_id);
         }
         int taday = 0;
         public void SetWeekInfo()
@@ -1281,7 +1413,7 @@ namespace bilibili2
         //番剧时间表点击
         private void Ban_btn_Timeline_Click(object sender, RoutedEventArgs e)
         {
-            if (this.ActualWidth>500)
+            if (this.ActualWidth > 500)
             {
                 B_Timeline.Visibility = Visibility.Visible;
                 gridview_List.Visibility = Visibility.Collapsed;
@@ -1296,12 +1428,12 @@ namespace bilibili2
         //索引点击
         private void gridview_List_ItemClick(object sender, ItemClickEventArgs e)
         {
-            infoFrame.Navigate(typeof(BanByTagPage), new string[] { (e.ClickedItem as TagModel).tag_id.ToString(),(e.ClickedItem as  TagModel).tag_name});
+            infoFrame.Navigate(typeof(BanByTagPage), new string[] { (e.ClickedItem as TagModel).tag_id.ToString(), (e.ClickedItem as TagModel).tag_name });
         }
         //索引表点击
         private void Ban_btn_Tag_Click(object sender, RoutedEventArgs e)
         {
-            if (this.ActualWidth>500)
+            if (this.ActualWidth > 500)
             {
                 B_Timeline.Visibility = Visibility.Collapsed;
                 gridview_List.Visibility = Visibility.Visible;
@@ -1330,20 +1462,20 @@ namespace bilibili2
                 JObject json = JObject.Parse(model.result.ToString());
                 List<BannumiIndexModel> ban = JsonConvert.DeserializeObject<List<BannumiIndexModel>>(json["latestUpdate"]["list"].ToString());
                 GridView_Bangumi_NewUpdate.ItemsSource = ban;
-               // LoadBan = true;
+                // LoadBan = true;
             }
             catch (Exception ex)
             {
-                messShow.Show("读取番剧最近更新失败\r\n" + ex.Message,3000);
+                messShow.Show("读取番剧最近更新失败\r\n" + ex.Message, 3000);
                 //LoadBan = false;
             }
         }
-
+        //番剧更新点击
         private void GridView_Bangumi_NewUpdate_ItemClick(object sender, ItemClickEventArgs e)
         {
             infoFrame.Navigate(typeof(BanInfoPage), (e.ClickedItem as BannumiIndexModel).season_id);
         }
-
+        //读取我的追番
         private void Ban_btn_MyBan_Click(object sender, RoutedEventArgs e)
         {
             if (new UserClass().IsLogin())
@@ -1352,11 +1484,11 @@ namespace bilibili2
             }
             else
             {
-                messShow.Show("请先登录",3000);
+                messShow.Show("请先登录", 3000);
             }
         }
         //读取番剧Banner
-        private async  Task GetBanBanner()
+        private async Task GetBanBanner()
         {
             try
             {
@@ -1387,7 +1519,7 @@ namespace bilibili2
                 messShow.Show("读取番剧Banner失败！" + ex.Message, 3000);
                 //throw;
             }
-             
+
         }
         //读取番剧推荐
         string Page_BanTJ = "-1";
@@ -1428,9 +1560,9 @@ namespace bilibili2
             catch (Exception ex)
             {
                 messShow.Show("读取番剧推荐失败！" + ex.Message, 3000);
-               // throw;
+                // throw;
             }
-            
+
         }
         //番剧Banner点击
         private void btn_Banner_Ban_Click(object sender, RoutedEventArgs e)
@@ -1450,12 +1582,12 @@ namespace bilibili2
             infoFrame.Navigate(typeof(WebViewPage), (home_flipView_Ban.SelectedItem as BanBannerModel).link);
         }
         //番剧推荐加载更多
-       bool LoadBaning = false;
-        private  async void sc_Ban_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
+        bool LoadBaning = false;
+        private async void sc_Ban_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
         {
             if (sc_Ban.VerticalOffset == sc_Ban.ScrollableHeight)
             {
-                if (!LoadBaning&&Ban_TJ_more.Text!= "没有更多了...")
+                if (!LoadBaning && Ban_TJ_more.Text != "没有更多了...")
                 {
                     LoadBaning = true;
                     await GetBanTJ();
@@ -1467,10 +1599,10 @@ namespace bilibili2
         private void list_Ban_TJ_ItemClick(object sender, ItemClickEventArgs e)
         {
             //妈蛋，B站就一定要返回个链接么
-            string tag= Regex.Match((e.ClickedItem as BanTJModel).link,@"^http://bangumi.bilibili.com/anime/category/(.*?)$").Groups[1].Value;
-            if (tag.Length!=0)
+            string tag = Regex.Match((e.ClickedItem as BanTJModel).link, @"^http://bangumi.bilibili.com/anime/category/(.*?)$").Groups[1].Value;
+            if (tag.Length != 0)
             {
-                infoFrame.Navigate(typeof(BanByTagPage),new string[] { tag, (e.ClickedItem as BanTJModel).title});
+                infoFrame.Navigate(typeof(BanByTagPage), new string[] { tag, (e.ClickedItem as BanTJModel).title });
                 return;
             }
             string ban = Regex.Match((e.ClickedItem as BanTJModel).link, @"^http://bangumi.bilibili.com/anime/(.*?)$").Groups[1].Value;
@@ -1492,10 +1624,10 @@ namespace bilibili2
             }
             else
             {
-                this.infoFrame.Navigate(typeof(SearchPage), top_txt_find.Text);
+                this.infoFrame.Navigate(typeof(SearchPage), txt_auto_Find.Text);
             }
         }
-        
+        //搜索文字改变
         private async void txt_auto_Find_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
         {
             if (sender.Text.Length != 0)
@@ -1507,8 +1639,8 @@ namespace bilibili2
                 sender.ItemsSource = null;
             }
         }
-
-        private  void txt_auto_Find_SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
+        //搜索点击待选框
+        private void txt_auto_Find_SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
         {
             txt_auto_Find.Text = args.SelectedItem as string;
         }
@@ -1553,13 +1685,62 @@ namespace bilibili2
                 if (Regex.IsMatch(((TopicModel)e.ClickedItem).link, @"live.bilibili.com/(.*?)"))
                 {
                     string a = Regex.Match(((TopicModel)e.ClickedItem).link + "a", "live.bilibili.com/(.*?)a").Groups[1].Value;
-                   // livePlayVideo(a);
+                    // livePlayVideo(a);
                 }
                 else
                 {
                     this.infoFrame.Navigate(typeof(WebViewPage), ((TopicModel)e.ClickedItem).link);
                 }
             }
+        }
+
+        private async void top_txt_find_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+        {
+            if (sender.PlaceholderText != "搜索关键字或AV号")
+            {
+                return;
+            }
+            if (sender.Text.Length != 0)
+            {
+                sender.ItemsSource = await GetSugges(sender.Text);
+            }
+            else
+            {
+                sender.ItemsSource = null;
+            }
+        }
+
+        private void top_txt_find_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
+        {
+            if (sender.PlaceholderText != "搜索关键字或AV号")
+            {
+                return;
+            }
+            if (sender.Text.Length == 0)
+            {
+                //top_txt_find.Visibility = Visibility.Collapsed;
+                //top_btn_find.Visibility = Visibility.Visible;
+                //mainFrame.Navigate(typeof(SeasonPage));
+            }
+            else
+            {
+                infoFrame.Navigate(typeof(SearchPage), top_txt_find.Text);
+            }
+        }
+
+        private void top_txt_find_SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
+        {
+            top_txt_find.Text = args.SelectedItem as string;
+        }
+        //搜索热词点击
+        private void list_Hot_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            infoFrame.Navigate(typeof(SearchPage), (e.ClickedItem as HotModel).keyword);
+        }
+        //dilidili点击
+        private void btn_dilidili_Click(object sender, RoutedEventArgs e)
+        {
+            infoFrame.Navigate(typeof(PlayerPage));
         }
     }
 

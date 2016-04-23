@@ -66,7 +66,14 @@ namespace bilibili2.Pages
                 this.Frame.Navigate(typeof(BanInfoPage), ban2);
                 return;
             }
-
+            //bilibili://?av=4284663
+            string ban3 = Regex.Match(args.Uri.AbsoluteUri, @"^bilibili://?av=(.*?)$").Groups[1].Value;
+            if (ban3.Length != 0)
+            {
+                //args.Handled = true;
+                this.Frame.Navigate(typeof(VideoInfoPage), ban3);
+                return;
+            }
             //text .Text= args.Uri.AbsoluteUri;
             webview_progressBar.Visibility = Visibility.Visible;
             if (Regex.IsMatch(args.Uri.AbsoluteUri, "/video/av(.*)?[/|+](.*)?"))
@@ -106,7 +113,13 @@ namespace bilibili2.Pages
                 this.Frame.Navigate(typeof(BanInfoPage), ban2);
                 return;
             }
-
+            string ban3 = Regex.Match(args.Uri.AbsoluteUri, @"^bilibili://?av=(.*?)$").Groups[1].Value;
+            if (ban3.Length != 0)
+            {
+                //args.Handled = true;
+                this.Frame.Navigate(typeof(VideoInfoPage), ban3);
+                return;
+            }
             //乱写一通的正则
             //正则真的真的真的不会啊- -
             if (Regex.IsMatch(args.Uri.AbsoluteUri, "/video/av(.*)?[/|+](.*)?"))

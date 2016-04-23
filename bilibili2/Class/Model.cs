@@ -481,6 +481,50 @@ namespace bilibili2
         public int count { get; set; }
         public int pages { get; set; }
     }
+   public class GetHistoryModel
+    {
+        //必须有登录Cookie
+        //Josn：http://api.bilibili.com/x/history?jsonp=jsonp&ps=20&pn=1
+        public int code { get; set; }
+        public object data { get; set; }
+        public string aid { get; set; }
+        public string cover { get; set; }
+        public string pic { get; set; }
+        public string title { get; set; }
+        public string view_at { get; set; }
+        public string typename { get; set; }
+    }
+    public class GetAttentionLive
+    {
+        public int code { get; set; }
+        public string message { get; set; }
+
+        public object data { get; set; }
+        public int page { get; set; }
+        public int pagesize { get; set; }
+
+        public object list { get; set; }
+        public string name { get; set; }
+        public string face { get; set; }
+        public string roomid { get; set; }
+        public int live_status { get; set; }//0为未开播
+        public string areaName { get; set; }
+
+        public string state
+        {
+            get
+            {
+                if (live_status==1)
+                {
+                    return "正在直播";
+                }
+                else
+                {
+                    return "未开播";
+                }
+            }
+        }
+    }
     //首页信息
     public class InfoModel
     {
@@ -655,6 +699,7 @@ namespace bilibili2
         public int attention { get; set; }//是否关注
                                           // public double last_ep_index { get; set; }//看到
 
+        public int Num { get; set; }
         public object tags { get; set; }
         public string index { get; set; }
         public int tag_id { get; set; }
@@ -930,6 +975,43 @@ namespace bilibili2
         public string title { get; set; }
         public string description { get; set; }//标题
         public string pic { get; set; }//封面
+    }
+
+    public class VideoUriModel
+    {
+        public string format { get; set; }//视频类型
+
+        public object durl { get; set; }//视频信息
+
+        public string url { get; set; }//视频地址
+
+        public object backup_url { get; set; }//视频备份地址
+    }
+
+    public class HomeLiveModel
+    {
+        public int code { get; set; }
+        public string message { get; set; }
+
+        public object data { get; set; }
+        public object banner { get; set; }
+            public string title { get; set; }
+            public string img { get; set; }
+            public string remark { get; set; }
+            public string link { get; set; }
+        public object partitions { get; set; }
+            public object partition { get; set; }
+                public string name { get; set; }
+                 public int id { get; set; }
+           public object lives { get; set; }
+                public object owner { get; set; }
+                    public string face { get; set; }
+                    public string mid { get; set; }
+                public object cover { get; set; }
+                    public string src { get; set; }
+                //public string title { get; set; }
+                public long online { get; set; }
+                public string room_id { get; set; }
     }
 
 }

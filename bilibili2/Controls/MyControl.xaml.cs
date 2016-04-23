@@ -109,7 +109,17 @@ namespace bilibili2
             }
         }
 
-
+        int FJ = 1;
+        int DH = 1;
+        int YY = 1;
+        int WD = 1;
+        int YX = 1;
+        int YL = 1;
+        int KJ = 1;
+        int GC = 1;
+        int DY = 1;
+        int DSJ = 1;
+        int SS = 1;
         WebClientClass wc = new WebClientClass();
         public async void SetHomeInfo()
         {
@@ -170,66 +180,245 @@ namespace bilibili2
             {
                 case "FJ":
                     gridview = home_GridView_FJ;
-                    uri = "http://api.bilibili.com/list?type=json&appkey=422fd9d7289a1dd9&tid=13&page=1&pagesize=" + 20 + "&order=hot&ver=2&rnd=" + new Random().Next(1000, 9999);
+                    switch (FJ)
+                    {
+                        case 0:
+                            uri = "http://api.bilibili.com/list?type=json&appkey=422fd9d7289a1dd9&tid=13&page=1&pagesize=" + 20 + "&order=hot&ver=2&rnd=" + new Random().Next(1000, 9999);
+                            FJ++;
+                            break;
+                        case 1:
+                            uri = "http://api.bilibili.com/list?type=json&appkey=422fd9d7289a1dd9&tid=13&page=1&pagesize=" + 20 + "&order=review&ver=2&rnd=" + new Random().Next(1000, 9999);
+                            FJ++;
+                            break;
+                        case 2:
+                            uri = "http://api.bilibili.com/list?type=json&appkey=422fd9d7289a1dd9&tid=13&page=1&pagesize=" + 20 + "&order=default&ver=2&rnd=" + new Random().Next(1000, 9999);
+                            FJ = 0;
+                            break;
+                        default:
+                            break;
+                    }
                     break;
                 case "DH":
                     gridview = home_GridView_DH;
-                    uri = "http://api.bilibili.com/list?type=json&appkey=422fd9d7289a1dd9&tid=1&page=1&pagesize=" + 20 + "&order=hot&ver=2&rnd=" + new Random().Next(1000, 9999);
+                    switch (DH)
+                    {
+                        case 0:
+                            uri = "http://api.bilibili.com/list?type=json&appkey=422fd9d7289a1dd9&tid=1&page=1&pagesize=" + 20 + "&order=hot&ver=2&rnd=" + new Random().Next(1000, 9999);
+                            DH++;
+                            break;
+                        case 1:
+                            uri = "http://api.bilibili.com/list?type=json&appkey=422fd9d7289a1dd9&tid=1&page=1&pagesize=" + 20 + "&order=review&ver=2&rnd=" + new Random().Next(1000, 9999);
+                            DH++;
+                            break;
+                        case 2:
+                            uri = "http://api.bilibili.com/list?type=json&appkey=422fd9d7289a1dd9&tid=1&page=1&pagesize=" + 20 + "&order=default&ver=2&rnd=" + new Random().Next(1000, 9999);
+                            DH = 0;
+                            break;
+                        default:
+                            break;
+                    }
                     break;
                 case "YY":
                     gridview = home_GridView_YYWD;
-                    uri = "http://api.bilibili.com/list?type=json&appkey=422fd9d7289a1dd9&tid=3&page=1&pagesize=" + 20 + "&order=hot&ver=2&rnd=" + new Random().Next(1000, 9999);
+                    switch (YY)
+                    {
+                        case 0:
+                            uri = "http://api.bilibili.com/list?type=json&appkey=422fd9d7289a1dd9&tid=3&page=1&pagesize=" + 20 + "&order=hot&ver=2&rnd=" + new Random().Next(1000, 9999);
+                            YY++;
+                            break;
+                        case 1:
+                            uri = "http://api.bilibili.com/list?type=json&appkey=422fd9d7289a1dd9&tid=3&page=1&pagesize=" + 20 + "&order=review&ver=2&rnd=" + new Random().Next(1000, 9999);
+                            YY++;
+                            break;
+                        case 2:
+                            uri = "http://api.bilibili.com/list?type=json&appkey=422fd9d7289a1dd9&tid=3&page=1&pagesize=" + 20 + "&order=default&ver=2&rnd=" + new Random().Next(1000, 9999);
+                            YY = 0;
+                            break;
+                        default:
+                            break;
+                    }
                     break;
                 case "WD":
                     gridview = home_GridView_WD;
-                    uri = "http://api.bilibili.com/list?type=json&appkey=422fd9d7289a1dd9&tid=20&page=1&pagesize=" + 20 + "&order=hot&ver=2&rnd=" + new Random().Next(1000, 9999);
+                   switch (WD)
+                    {
+                        case 0:
+                            uri = "http://api.bilibili.com/list?type=json&appkey=422fd9d7289a1dd9&tid=20&page=1&pagesize=" + 20 + "&order=hot&ver=2&rnd=" + new Random().Next(1000, 9999);
+                            WD++;
+                            break;
+                        case 1:
+                            uri = "http://api.bilibili.com/list?type=json&appkey=422fd9d7289a1dd9&tid=20&page=1&pagesize=" + 20 + "&order=review&ver=2&rnd=" + new Random().Next(1000, 9999);
+                            WD++;
+                            break;
+                        case 2:
+                            uri = "http://api.bilibili.com/list?type=json&appkey=422fd9d7289a1dd9&tid=20&page=1&pagesize=" + 20 + "&order=default&ver=2&rnd=" + new Random().Next(1000, 9999);
+                            WD = 0;
+                            break;
+                        default:
+                            break;
+                    }
                     break;
                 case "YX":
                     gridview = home_GridView_YX;
-                    uri = "http://api.bilibili.com/list?type=json&appkey=422fd9d7289a1dd9&tid=4&page=1&pagesize=" + 20 + "&order=hot&ver=2&rnd=" + new Random().Next(1000, 9999);
+                    switch (YX)
+                    {
+                        case 0:
+                            uri = "http://api.bilibili.com/list?type=json&appkey=422fd9d7289a1dd9&tid=4&page=1&pagesize=" + 20 + "&order=hot&ver=2&rnd=" + new Random().Next(1000, 9999);
+                            YX++;
+                            break;
+                        case 1:
+                            uri = "http://api.bilibili.com/list?type=json&appkey=422fd9d7289a1dd9&tid=4&page=1&pagesize=" + 20 + "&order=review&ver=2&rnd=" + new Random().Next(1000, 9999);
+                            YX++;
+                            break;
+                        case 2:
+                            uri = "http://api.bilibili.com/list?type=json&appkey=422fd9d7289a1dd9&tid=4&page=1&pagesize=" + 20 + "&order=default&ver=2&rnd=" + new Random().Next(1000, 9999);
+                            YX = 0;
+                            break;
+                        default:
+                            break;
+                    }
                     break;
                 case "KJ":
                     gridview = home_GridView_KJ;
-                    uri = "http://api.bilibili.com/list?type=json&appkey=422fd9d7289a1dd9&tid=36&page=1&pagesize=" + 20 + "&order=hot&ver=2&rnd=" + new Random().Next(1000, 9999);
+                    switch (KJ)
+                    {
+                        case 0:
+                            uri = "http://api.bilibili.com/list?type=json&appkey=422fd9d7289a1dd9&tid=36&page=1&pagesize=" + 20 + "&order=hot&ver=2&rnd=" + new Random().Next(1000, 9999);
+                            KJ++;
+                            break;
+                        case 1:
+                            uri = "http://api.bilibili.com/list?type=json&appkey=422fd9d7289a1dd9&tid=36&page=1&pagesize=" + 20 + "&order=review&ver=2&rnd=" + new Random().Next(1000, 9999);
+                            KJ++;
+                            break;
+                        case 2:
+                            uri = "http://api.bilibili.com/list?type=json&appkey=422fd9d7289a1dd9&tid=36&page=1&pagesize=" + 20 + "&order=default&ver=2&rnd=" + new Random().Next(1000, 9999);
+                            KJ = 0;
+                            break;
+                        default:
+                            break;
+                    }
                     break;
                 case "YL":
                     gridview = home_GridView_YL;
-                    uri = "http://api.bilibili.com/list?type=json&appkey=422fd9d7289a1dd9&tid=5&page=1&pagesize=" + 20 + "&order=hot&ver=2&rnd=" + new Random().Next(1000, 9999);
+                    switch (YL)
+                    {
+                        case 0:
+                            uri = "http://api.bilibili.com/list?type=json&appkey=422fd9d7289a1dd9&tid=5&page=1&pagesize=" + 20 + "&order=hot&ver=2&rnd=" + new Random().Next(1000, 9999);
+                            YL++;
+                            break;
+                        case 1:
+                            uri = "http://api.bilibili.com/list?type=json&appkey=422fd9d7289a1dd9&tid=5&page=1&pagesize=" + 20 + "&order=review&ver=2&rnd=" + new Random().Next(1000, 9999);
+                            YL++;
+                            break;
+                        case 2:
+                            uri = "http://api.bilibili.com/list?type=json&appkey=422fd9d7289a1dd9&tid=5&page=1&pagesize=" + 20 + "&order=default&ver=2&rnd=" + new Random().Next(1000, 9999);
+                            YL = 0;
+                            break;
+                        default:
+                            break;
+                    }
                     break;
                 case "GC":
                     gridview = home_GridView_GC;
-                    uri = "http://api.bilibili.com/list?type=json&appkey=422fd9d7289a1dd9&tid=119&page=1&pagesize=" + 20 + "&order=hot&ver=2&rnd=" + new Random().Next(1000, 9999);
+                    switch (GC)
+                    {
+                        case 0:
+                            uri = "http://api.bilibili.com/list?type=json&appkey=422fd9d7289a1dd9&tid=119&page=1&pagesize=" + 20 + "&order=hot&ver=2&rnd=" + new Random().Next(1000, 9999);
+                            GC++;
+                            break;
+                        case 1:
+                            uri = "http://api.bilibili.com/list?type=json&appkey=422fd9d7289a1dd9&tid=119&page=1&pagesize=" + 20 + "&order=review&ver=2&rnd=" + new Random().Next(1000, 9999);
+                            GC++;
+                            break;
+                        case 2:
+                            uri = "http://api.bilibili.com/list?type=json&appkey=422fd9d7289a1dd9&tid=119&page=1&pagesize=" + 20 + "&order=default&ver=2&rnd=" + new Random().Next(1000, 9999);
+                            GC = 0;
+                            break;
+                        default:
+                            break;
+                    }
                     break;
                 case "DY":
                     gridview = home_GridView_DY;
-                    uri = "http://api.bilibili.com/list?type=json&appkey=422fd9d7289a1dd9&tid=23&page=1&pagesize=" + 20 + "&order=hot&ver=2&rnd=" + new Random().Next(1000, 9999);
+                    switch (DY)
+                    {
+                        case 0:
+                            uri = "http://api.bilibili.com/list?type=json&appkey=422fd9d7289a1dd9&tid=23&page=1&pagesize=" + 20 + "&order=hot&ver=2&rnd=" + new Random().Next(1000, 9999);
+                            DY++;
+                            break;
+                        case 1:
+                            uri = "http://api.bilibili.com/list?type=json&appkey=422fd9d7289a1dd9&tid=23&page=1&pagesize=" + 20 + "&order=review&ver=2&rnd=" + new Random().Next(1000, 9999);
+                            DY++;
+                            break;
+                        case 2:
+                            uri = "http://api.bilibili.com/list?type=json&appkey=422fd9d7289a1dd9&tid=23&page=1&pagesize=" + 20 + "&order=default&ver=2&rnd=" + new Random().Next(1000, 9999);
+                            DY = 0;
+                            break;
+                        default:
+                            break;
+                    }
                     break;
                 case "DSJ":
                     gridview = home_GridView_DSJ;
-                    uri = "http://api.bilibili.com/list?type=json&appkey=422fd9d7289a1dd9&tid=11&page=1&pagesize=" + 20 + "&order=hot&ver=2&rnd=" + new Random().Next(1000, 9999);
+                    switch (DSJ)
+                    {
+                        case 0:
+                            uri = "http://api.bilibili.com/list?type=json&appkey=422fd9d7289a1dd9&tid=11&page=1&pagesize=" + 20 + "&order=hot&ver=2&rnd=" + new Random().Next(1000, 9999);
+                            DSJ++;
+                            break;
+                        case 1:
+                            uri = "http://api.bilibili.com/list?type=json&appkey=422fd9d7289a1dd9&tid=11&page=1&pagesize=" + 20 + "&order=review&ver=2&rnd=" + new Random().Next(1000, 9999);
+                            DSJ++;
+                            break;
+                        case 2:
+                            uri = "http://api.bilibili.com/list?type=json&appkey=422fd9d7289a1dd9&tid=11&page=1&pagesize=" + 20 + "&order=default&ver=2&rnd=" + new Random().Next(1000, 9999);
+                            DSJ = 0;
+                            break;
+                        default:
+                            break;
+                    }
+                    
                     break;
                 case "SS":
                     gridview = home_GridView_SS;
-                    uri = "http://api.bilibili.com/list?type=json&appkey=422fd9d7289a1dd9&tid=155&page=1&pagesize=" + 20 + "&order=hot&ver=2&rnd=" + new Random().Next(1000, 9999);
+                    switch (SS)
+                    {
+                        case 0:
+                            uri = "http://api.bilibili.com/list?type=json&appkey=422fd9d7289a1dd9&tid=155&page=1&pagesize=" + 20 + "&order=hot&ver=2&rnd=" + new Random().Next(1000, 9999);
+                            SS++;
+                            break;
+                        case 1:
+                            uri = "http://api.bilibili.com/list?type=json&appkey=422fd9d7289a1dd9&tid=155&page=1&pagesize=" + 20 + "&order=review&ver=2&rnd=" + new Random().Next(1000, 9999);
+                            SS++;
+                            break;
+                        case 2:
+                            uri = "http://api.bilibili.com/list?type=json&appkey=422fd9d7289a1dd9&tid=155&page=1&pagesize=" + 20 + "&order=default&ver=2&rnd=" + new Random().Next(1000, 9999);
+                            SS = 0;
+                            break;
+                        default:
+                            break;
+                    }
+                    //uri = "http://api.bilibili.com/list?type=json&appkey=422fd9d7289a1dd9&tid=155&page=1&pagesize=" + 20 + "&order=hot&ver=2&rnd=" + new Random().Next(1000, 9999);
                     break;
                 default:
                     break;
             }
-            if (gridview.Items==null|| gridview.Items.Count==0)
-            {
-                string fj = await wc.GetResults(new Uri(uri));
-                SetListView(fj, gridview);
-            }
-            else
-            {
-                var lists = (from a in gridview.Items select a).ToArray();
-                gridview.Items.Clear();
-                for (int i = lists.Length - 1; i >= 0; i--)
-                {
-                    gridview.Items.Add(lists[i]);
-                }
-                lists = null;
-            }
+            string fj = await wc.GetResults(new Uri(uri));
+            SetListView(fj, gridview);
+            //if (gridview.Items==null|| gridview.Items.Count==0)
+            //{
+               
+            //}
+            //else
+            //{
+            //    var lists = (from a in gridview.Items select a).ToArray();
+            //    gridview.Items.Clear();
+            //    for (int i = lists.Length - 1; i >= 0; i--)
+            //    {
+            //        gridview.Items.Add(lists[i]);
+            //    }
+            //    lists = null;
+            //}
            
         }
     }

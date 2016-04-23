@@ -68,7 +68,7 @@ namespace bilibili2
         }
         private void GetSetting()
         {
-           
+
         }
         //首页错误
         private void Home_Items_ErrorEvent(string aid)
@@ -199,8 +199,24 @@ namespace bilibili2
             {
                 case 0:
                     top_txt_find.PlaceholderText = "搜索房间或主播";
+                    if (!liveinfo.isLoaded)
+                    {
+                        liveinfo.GetLiveInfo();
+                    }
                     break;
                 case 1:
+                    if (!LoadBan)
+                    {
+                        LoadBan = false;
+                        await GetBanUpdate();
+                        await GetBanBanner();
+                        await GetBanTJ();
+                        LoadBan = true;
+                    }
+                    if (!liveinfo.isLoaded)
+                    {
+                        liveinfo.GetLiveInfo();
+                    }
                     break;
                 case 2:
                     if (!LoadBan)
@@ -349,7 +365,7 @@ namespace bilibili2
         //页面大小改变
         private void Page_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-
+           
 
             if (this.ActualWidth <= 640)
             {
@@ -723,7 +739,7 @@ namespace bilibili2
                     {
                         txt_D_L.Text = "夜间模式";
                         RequestedTheme = ElementTheme.Light;
-                       
+
                         font_D_L.Glyph = "\uE708";
                         ChangeTitbarColor();
                     }
@@ -739,6 +755,14 @@ namespace bilibili2
                     }
                     break;
                 case "History":
+                    if (isLogin)
+                    {
+                        infoFrame.Navigate(typeof(HistoryPage));
+                    }
+                    else
+                    {
+                        messShow.Show("请先登录！", 3000);
+                    }
                     break;
                 case "Message":
                     break;
@@ -1024,6 +1048,12 @@ namespace bilibili2
                     break;
                 case "设置":
                     (infoFrame.Content as SettingPage).BackEvent += MainPage_BackEvent;
+                    break;
+                case "播放器":
+                    (infoFrame.Content as PlayerPage).BackEvent += MainPage_BackEvent;
+                    break;
+                case "历史":
+                    (infoFrame.Content as HistoryPage).BackEvent += MainPage_BackEvent;
                     break;
                 default:
                     break;
@@ -1598,7 +1628,7 @@ namespace bilibili2
         //番剧推荐点击
         private void list_Ban_TJ_ItemClick(object sender, ItemClickEventArgs e)
         {
-            //妈蛋，B站就一定要返回个链接么
+            //妈蛋，B站就一定要返回个链接么,就不能返回个类型加参数吗
             string tag = Regex.Match((e.ClickedItem as BanTJModel).link, @"^http://bangumi.bilibili.com/anime/category/(.*?)$").Groups[1].Value;
             if (tag.Length != 0)
             {
@@ -1609,6 +1639,13 @@ namespace bilibili2
             if (ban.Length != 0)
             {
                 infoFrame.Navigate(typeof(BanInfoPage), ban);
+                return;
+            }
+            //
+            string aid = Regex.Match((e.ClickedItem as BanTJModel).link, @"^http://www.bilibili.com/video/av(.*?)/$").Groups[1].Value;
+            if (aid.Length != 0)
+            {
+                infoFrame.Navigate(typeof(VideoInfoPage), aid);
                 return;
             }
             infoFrame.Navigate(typeof(WebViewPage), (e.ClickedItem as BanTJModel).link);
@@ -1740,8 +1777,28 @@ namespace bilibili2
         //dilidili点击
         private void btn_dilidili_Click(object sender, RoutedEventArgs e)
         {
-            infoFrame.Navigate(typeof(PlayerPage));
+            //infoFrame.Navigate(typeof(PlayerPage));
         }
-    }
+        //打开直播关注
+        private async void btn_live_Atton_Click(object sender, RoutedEventArgs e)
+        {
+            UserClass UserInfo = new UserClass();
+            if (UserInfo.IsLogin())
+            {
+                grid_AttenLive.Visibility = Visibility.Visible;
+                sp_Live.IsPaneOpen = true;
+                pro_Load_live.Visibility = Visibility.Visible;
+                list_AttLive.ItemsSource = await new UserClass().GetAttentionLive();
+                pro_Load_live.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                messShow.Show("请先登录!", 3000);
+            }
 
+
+        }
+
+     
+    }
 }

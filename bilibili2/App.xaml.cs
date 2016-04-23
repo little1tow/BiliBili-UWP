@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Text.RegularExpressions;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
@@ -127,6 +128,26 @@ namespace bilibili2
             var deferral = e.SuspendingOperation.GetDeferral();
             //TODO: 保存应用程序状态并停止任何后台活动
             deferral.Complete();
+        }
+
+        protected override void OnActivated(IActivatedEventArgs args)
+        {
+            if (args.Kind == ActivationKind.Protocol)
+            {
+                ProtocolActivatedEventArgs eventArgs = args as ProtocolActivatedEventArgs;
+                
+                string ban3 = Regex.Match(eventArgs.Uri.AbsoluteUri, @"^bilibili://?av=(.*?)$").Groups[1].Value;
+                if (ban3.Length != 0)
+                {
+                    //args.Handled = true;
+                    Frame rootFrame = Window.Current.Content as Frame;
+                    rootFrame.Navigate(typeof(VideoInfoPage), ban3);
+                   // return;
+                }
+                // TODO: Handle URI activation
+                // The received URI is eventArgs.Uri.AbsoluteUri
+            }
+
         }
     }
 }

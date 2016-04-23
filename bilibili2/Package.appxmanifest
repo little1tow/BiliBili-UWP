@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" IgnorableNamespaces="uap mp">
-  <Identity Name="58710062-37ab-4196-836d-1030d9d73897" Publisher="CN=zhc" Version="1.0.7.0" />
+  <Identity Name="58710062-37ab-4196-836d-1030d9d73897" Publisher="CN=zhc" Version="1.0.9.0" />
   <mp:PhoneIdentity PhoneProductId="58710062-37ab-4196-836d-1030d9d73897" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>bilibili2</DisplayName>
@@ -20,9 +20,22 @@
         </uap:DefaultTile>
         <uap:SplashScreen Image="Assets\SplashScreen.png" BackgroundColor="#DF85A0" />
       </uap:VisualElements>
+      <Extensions>
+        <uap:Extension Category="windows.protocol" EntryPoint="bilibili2.App">
+          <uap:Protocol Name="bilibili">
+            <uap:DisplayName>BiliBili UWP</uap:DisplayName>
+          </uap:Protocol>
+        </uap:Extension>
+        <Extension Category="windows.backgroundTasks" EntryPoint="bilibili2.BackTask.BackgroundTask">
+          <BackgroundTasks>
+            <Task Type="timer" />
+          </BackgroundTasks>
+        </Extension>
+      </Extensions>
     </Application>
   </Applications>
   <Capabilities>
     <Capability Name="internetClient" />
+    <uap:Capability Name="videosLibrary" />
   </Capabilities>
 </Package>

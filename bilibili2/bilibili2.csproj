@@ -104,8 +104,15 @@
     </Compile>
     <Compile Include="Class\MD5.cs" />
     <Compile Include="Class\SettingHelper.cs" />
+    <Compile Include="Class\SqlHelper.cs" />
     <Compile Include="Class\UserClass.cs" />
     <Compile Include="Class\WebClientClass.cs" />
+    <Compile Include="Controls\MyDanmaku.xaml.cs">
+      <DependentUpon>MyDanmaku.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\MyLiveControl.xaml.cs">
+      <DependentUpon>MyLiveControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\OrientedSize.cs" />
     <Compile Include="Controls\WrapPanel.cs" />
     <Compile Include="Controls\MessageShow.xaml.cs">
@@ -128,6 +135,9 @@
     </Compile>
     <Compile Include="Pages\FavPage.xaml.cs">
       <DependentUpon>FavPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\HistoryPage.xaml.cs">
+      <DependentUpon>HistoryPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\LoadPage.xaml.cs">
       <DependentUpon>LoadPage.xaml</DependentUpon>
@@ -223,8 +233,6 @@
     <Content Include="Assets\PartIcon\BDSJ.png" />
     <Content Include="Assets\PartIcon\BDY.png" />
     <Content Include="Assets\PartIcon\BFJ.png" />
-    <Content Include="Assets\PartIcon\bg2.png" />
-    <Content Include="Assets\PartIcon\bg3.png" />
     <Content Include="Assets\PartIcon\BGC.png" />
     <Content Include="Assets\PartIcon\BKJ.png" />
     <Content Include="Assets\PartIcon\BSS.png" />
@@ -254,6 +262,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\MyDanmaku.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\MyLiveControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Pages\BanByTagPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -275,6 +291,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Pages\FavPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\HistoryPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -359,8 +379,16 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
+    <ProjectReference Include="..\bilibili2.BackTask\bilibili2.BackTask.csproj">
+      <Project>{a138e7d5-614a-4d37-a282-7fc3eee9f910}</Project>
+      <Name>bilibili2.BackTask</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <SDKReference Include="SQLite.UWP.2015, Version=3.12.2">
+      <Name>SQLite for Universal Windows Platform</Name>
+    </SDKReference>
     <SDKReference Include="WindowsMobile, Version=10.0.10240.0">
       <Name>Windows Mobile Extensions for the UWP</Name>
     </SDKReference>

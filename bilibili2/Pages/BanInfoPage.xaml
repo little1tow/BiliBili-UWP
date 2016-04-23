@@ -166,8 +166,8 @@
             <CommandBar x:Name="com_bar" Grid.Row="1" Background="{StaticResource BG}" Foreground="White" VerticalAlignment="Bottom">
                 <CommandBar.SecondaryCommands>
                     <AppBarButton x:Name="btn_Refresh" Icon="Refresh" Label="刷新" Click="btn_Refresh_Click"/>
-                    <AppBarButton Icon="ReShare" Label="分享" />
-                    <AppBarToggleButton x:Name="cb_IsPlay" Icon="Play" Label="直接播放" IsChecked="False"/>
+                    <AppBarButton x:Name="Share" Icon="ReShare" Label="分享" Click="Share_Click"/>
+                    <AppBarToggleButton x:Name="cb_IsPlay" Icon="Play" Label="直接播放" IsChecked="True"/>
                 </CommandBar.SecondaryCommands>
                 <AppBarButton x:Name="btn_CB" Visibility="Collapsed" Icon="Bold" Label="承包" Foreground="White"/>
                 <AppBarButton x:Name="btn_Conent" Visibility="Collapsed" Icon="Message" Label="评论" Foreground="White"/>

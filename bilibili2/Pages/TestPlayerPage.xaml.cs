@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using SQLitePCL;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -18,6 +19,7 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using Windows.Web.Http;
 
+
 // “空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=234238 上提供
 
 namespace bilibili2.Pages
@@ -30,13 +32,15 @@ namespace bilibili2.Pages
         public TestPlayerPage()
         {
             this.InitializeComponent();
+        
         }
 
         private DisplayRequest dispRequest = null;
 
-
+        string cid ;
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
+            cid = e.Parameter as string;
             GetPlayInfo(e.Parameter as string, 2);
             if (dispRequest == null)
             {
@@ -78,15 +82,6 @@ namespace bilibili2.Pages
             }
         }
 
-        public class VideoUriModel
-        {
-            public string format { get; set; }//视频类型
-
-            public object durl { get; set; }//视频信息
-
-            public string url { get; set; }//视频地址
-
-            public object backup_url { get; set; }//视频备份地址
-        }
+     
     }
 }

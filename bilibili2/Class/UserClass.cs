@@ -238,6 +238,70 @@ namespace bilibili2.Class
                 return null;
             }
         }
+        /// <summary>
+        /// 观看历史
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<GetHistoryModel>> GetHistory(int PageNum)
+        {
+            if (IsLogin())
+            {
+                try
+                {
+                    string results = await new WebClientClass().GetResults(new Uri("http://api.bilibili.com/x/history?jsonp=jsonp&ps=20&pn=" + PageNum+"&rnd="+new Random().Next(1000,9999)));
+                    //一层
+                    GetHistoryModel model = JsonConvert.DeserializeObject<GetHistoryModel>(results);
+                    if (model.data == null)
+                    {
+                        return null;
+                    }
+                    else
+                    {
+                        List<GetHistoryModel> lsModel = JsonConvert.DeserializeObject<List<GetHistoryModel>>(model.data.ToString());
+                        return lsModel;
+                    }
+
+                }
+                catch (Exception)
+                {
+                    return null;
+                }
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// 关注直播
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<GetAttentionLive>> GetAttentionLive()
+        {
+            List<GetAttentionLive> list = new List<GetAttentionLive>();
+            try
+            {
+                string url = string.Format("http://live.bilibili.com/AppFeed/index?_device=wp&_ulv=10000&access_key={0}&appkey=422fd9d7289a1dd9&build=411005&page=1&pagesize=20&platform=android",ApiHelper.access_key);
+                url += "&sign="+ApiHelper.GetSign(url);
+                string result =await  new WebClientClass().GetResults(new Uri(url));
+                GetAttentionLive mode = JsonConvert.DeserializeObject<GetAttentionLive>(result);
+                if (mode.code==0)
+                {
+                    GetAttentionLive model = JsonConvert.DeserializeObject<GetAttentionLive>(mode.data.ToString());
+                    list = JsonConvert.DeserializeObject<List<GetAttentionLive>>(model.list.ToString());
+                    return list.OrderByDescending(s => s.live_status).ToList();
+                }
+                else
+                {
+                    return list;
+                }
+            }
+            catch (Exception)
+            {
+                return list;
+            }
+        }
         //是否登录
         public bool IsLogin()
         {

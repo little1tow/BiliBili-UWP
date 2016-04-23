@@ -112,15 +112,7 @@ namespace bilibili2.Pages
                 pr_load.Visibility = Visibility.Visible;
                 wc = new WebClientClass();
                 string uri = "";
-                //if (!IsBan)
-                //{
-                //    //bf6bb7876ac096c6ea76af411f70c8fb
-                //    uri = string.Format("http://bangumi.bilibili.com/api/season?_device=wp&access_key{2}&_ulv=10000&build=411005&platform=android&appkey=422fd9d7289a1dd9&ts={0}000&type=sp&sp_id={1}", ApiHelper.GetTimeSpen, banID, ApiHelper.access_key);
-                //}
-                //else
-                //{
                     uri = string.Format("http://bangumi.bilibili.com/api/season?_device=wp&access_key={2}&_ulv=10000&build=411005&platform=android&appkey=422fd9d7289a1dd9&ts={0}000&type=bangumi&season_id={1}", ApiHelper.GetTimeSpen, banID, ApiHelper.access_key);
-               // }
                 uri += "&sign=" + ApiHelper.GetSign(uri);
                 string result = await wc.GetResults(new Uri(uri));
                 BangumiInfoModel model = new BangumiInfoModel();
@@ -141,7 +133,13 @@ namespace bilibili2.Pages
                     }
 
                     List<BangumiInfoModel> list = JsonConvert.DeserializeObject<List<BangumiInfoModel>>(model.episodes.ToString());
-                    list_E.ItemsSource = list;
+                    List<BangumiInfoModel> list2 = new List<BangumiInfoModel>();
+                    for (int i = 0; i < list.Count; i++)
+                    {
+                        list[i].Num = i;
+                        list2.Add(list[i]);
+                    }
+                    list_E.ItemsSource = list2;
                     List<BangumiInfoModel> list_CV = JsonConvert.DeserializeObject<List<BangumiInfoModel>>(model.actor.ToString());
                     txt_CV.Text = "";
                     foreach (BangumiInfoModel item in list_CV)
@@ -200,22 +198,33 @@ namespace bilibili2.Pages
             if (cb_IsPlay.IsChecked.Value)
             {
                 BangumiInfoModel model = e.ClickedItem as BangumiInfoModel;
-                List<VideoInfoModel> listVideo = new List<VideoInfoModel>();
-                List<BangumiInfoModel> ls = ((List<BangumiInfoModel>)list_E.ItemsSource).OrderBy(s => Convert.ToDouble(s.index)).ToList();
-
+                List<VideoModel> listVideo = new List<VideoModel>();
+                List<BangumiInfoModel> ls = ((List<BangumiInfoModel>)list_E.ItemsSource).OrderByDescending(s => Convert.ToDouble(s.Num)).ToList();
                 foreach (BangumiInfoModel item in ls)
                 {
-                    listVideo.Add(new VideoInfoModel() { aid = item.av_id, title = item.index_title ?? item.index, cid = item.danmaku.ToString(), page = item.index, part = item.index_title ?? "" });
+                    listVideo.Add(new VideoModel() { aid = item.av_id, title = txt_Name.Text, cid = item.danmaku.ToString(), page = item.index, part = item.index_title ?? "" });
                 }
-
-                KeyValuePair<List<VideoInfoModel>, int> list = new KeyValuePair<List<VideoInfoModel>, int>(listVideo, ls.IndexOf(e.ClickedItem as BangumiInfoModel));
-                //VplayVideo(list);
+                KeyValuePair<List<VideoModel>, int> list = new KeyValuePair<List<VideoModel>, int>(listVideo, ls.IndexOf(e.ClickedItem as BangumiInfoModel));
+                PostHistory(model.av_id);
+                this.Frame.Navigate(typeof(PlayerPage), list);
             }
             else
             {
                 this.Frame.Navigate(typeof(VideoInfoPage), (e.ClickedItem as BangumiInfoModel).av_id);
             }
-
+        }
+        private async void PostHistory(string aid)
+        {
+            try
+            {
+                WebClientClass wc = new WebClientClass();
+                string url = string.Format("http://api.bilibili.com/x/history/add?_device=wp&_ulv=10000&access_key={0}&appkey={1}&build=411005&platform=android", ApiHelper.access_key, ApiHelper._appKey);
+                url += "&sign=" + ApiHelper.GetSign(url);
+                string result = await wc.PostResults(new Uri(url), "aid=" + aid);
+            }
+            catch (Exception)
+            {
+            }
         }
         //private async void btn_OK_Click(object sender, RoutedEventArgs e)
         //{
@@ -401,6 +410,15 @@ namespace bilibili2.Pages
                 return false;
             }
 
+        }
+
+        private void Share_Click(object sender, RoutedEventArgs e)
+        {
+            Windows.ApplicationModel.DataTransfer.DataPackage pack = new Windows.ApplicationModel.DataTransfer.DataPackage();
+            pack.SetText(string.Format("我正在BiliBili追{0},一起来看吧\r\n地址：http://bangumi.bilibili.com/anime/{1}", txt_Name.Text, banID));
+            Windows.ApplicationModel.DataTransfer.Clipboard.SetContent(pack); // 保存 DataPackage 对象到剪切板
+            Windows.ApplicationModel.DataTransfer.Clipboard.Flush();
+            messShow.Show("已将内容复制到剪切板",3000);
         }
     }
 }

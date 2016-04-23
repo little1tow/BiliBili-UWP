@@ -45,14 +45,13 @@ namespace bilibili2
             NavigationCacheMode = NavigationCacheMode.Enabled;
         }
         string aid = "";
-       
+        bool Back = false;
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            // if (e.NavigationMode== NavigationMode.New)
-            // {
-          
             bg.Color = ((SolidColorBrush)this.Frame.Tag).Color;
-            video_Error_Null.Visibility = Visibility.Collapsed;
+            if (e.NavigationMode == NavigationMode.New||Back)
+            {
+                video_Error_Null.Visibility = Visibility.Collapsed;
                 video_Error_User.Visibility = Visibility.Collapsed;
                 aid = "";
                 top_txt_Header.Text = "AV" + e.Parameter as string;
@@ -66,16 +65,16 @@ namespace bilibili2
                 aid = e.Parameter as string;
                 GetVideoInfo(aid);
                GetFavBox();
-            //}
+            }
 
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
-            Video_Grid_Info.DataContext = null;
-            Video_UP.DataContext = null;
-            Video_data.DataContext = null;
-            ListView_Comment_Hot.Items.Clear();
+            //Video_Grid_Info.DataContext = null;
+            //Video_UP.DataContext = null;
+            //Video_data.DataContext = null;
+            //ListView_Comment_Hot.Items.Clear();
         }
         private void btn_back_Click(object sender, RoutedEventArgs e)
         {
@@ -192,7 +191,7 @@ namespace bilibili2
                 List<VideoModel> ban = JsonConvert.DeserializeObject<List<VideoModel>>(InfoModel.pages.ToString());
                 foreach (VideoModel item in ban)
                 {
-                    item.title = model.title;
+                    item.title = InfoModel.title;
                     item.aid = aid;
                 }
                 Video_List.ItemsSource = ban;
@@ -444,17 +443,29 @@ namespace bilibili2
 
         private void ListView_ItemClick(object sender, ItemClickEventArgs e)
         {
+            Back = true;
             this.Frame.Navigate(typeof(VideoInfoPage), (e.ClickedItem as RecommendModel).id);
+            Video_Grid_Info.DataContext = null;
+            Video_UP.DataContext = null;
+            Video_data.DataContext = null;
+            ListView_Comment_Hot.Items.Clear();
         }
 
         private void Video_List_ItemClick(object sender, ItemClickEventArgs e)
         {
-            this.Frame.Navigate(typeof(TestPlayerPage), (e.ClickedItem as VideoModel).cid);
+            List<VideoModel> list = (List<VideoModel>)Video_List.ItemsSource;
+            KeyValuePair<List<VideoModel>, int> Par = new KeyValuePair<List<VideoModel>, int>(list, list.IndexOf((VideoModel)e.ClickedItem));
+            PostHistory();
+            this.Frame.Navigate(typeof(PlayerPage), Par);
+            //this.Frame.Navigate(typeof(PlayerPage), (e.ClickedItem as VideoModel).cid);
         }
 
         private void btn_playP1_Click(object sender, RoutedEventArgs e)
         {
-            this.Frame.Navigate(typeof(TestPlayerPage), (Video_List.Items[0] as VideoModel).cid);
+            List<VideoModel> list= (List<VideoModel>)Video_List.ItemsSource;
+            KeyValuePair<List<VideoModel>, int> Par = new KeyValuePair<List<VideoModel>, int>(list,0);
+            PostHistory();
+            this.Frame.Navigate(typeof(PlayerPage),Par);
         }
 
         private void btn_TB_1_Click(object sender, RoutedEventArgs e)
@@ -870,7 +881,14 @@ namespace bilibili2
                     }
                     else
                     {
-                        messShow.Show("点赞失败",3000);
+                        if ((int)json["code"] == 12007)
+                        {
+                            messShow.Show("已经点赞了", 3000);
+                        }
+                        else
+                        {
+                            messShow.Show("点赞失败" + result, 3000);
+                        }
                     }
 
                 }
@@ -1004,6 +1022,30 @@ namespace bilibili2
         private void btn_UP_Click(object sender, RoutedEventArgs e)
         {
             this.Frame.Navigate(typeof(UserInfoPage), ((VideoModel)Video_UP.DataContext).mid);
+
+        }
+
+        private void btn_Share_Click(object sender, RoutedEventArgs e)
+        {
+            Windows.ApplicationModel.DataTransfer.DataPackage pack = new Windows.ApplicationModel.DataTransfer.DataPackage();
+            pack.SetText(string.Format("我正在BiliBili看{0}\r\n地址：http://www.bilibili.com/video/av{1}", Video_Title.Text, aid));
+            Windows.ApplicationModel.DataTransfer.Clipboard.SetContent(pack); // 保存 DataPackage 对象到剪切板
+            Windows.ApplicationModel.DataTransfer.Clipboard.Flush();
+            messShow.Show("已将内容复制到剪切板", 3000);
+        }
+
+        private async void PostHistory()
+        {
+            try
+            {
+                WebClientClass wc = new WebClientClass();
+                string url = string.Format("http://api.bilibili.com/x/history/add?_device=wp&_ulv=10000&access_key={0}&appkey={1}&build=411005&platform=android", ApiHelper.access_key, ApiHelper._appKey);
+                url += "&sign=" + ApiHelper.GetSign(url);
+                string result = await wc.PostResults(new Uri(url), "aid=" + aid);
+            }
+            catch (Exception)
+            {
+            }
         }
     }
 }

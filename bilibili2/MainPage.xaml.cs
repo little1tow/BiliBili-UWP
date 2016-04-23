@@ -1,5 +1,6 @@
 ﻿using bilibili2.Class;
 using bilibili2.Pages;
+using bilibili2.PartPages;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -432,7 +433,47 @@ namespace bilibili2
         //打开分区
         private void HyperlinkButton_Click(object sender, RoutedEventArgs e)
         {
-            infoFrame.Navigate(typeof(VideoInfoPage));
+            switch (int.Parse((sender as HyperlinkButton).Tag.ToString()))
+            {
+                case 0:
+                    pivot_Home.SelectedIndex = 0;
+                    break;
+                case 1:
+                    infoFrame.Navigate(typeof(FJPage));
+                    break;
+                case 2:
+                    infoFrame.Navigate(typeof(DHPage));
+                    break;
+                case 3:
+                    infoFrame.Navigate(typeof(YYPage));
+                    break;
+                case 4:
+                    infoFrame.Navigate(typeof(WDPage));
+                    break;
+                case 5:
+                    infoFrame.Navigate(typeof(KJPage));
+                    break;
+                case 6:
+                    infoFrame.Navigate(typeof(YXPage));
+                    break;
+                case 7:
+                    infoFrame.Navigate(typeof(GCPage));
+                    break;
+                case 8:
+                    infoFrame.Navigate(typeof(YLPage));
+                    break;
+                case 9:
+                    infoFrame.Navigate(typeof(DYPage));
+                    break;
+                case 10:
+                    infoFrame.Navigate(typeof(DSJPage));
+                    break;
+                case 11:
+                    infoFrame.Navigate(typeof(SSPage));
+                    break;
+                default:
+                    break;
+            }
             //jinr.From = this.ActualWidth;
         }
         //子页面后退
@@ -765,6 +806,14 @@ namespace bilibili2
                     }
                     break;
                 case "Message":
+                    if (isLogin)
+                    {
+                        infoFrame.Navigate(typeof(MessagePage));
+                    }
+                    else
+                    {
+                        messShow.Show("请先登录！", 3000);
+                    }
                     break;
                 case "Download":
                     break;
@@ -1036,6 +1085,7 @@ namespace bilibili2
                     break;
                 case "用户中心":
                     (infoFrame.Content as UserInfoPage).BackEvent += MainPage_BackEvent;
+                    (infoFrame.Content as UserInfoPage).ExitEvent += MainPage_ExitEvent;
                     break;
                 case "查看评论":
                     (infoFrame.Content as CommentPage).BackEvent += MainPage_BackEvent;
@@ -1055,10 +1105,54 @@ namespace bilibili2
                 case "历史":
                     (infoFrame.Content as HistoryPage).BackEvent += MainPage_BackEvent;
                     break;
+                case "番剧":
+                    (infoFrame.Content as FJPage).BackEvent += MainPage_BackEvent;
+                    break;
+                case "动画":
+                    (infoFrame.Content as DHPage).BackEvent += MainPage_BackEvent;
+                    break;
+                case "音乐":
+                    (infoFrame.Content as YYPage).BackEvent += MainPage_BackEvent;
+                    break;
+                case "舞蹈":
+                    (infoFrame.Content as WDPage).BackEvent += MainPage_BackEvent;
+                    break;
+                case "科技":
+                    (infoFrame.Content as KJPage).BackEvent += MainPage_BackEvent;
+                    break;
+                case "游戏":
+                    (infoFrame.Content as YXPage).BackEvent += MainPage_BackEvent;
+                    break;
+                case "鬼畜":
+                    (infoFrame.Content as GCPage).BackEvent += MainPage_BackEvent;
+                    break;
+                case "娱乐":
+                    (infoFrame.Content as YLPage).BackEvent += MainPage_BackEvent;
+                    break;
+                case "电影":
+                    (infoFrame.Content as DYPage).BackEvent += MainPage_BackEvent;
+                    break;
+                case "电视剧":
+                    (infoFrame.Content as DSJPage).BackEvent += MainPage_BackEvent;
+                    break;
+                case "时尚":
+                    (infoFrame.Content as SSPage).BackEvent += MainPage_BackEvent;
+                    break;
+                case "消息中心":
+                    (infoFrame.Content as MessagePage).BackEvent += MainPage_BackEvent;
+                    break;
                 default:
                     break;
             }
         }
+
+        private void MainPage_ExitEvent()
+        {
+            tuic.To = this.ActualWidth;
+            storyboardPopOut.Begin();
+            GetLoadInfo();
+        }
+
         //主题更换
         private void MainPage_ChangeTheme()
         {

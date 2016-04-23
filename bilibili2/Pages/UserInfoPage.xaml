@@ -154,12 +154,12 @@
                                     <MenuFlyout>
                                         <MenuFlyoutItem Visibility="Collapsed">编辑资料</MenuFlyoutItem>
                                         <MenuFlyoutItem Visibility="Collapsed">隐私设置</MenuFlyoutItem>
-                                        <MenuFlyoutSubItem Text="更换背景">
+                                        <MenuFlyoutSubItem Text="更换背景" Visibility="Collapsed">
                                             <ToggleMenuFlyoutItem x:Name="menu_One" Click="ToggleMenuFlyoutItem_Click" IsChecked="True">蓝</ToggleMenuFlyoutItem>
                                             <ToggleMenuFlyoutItem x:Name="menu_Two" Click="ToggleMenuFlyoutItem_Click">黄</ToggleMenuFlyoutItem>
                                             <ToggleMenuFlyoutItem x:Name="menu_Three" Click="ToggleMenuFlyoutItem_Click">绿</ToggleMenuFlyoutItem>
                                         </MenuFlyoutSubItem>
-                                        <MenuFlyoutItem x:Name="btn_Exit">退出登录</MenuFlyoutItem>
+                                        <MenuFlyoutItem x:Name="btn_Exit" Click="btn_Exit_Click">退出登录</MenuFlyoutItem>
                                     </MenuFlyout>
                                 </AppBarButton.Flyout>
                             </AppBarButton>

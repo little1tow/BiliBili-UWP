@@ -791,91 +791,94 @@
                         </ScrollViewer>
                     </PivotItem>
                     <PivotItem Margin="0">
-                        <Grid >
-                            <Grid.RowDefinitions>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition/>
-                                <ColumnDefinition/>
-                                <ColumnDefinition/>
-                            </Grid.ColumnDefinitions>
-                            <HyperlinkButton Foreground="{ThemeResource Bili-FontColor}" VerticalAlignment="Center" Tag="0" HorizontalAlignment="Center" Click="HyperlinkButton_Click" >
-                                <StackPanel Height="72" Width="72" >
-                                    <Image Source="ms-appx:///Assets/PartIcon/BZB.png" Width="48" Height="48"/>
-                                    <TextBlock Text="直播" HorizontalAlignment="Center"/>
-                                </StackPanel>
-                            </HyperlinkButton>
-                            <HyperlinkButton Foreground="{ThemeResource Bili-FontColor}" VerticalAlignment="Center" Tag="1" Grid.Column="1" HorizontalAlignment="Center"  >
-                                <StackPanel Height="72" Width="72"  >
-                                    <Image Source="ms-appx:///Assets/PartIcon/BFJ.png" Width="48" Height="48"/>
-                                    <TextBlock Text="番剧" HorizontalAlignment="Center"/>
-                                </StackPanel>
-                            </HyperlinkButton>
-                            <HyperlinkButton Foreground="{ThemeResource Bili-FontColor}" Grid.Column="2" Tag="2"  VerticalAlignment="Center" HorizontalAlignment="Center" >
-                                <StackPanel Height="72" Width="72" >
-                                    <Image Source="ms-appx:///Assets/PartIcon/BDH.png" Width="48" Height="48"/>
-                                    <TextBlock Text="动画" HorizontalAlignment="Center"/>
-                                </StackPanel>
-                            </HyperlinkButton>
-                            <HyperlinkButton Foreground="{ThemeResource Bili-FontColor}" Grid.Row="1" Grid.Column="0" Tag="3" VerticalAlignment="Center" HorizontalAlignment="Center"  >
-                                <StackPanel Height="72" Width="72" >
-                                    <Image Source="ms-appx:///Assets/PartIcon/BYY.png" Width="48" Height="48"/>
-                                    <TextBlock Text="音乐" HorizontalAlignment="Center"/>
-                                </StackPanel>
-                            </HyperlinkButton>
-                            <HyperlinkButton Foreground="{ThemeResource Bili-FontColor}" Grid.Row="1" Grid.Column="1" Tag="4" VerticalAlignment="Center" HorizontalAlignment="Center" >
-                                <StackPanel Height="72" Width="72" Tag="0">
-                                    <Image Source="ms-appx:///Assets/PartIcon/BWD.png" Width="48" Height="48"/>
-                                    <TextBlock Text="舞蹈" HorizontalAlignment="Center"/>
-                                </StackPanel>
-                            </HyperlinkButton>
-                            <HyperlinkButton Foreground="{ThemeResource Bili-FontColor}" Grid.Row="1" Grid.Column="2" Tag="5" VerticalAlignment="Center" HorizontalAlignment="Center"  >
-                                <StackPanel Height="72" Width="72" Tag="0">
-                                    <Image Source="ms-appx:///Assets/PartIcon/BKJ.png" Width="48" Height="48"/>
-                                    <TextBlock Text="科技" HorizontalAlignment="Center"/>
-                                </StackPanel>
-                            </HyperlinkButton>
-                            <HyperlinkButton Foreground="{ThemeResource Bili-FontColor}" Grid.Row="2" Grid.Column="0" Tag="6" VerticalAlignment="Center" HorizontalAlignment="Center"  >
-                                <StackPanel Height="72" Width="72" Tag="0">
-                                    <Image Source="ms-appx:///Assets/PartIcon/BYX.png" Width="48" Height="48"/>
-                                    <TextBlock Text="游戏" HorizontalAlignment="Center"/>
-                                </StackPanel>
-                            </HyperlinkButton>
-                            <HyperlinkButton Foreground="{ThemeResource Bili-FontColor}" Grid.Row="2" Grid.Column="1" Tag="7" VerticalAlignment="Center" HorizontalAlignment="Center"  >
-                                <StackPanel Height="72" Width="72" Tag="0">
-                                    <Image Source="ms-appx:///Assets/PartIcon/BGC.png" Width="48" Height="48"/>
-                                    <TextBlock Text="鬼畜" HorizontalAlignment="Center"/>
-                                </StackPanel>
-                            </HyperlinkButton>
-                            <HyperlinkButton Foreground="{ThemeResource Bili-FontColor}" Grid.Row="2" Grid.Column="2" Tag="8" VerticalAlignment="Center" HorizontalAlignment="Center" >
-                                <StackPanel Height="72" Width="72" Tag="0">
-                                    <Image Source="ms-appx:///Assets/PartIcon/BYL.png" Width="48" Height="48"/>
-                                    <TextBlock Text="娱乐" HorizontalAlignment="Center"/>
-                                </StackPanel>
-                            </HyperlinkButton>
-                            <HyperlinkButton Foreground="{ThemeResource Bili-FontColor}" Grid.Row="3" Grid.Column="0" Tag="9" VerticalAlignment="Center" HorizontalAlignment="Center"  >
-                                <StackPanel Height="72" Width="72" Tag="0">
-                                    <Image Source="ms-appx:///Assets/PartIcon/BDY.png" Width="48" Height="48"/>
-                                    <TextBlock Text="电影" HorizontalAlignment="Center"/>
-                                </StackPanel>
-                            </HyperlinkButton>
-                            <HyperlinkButton Foreground="{ThemeResource Bili-FontColor}" Grid.Row="3" Grid.Column="1" Tag="10" VerticalAlignment="Center" HorizontalAlignment="Center" >
-                                <StackPanel Height="72" Width="72" Tag="0">
-                                    <Image Source="ms-appx:///Assets/PartIcon/BDSJ.png" Width="48" Height="48"/>
-                                    <TextBlock Text="电视剧" HorizontalAlignment="Center"/>
-                                </StackPanel>
-                            </HyperlinkButton>
-                            <HyperlinkButton Foreground="{ThemeResource Bili-FontColor}" Grid.Row="3" Grid.Column="2" Tag="11" VerticalAlignment="Center" HorizontalAlignment="Center" >
-                                <StackPanel Height="72" Width="72" Tag="0">
-                                    <Image Source="ms-appx:///Assets/PartIcon/BSS.png" Width="48" Height="48"/>
-                                    <TextBlock Text="时尚" HorizontalAlignment="Center"/>
-                                </StackPanel>
-                            </HyperlinkButton>
-                        </Grid>
+                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                            <Grid MinHeight="500">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <HyperlinkButton Foreground="{ThemeResource Bili-FontColor}" VerticalAlignment="Center" Tag="0" HorizontalAlignment="Center" Click="HyperlinkButton_Click" >
+                                    <StackPanel Height="72" Width="72" >
+                                        <Image Source="ms-appx:///Assets/PartIcon/BZB.png" Width="48" Height="48"/>
+                                        <TextBlock Text="直播" HorizontalAlignment="Center"/>
+                                    </StackPanel>
+                                </HyperlinkButton>
+                                <HyperlinkButton Foreground="{ThemeResource Bili-FontColor}" VerticalAlignment="Center" Tag="1" Grid.Column="1" HorizontalAlignment="Center"  Click="HyperlinkButton_Click" >
+                                    <StackPanel Height="72" Width="72"  >
+                                        <Image Source="ms-appx:///Assets/PartIcon/BFJ.png" Width="48" Height="48"/>
+                                        <TextBlock Text="番剧" HorizontalAlignment="Center"/>
+                                    </StackPanel>
+                                </HyperlinkButton>
+                                <HyperlinkButton Foreground="{ThemeResource Bili-FontColor}" Grid.Column="2" Tag="2"  VerticalAlignment="Center" HorizontalAlignment="Center" Click="HyperlinkButton_Click" >
+                                    <StackPanel Height="72" Width="72" >
+                                        <Image Source="ms-appx:///Assets/PartIcon/BDH.png" Width="48" Height="48"/>
+                                        <TextBlock Text="动画" HorizontalAlignment="Center"/>
+                                    </StackPanel>
+                                </HyperlinkButton>
+                                <HyperlinkButton Foreground="{ThemeResource Bili-FontColor}" Grid.Row="1" Grid.Column="0" Tag="3" VerticalAlignment="Center" HorizontalAlignment="Center"  Click="HyperlinkButton_Click" >
+                                    <StackPanel Height="72" Width="72" >
+                                        <Image Source="ms-appx:///Assets/PartIcon/BYY.png" Width="48" Height="48"/>
+                                        <TextBlock Text="音乐" HorizontalAlignment="Center"/>
+                                    </StackPanel>
+                                </HyperlinkButton>
+                                <HyperlinkButton Foreground="{ThemeResource Bili-FontColor}" Grid.Row="1" Grid.Column="1" Tag="4" VerticalAlignment="Center" HorizontalAlignment="Center" Click="HyperlinkButton_Click" >
+                                    <StackPanel Height="72" Width="72" Tag="0">
+                                        <Image Source="ms-appx:///Assets/PartIcon/BWD.png" Width="48" Height="48"/>
+                                        <TextBlock Text="舞蹈" HorizontalAlignment="Center"/>
+                                    </StackPanel>
+                                </HyperlinkButton>
+                                <HyperlinkButton Foreground="{ThemeResource Bili-FontColor}" Grid.Row="1" Grid.Column="2" Tag="5" VerticalAlignment="Center" HorizontalAlignment="Center"  Click="HyperlinkButton_Click" >
+                                    <StackPanel Height="72" Width="72" Tag="0">
+                                        <Image Source="ms-appx:///Assets/PartIcon/BKJ.png" Width="48" Height="48"/>
+                                        <TextBlock Text="科技" HorizontalAlignment="Center"/>
+                                    </StackPanel>
+                                </HyperlinkButton>
+                                <HyperlinkButton Foreground="{ThemeResource Bili-FontColor}" Grid.Row="2" Grid.Column="0" Tag="6" VerticalAlignment="Center" HorizontalAlignment="Center"  Click="HyperlinkButton_Click" >
+                                    <StackPanel Height="72" Width="72" Tag="0">
+                                        <Image Source="ms-appx:///Assets/PartIcon/BYX.png" Width="48" Height="48"/>
+                                        <TextBlock Text="游戏" HorizontalAlignment="Center"/>
+                                    </StackPanel>
+                                </HyperlinkButton>
+                                <HyperlinkButton Foreground="{ThemeResource Bili-FontColor}" Grid.Row="2" Grid.Column="1" Tag="7" VerticalAlignment="Center" HorizontalAlignment="Center"  Click="HyperlinkButton_Click" >
+                                    <StackPanel Height="72" Width="72" Tag="0">
+                                        <Image Source="ms-appx:///Assets/PartIcon/BGC.png" Width="48" Height="48"/>
+                                        <TextBlock Text="鬼畜" HorizontalAlignment="Center"/>
+                                    </StackPanel>
+                                </HyperlinkButton>
+                                <HyperlinkButton Foreground="{ThemeResource Bili-FontColor}" Grid.Row="2" Grid.Column="2" Tag="8" VerticalAlignment="Center" HorizontalAlignment="Center" Click="HyperlinkButton_Click" >
+                                    <StackPanel Height="72" Width="72" Tag="0">
+                                        <Image Source="ms-appx:///Assets/PartIcon/BYL.png" Width="48" Height="48"/>
+                                        <TextBlock Text="娱乐" HorizontalAlignment="Center"/>
+                                    </StackPanel>
+                                </HyperlinkButton>
+                                <HyperlinkButton Foreground="{ThemeResource Bili-FontColor}" Grid.Row="3" Grid.Column="0" Tag="9" VerticalAlignment="Center" HorizontalAlignment="Center"  Click="HyperlinkButton_Click" >
+                                    <StackPanel Height="72" Width="72" Tag="0">
+                                        <Image Source="ms-appx:///Assets/PartIcon/BDY.png" Width="48" Height="48"/>
+                                        <TextBlock Text="电影" HorizontalAlignment="Center"/>
+                                    </StackPanel>
+                                </HyperlinkButton>
+                                <HyperlinkButton Foreground="{ThemeResource Bili-FontColor}" Grid.Row="3" Grid.Column="1" Tag="10" VerticalAlignment="Center" HorizontalAlignment="Center" Click="HyperlinkButton_Click" >
+                                    <StackPanel Height="72" Width="72" Tag="0">
+                                        <Image Source="ms-appx:///Assets/PartIcon/BDSJ.png" Width="48" Height="48"/>
+                                        <TextBlock Text="电视剧" HorizontalAlignment="Center"/>
+                                    </StackPanel>
+                                </HyperlinkButton>
+                                <HyperlinkButton Foreground="{ThemeResource Bili-FontColor}" Grid.Row="3" Grid.Column="2" Tag="11" VerticalAlignment="Center" HorizontalAlignment="Center" Click="HyperlinkButton_Click" >
+                                    <StackPanel Height="72" Width="72" Tag="0">
+                                        <Image Source="ms-appx:///Assets/PartIcon/BSS.png" Width="48" Height="48"/>
+                                        <TextBlock Text="时尚" HorizontalAlignment="Center"/>
+                                    </StackPanel>
+                                </HyperlinkButton>
+                            </Grid>
+                        </ScrollViewer>
+                     
                     </PivotItem>
                     <PivotItem Margin="0" >
                         <ScrollViewer x:Name="sc" VerticalScrollBarVisibility="Auto" ViewChanged="sc_ViewChanged">

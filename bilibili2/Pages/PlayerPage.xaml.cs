@@ -10,8 +10,11 @@ using System.Threading.Tasks;
 using System.Xml;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Media;
+using Windows.Media.Playback;
 using Windows.System.Display;
 using Windows.UI;
+using Windows.UI.Core;
 using Windows.UI.Popups;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
@@ -23,7 +26,7 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
 // “空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=234238 上提供
-
+//bilibili2.Pages.PlayerPage
 namespace bilibili2.Pages
 {
     /// <summary>
@@ -36,7 +39,48 @@ namespace bilibili2.Pages
         public PlayerPage()
         {
             this.InitializeComponent();
+            CoreWindow.GetForCurrentThread().KeyDown += PlayerPage_KeyDown;
         }
+
+        private void PlayerPage_KeyDown(CoreWindow sender, KeyEventArgs args)
+        {
+            args.Handled = true;
+            switch (args.VirtualKey)
+            {
+                case Windows.System.VirtualKey.Space:
+                    if (btn_Pause.Visibility == Visibility.Visible)
+                    {
+                        mediaElement.Pause();
+                    }
+                    else
+                    {
+                        mediaElement.Play();
+                    }
+                    break;
+                case Windows.System.VirtualKey.Left:
+                   // mediaElement.Position.Subtract(new TimeSpan(0, 0, 3));
+                    slider3.Value = slider.Value - 3;
+                    messShow.Show(mediaElement.Position.Hours.ToString("00") + ":" + mediaElement.Position.Minutes.ToString("00") + ":" + mediaElement.Position.Seconds.ToString("00"), 3000);
+                    break;
+                case Windows.System.VirtualKey.Up:
+                    mediaElement.Volume += 0.1;
+                    messShow.Show("音量:"+mediaElement.Volume.ToString("P"), 3000);
+                    break;
+                case Windows.System.VirtualKey.Right:
+                    slider3.Value = slider.Value + 3;
+                    messShow.Show(mediaElement.Position.Hours.ToString("00") + ":" + mediaElement.Position.Minutes.ToString("00") + ":" + mediaElement.Position.Seconds.ToString("00"), 3000);
+                    break;
+                case Windows.System.VirtualKey.Down:
+                    mediaElement.Volume-= 0.1;
+                    messShow.Show("音量:" + mediaElement.Volume.ToString("P"), 3000);
+                    break;
+                default:
+                    break;
+            }
+
+         
+        }
+
         DispatcherTimer timer = new DispatcherTimer();
         DispatcherTimer datetimer = new DispatcherTimer();//用于更新时间
         SettingHelper setting = new SettingHelper();
@@ -46,6 +90,8 @@ namespace bilibili2.Pages
         int PlayP = 0;//播放第几P
         bool LoadDanmu = true;
         private bool Is = false;
+        string Cid = string.Empty;
+        string Aid = string.Empty;
         private DisplayRequest dispRequest = null;//保持屏幕常亮
         protected override async  void OnNavigatedTo(NavigationEventArgs e)
         {
@@ -54,6 +100,7 @@ namespace bilibili2.Pages
             datetimer.Start();
             VideoList = ((KeyValuePair<List<VideoModel>, int>)e.Parameter).Key;
             PlayP= ((KeyValuePair<List<VideoModel>, int>)e.Parameter).Value;
+          
 
             if (VideoList.Count<=1)
             {
@@ -78,8 +125,10 @@ namespace bilibili2.Pages
         private async Task PlayVideo(VideoModel model)
         {
             progress.Visibility = Visibility.Visible;
-            top_Title.Text = model.title + " " + PlayP;
+            top_Title.Text = model.title + " " + model.page;
             pro_Num.Text = "填充弹幕中...";
+            Cid = model.cid;
+            Aid = model.aid;
             DanMuPool = await GetDM(model.cid);
             pro_Num.Text = "读取视频信息...";
             await GetPlayInfo(model.cid, top_cb_Quality.SelectedIndex+1);
@@ -124,11 +173,13 @@ namespace bilibili2.Pages
                     ApplicationView.GetForCurrentView().TryEnterFullScreenMode();
                     btn_Full.Visibility = Visibility.Collapsed;
                     btn_ExitFull.Visibility = Visibility.Visible;
+                    tw_AutoFull.IsOn = true;
                 }
                 else
                 {
                     btn_Full.Visibility = Visibility.Visible;
                     btn_ExitFull.Visibility = Visibility.Collapsed;
+                    tw_AutoFull.IsOn = false;
                 }
             }
             else
@@ -139,12 +190,14 @@ namespace bilibili2.Pages
                     btn_Full.Visibility = Visibility.Collapsed;
                     btn_ExitFull.Visibility = Visibility.Visible;
                     ApplicationView.GetForCurrentView().TryEnterFullScreenMode();
+                    tw_AutoFull.IsOn = true;
                 }
                 else
                 {
                     setting.SetSettingValue("Full", false);
                     btn_Full.Visibility = Visibility.Visible;
                     btn_ExitFull.Visibility = Visibility.Collapsed;
+                    tw_AutoFull.IsOn = false;
                 }
             }
 
@@ -173,6 +226,55 @@ namespace bilibili2.Pages
             {
                 slider_V.Value = 1;
             }
+
+            if (setting.SettingContains("DanVisRoll"))
+            {
+                if ((bool)setting.GetSettingValue("DanVisRoll"))
+                {
+                    menu_setting_gd.IsChecked = false;
+                }
+                else
+                {
+                    menu_setting_gd.IsChecked = true;
+                }
+            }
+            else
+            {
+                menu_setting_gd.IsChecked= false;
+            }
+
+            if (setting.SettingContains("DanVisTop"))
+            {
+                if ((bool)setting.GetSettingValue("DanVisTop"))
+                {
+                    menu_setting_top.IsChecked = false;
+                }
+                else
+                {
+                    menu_setting_top.IsChecked = true;
+                }
+            }
+            else
+            {
+                menu_setting_top.IsChecked = false;
+            }
+
+            if (setting.SettingContains("DanVisButtom"))
+            {
+                if ((bool)setting.GetSettingValue("DanVisButtom"))
+                {
+                    menu_setting_buttom.IsChecked = false;
+                }
+                else
+                {
+                    menu_setting_buttom.IsChecked = true;
+                }
+            }
+            else
+            {
+                menu_setting_buttom.IsChecked = false;
+            }
+
 
             if (setting.SettingContains("OpenDanmu"))
             {
@@ -224,9 +326,15 @@ namespace bilibili2.Pages
             }
             else
             {
-                slider_DanmuSize.Value = 22;
+                if (device == "Windows.Mobile")
+                {
+                    slider_DanmuSize.Value = 16;
+                }
+                else
+                {
+                    slider_DanmuSize.Value = 22;
+                }
             }
-
         }
 
         public async Task GetPlayInfo(string mid, int quality)
@@ -367,7 +475,7 @@ namespace bilibili2.Pages
             }
             TimeSpan ts = new TimeSpan(0,0,Convert.ToInt32(slider.Value));
             txt_Post.Text = ts.Hours.ToString("00") + ":" + ts.Minutes.ToString("00") + ":" + ts.Seconds.ToString("00") + "/" + mediaElement.NaturalDuration.TimeSpan.Hours.ToString("00") + ":" + mediaElement.NaturalDuration.TimeSpan.Minutes.ToString("00") + ":" + mediaElement.NaturalDuration.TimeSpan.Seconds.ToString("00");
-            top_Title.Text = X.ToString();
+            
         }
 
         private void Grid_ManipulationCompleted(object sender, ManipulationCompletedRoutedEventArgs e)
@@ -464,18 +572,21 @@ namespace bilibili2.Pages
                 case MediaElementState.Closed:
                     btn_Play.Visibility = Visibility.Visible;
                     btn_Pause.Visibility = Visibility.Collapsed;
+                   
                     break;
                 case MediaElementState.Opening:
                     danmu.IsPlaying = false;
                     btn_Play.Visibility = Visibility.Visible;
                     btn_Pause.Visibility = Visibility.Collapsed;
                     progress.Visibility = Visibility.Visible;
+
                     break;
                 case MediaElementState.Buffering:
                     btn_Play.Visibility = Visibility.Collapsed;
                     btn_Pause.Visibility = Visibility.Visible;
                     danmu.IsPlaying = false;
                     progress.Visibility = Visibility.Visible;
+
                     break;
                 case MediaElementState.Playing:
                     btn_Play.Visibility = Visibility.Collapsed;
@@ -483,6 +594,7 @@ namespace bilibili2.Pages
                     danmu.IsPlaying = true;
                     progress.Visibility = Visibility.Collapsed;
                     timer.Start();
+                   
                     break;
                 case MediaElementState.Paused:
                     btn_Play.Visibility = Visibility.Visible;
@@ -490,6 +602,7 @@ namespace bilibili2.Pages
                     danmu.IsPlaying = false;
                     progress.Visibility = Visibility.Collapsed;
                     timer.Stop();
+                    
                     break;
                 case MediaElementState.Stopped:
                     btn_Play.Visibility = Visibility.Visible;
@@ -497,6 +610,7 @@ namespace bilibili2.Pages
                     danmu.IsPlaying = false;
                     progress.Visibility = Visibility.Collapsed;
                     timer.Stop();
+                   
                     break;
                 default:
                     break;
@@ -546,8 +660,68 @@ namespace bilibili2.Pages
 
         private void Send_btn_Send_Click(object sender, RoutedEventArgs e)
         {
-            danmu.AddGunDanmu(new MyDanmaku.DanMuModel { DanText = Send_text_Comment.Text, _DanColor = ((ComboBoxItem)Send_cb_Color.SelectedItem).Tag.ToString(), DanSize = "25" },true);
+            SenDanmuKa();
+            //danmu.AddGunDanmu(new MyDanmaku.DanMuModel { DanText = Send_text_Comment.Text, _DanColor = ((ComboBoxItem)Send_cb_Color.SelectedItem).Tag.ToString(), DanSize = "25" },true);
         }
+        /// <summary>
+        /// 发送弹幕
+        /// </summary>
+        public async void SenDanmuKa()
+        {
+            if (Send_text_Comment.Text.Length == 0)
+            {
+                messShow.Show("弹幕内容不能为空!",3000);
+                return;
+            }
+            if (!new UserClass().IsLogin())
+            {
+                return;
+            }
+            try
+            {
+                Uri ReUri = new Uri("http://interface.bilibili.com/dmpost?cid=" + Cid + "&aid=" + Aid + "&pid=1");
+                int modeInt = 1;
+                if (Send_cb_Mode.SelectedIndex == 2)
+                {
+                    modeInt = 4;
+                }
+                if (Send_cb_Mode.SelectedIndex == 1)
+                {
+                    modeInt = 5;
+                }
+                string Canshu = "message=" + Send_text_Comment.Text + "&pool=0&playTime=" + mediaElement.Position.TotalSeconds.ToString() + "&cid=" + Cid + "&date=" + DateTime.Now.ToString() + "&fontsize=25&mode=" + modeInt + "&rnd=933253860&color=" + ((ComboBoxItem)Send_cb_Color.SelectedItem).Tag;
+                string result = await new WebClientClass().PostResults(ReUri, Canshu);
+                long code = long.Parse(result);
+
+                if (code < 0)
+                {
+                    messShow.Show("已发送弹幕！"+result, 3000);
+                }
+                else
+                {
+                    messShow.Show("已发送弹幕！",3000);
+                    if (modeInt == 1)
+                    {
+                        danmu.AddGunDanmu(new MyDanmaku.DanMuModel { DanText = Send_text_Comment.Text, _DanColor = ((ComboBoxItem)Send_cb_Color.SelectedItem).Tag.ToString(), DanSize = "25" }, true);
+                    }
+                    if (modeInt == 4)
+                    {
+                        danmu.AddTopButtomDanmu(new MyDanmaku.DanMuModel { DanText = Send_text_Comment.Text, _DanColor = ((ComboBoxItem)Send_cb_Color.SelectedItem).Tag.ToString(), DanSize = "25" }, false, true);
+                    }
+                    if (modeInt == 5)
+                    {
+                        danmu.AddTopButtomDanmu(new MyDanmaku.DanMuModel { DanText = Send_text_Comment.Text, _DanColor = ((ComboBoxItem)Send_cb_Color.SelectedItem).Tag.ToString(), DanSize = "25" }, true, true);
+                    }
+                    Send_text_Comment.Text = string.Empty;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                messShow.Show( "发送弹幕发生错误！" + ex.Message, 3000);
+            }
+        }
+
 
         private void slider_L_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
         {
@@ -667,7 +841,17 @@ namespace bilibili2.Pages
             danmu.SetSpacing(slider_DanmuJianju.Value);
             setting.SetSettingValue("DanmuJianju", slider_DanmuJianju.Value);
         }
-        
+        private void tw_AutoFull_Toggled(object sender, RoutedEventArgs e)
+        {
+            if (tw_AutoFull.IsOn)
+            {
+                setting.SetSettingValue("Full", true);
+            }
+            else
+            {
+                setting.SetSettingValue("Full", false);
+            }
+        }
         private void slider_DanmuTran_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
         {
             danmu.Tran= slider_DanmuTran.Value/100;
@@ -684,7 +868,45 @@ namespace bilibili2.Pages
         private void slider_DanmuSize_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
         {
             danmu.fontSize = slider_DanmuSize.Value;
-            setting.SetSettingValue("DanmuSzie", slider_DanmuSize.Value);
+            setting.SetSettingValue("DanmuSize", slider_DanmuSize.Value);
+        }
+
+        private void menu_setting_top_Click(object sender, RoutedEventArgs e)
+        {
+
+                danmu.SetDanmuVisibility(false, MyDanmaku.DanmuMode.Top);
+                setting.SetSettingValue("DanVisTop", false);
+
+        }
+
+        private void menu_setting_buttom_Click(object sender, RoutedEventArgs e)
+        {
+                danmu.SetDanmuVisibility(false, MyDanmaku.DanmuMode.Buttom);
+                setting.SetSettingValue("DanVisButtom", false);
+        }
+
+        private void menu_setting_gd_Checked(object sender, RoutedEventArgs e)
+        {
+                danmu.SetDanmuVisibility(false, MyDanmaku.DanmuMode.Roll);
+                setting.SetSettingValue("DanVisRoll", false);
+        }
+
+        private void menu_setting_gd_Unchecked(object sender, RoutedEventArgs e)
+        {
+            danmu.SetDanmuVisibility(true, MyDanmaku.DanmuMode.Roll);
+            setting.SetSettingValue("DanVisRoll", true);
+        }
+
+        private void menu_setting_top_Unchecked(object sender, RoutedEventArgs e)
+        {
+            danmu.SetDanmuVisibility(true, MyDanmaku.DanmuMode.Top);
+            setting.SetSettingValue("DanVisTop", true);
+        }
+
+        private void menu_setting_buttom_Unchecked(object sender, RoutedEventArgs e)
+        {
+            danmu.SetDanmuVisibility(true, MyDanmaku.DanmuMode.Buttom);
+            setting.SetSettingValue("DanVisButtom", true);
         }
 
         #endregion
@@ -793,6 +1015,79 @@ namespace bilibili2.Pages
             }
 
         }
+
+
+
+
         #endregion
+       
+        private void tw_Background_Toggled(object sender, RoutedEventArgs e)
+        {
+            if (tw_AutoFull.IsOn)
+            {
+                mediaElement.AudioCategory = AudioCategory.BackgroundCapableMedia;
+                // BackgroundMediaPlayer.Current.
+                // BackgroundMediaPlayer.Current.AddAudioEffect
+                //BackgroundMediaPlayer.Current.
+          
+            }
+            else
+            {
+                mediaElement.AudioCategory = AudioCategory.ForegroundOnlyMedia;
+            }
+
+        }
+
+        private void Send_text_Comment_KeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            e.Handled = true;
+            if (e.Key== Windows.System.VirtualKey.Enter)
+            {
+                SenDanmuKa();
+            }
+        }
+
+        //投币
+        private void btn_TB_1_Click(object sender, RoutedEventArgs e)
+        {
+            TouBi(1);
+        }
+
+        private void btn_No_Click(object sender, RoutedEventArgs e)
+        {
+            grid_Tb.Hide();
+        }
+        public async void TouBi(int num)
+        {
+            UserClass getLogin = new UserClass();
+            if (getLogin.IsLogin())
+            {
+                try
+                {
+                    WebClientClass wc = new WebClientClass();
+                    Uri ReUri = new Uri("http://www.bilibili.com/plus/comment.php");
+                    string QuStr = "aid=" + Aid + "&rating=100&player=1&multiply=" + num;
+                    string result = await wc.PostResults(ReUri, QuStr);
+                    if (result == "OK")
+                    {
+                        messShow.Show("投币成功！", 3000);
+                    }
+                    else
+                    {
+                        messShow.Show("投币失败！" + result, 3000);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    messShow.Show("投币时发生错误\r\n" + ex.Message, 3000);
+                }
+            }
+            else
+            {
+                messShow.Show("请先登录!", 3000);
+            }
+        }
+
+
     }
 }

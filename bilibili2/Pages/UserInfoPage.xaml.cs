@@ -9,6 +9,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Storage;
 using Windows.UI.Core;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
@@ -19,6 +20,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using Windows.Web.Http;
+using Windows.Web.Http.Filters;
 
 // “空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=234238 上提供
 
@@ -39,6 +41,7 @@ namespace bilibili2.Pages
 
         public delegate void GoBackHandler();
         public event GoBackHandler BackEvent;
+        public event GoBackHandler ExitEvent;
         private void btn_Back_Click(object sender, RoutedEventArgs e)
         {
             if (this.Frame.CanGoBack)
@@ -434,6 +437,29 @@ namespace bilibili2.Pages
                 MessageDialog md = new MessageDialog("请先登录！");
                 await md.ShowAsync();
             }
+        }
+
+        private async void btn_Exit_Click(object sender, RoutedEventArgs e)
+        {
+            List<HttpCookie> listCookies = new List<HttpCookie>();
+            listCookies.Add(new HttpCookie("sid", ".bilibili.com", "/"));
+            listCookies.Add(new HttpCookie("DedeUserID", ".bilibili.com", "/"));
+            listCookies.Add(new HttpCookie("DedeUserID__ckMd5", ".bilibili.com", "/"));
+            listCookies.Add(new HttpCookie("SESSDATA", ".bilibili.com", "/"));
+            listCookies.Add(new HttpCookie("LIVE_LOGIN_DATA", ".bilibili.com", "/"));
+            listCookies.Add(new HttpCookie("LIVE_LOGIN_DATA__ckMd5", ".bilibili.com", "/"));
+            HttpBaseProtocolFilter filter = new HttpBaseProtocolFilter();
+            foreach (HttpCookie cookie in listCookies)
+            {
+                filter.CookieManager.DeleteCookie(cookie);
+            }
+            ApplicationDataContainer container = ApplicationData.Current.LocalSettings;
+            container.Values["AutoLogin"] = "false";
+            ApiHelper.access_key = string.Empty;
+            StorageFolder folder = ApplicationData.Current.LocalFolder;
+            StorageFile file = await folder.CreateFileAsync("us.bili", CreationCollisionOption.OpenIfExists);
+            await FileIO.WriteTextAsync(file, string.Empty);
+            ExitEvent();
         }
     }
 }

@@ -24,8 +24,8 @@ namespace bilibili2.Class
         private static String SQL_CREATE_TABLE = "CREATE TABLE IF NOT EXISTS {0} (aid TEXT,title TEXT,pic Text,type TEXT);";
         private static String SQL_QUERY_VALUE = "SELECT Value FROM {0} WHERE aid = ?;";
         private static String SQL_INSERT = "INSERT INTO {0} VALUES(?,?,?,?);";
-        private static String SQL_UPDATE = "UPDATE {0} SET Value = ? WHERE Key = ?";
-        private static String SQL_DELETE = "DELETE FROM {0} WHERE Key = ?";
+        //private static String SQL_UPDATE = "UPDATE {0} SET Value = ? WHERE Key = ?";
+        //private static String SQL_DELETE = "DELETE FROM {0} WHERE Key = ?";
 
         SQLiteConnection con;
         public void CreateTable(string tableName)

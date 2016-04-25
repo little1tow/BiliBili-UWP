@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace bilibili2
@@ -469,6 +470,7 @@ namespace bilibili2
         public object data { get; set; }//数据，包含第二层
                                         //第二层
         public object vlist { get; set; }//结果，包含第三层
+        public object list { get; set; }//结果，包含第三层
                                          //第三层
         public string aid { get; set; }//视频ID
         public string title { get; set; }//标题
@@ -478,6 +480,7 @@ namespace bilibili2
         public string created { get; set; }//上传时间
         public string length { get; set; }//长度
         public string description { get; set; }
+        public string uname { get; set; }
         public int count { get; set; }
         public int pages { get; set; }
     }
@@ -539,6 +542,14 @@ namespace bilibili2
         public string aid { get; set; }
         public int num { get; set; }
 
+        //用于直播
+        public object data { get; set; }
+        public string room_id { get; set; }
+        public string online { get; set; }
+        public string uname { get; set; }
+        public string cover { get; set; }
+        public string face { get; set; }
+        public string roomid { get; set; }
     }
     //热门搜索
     public class HotModel
@@ -1012,6 +1023,139 @@ namespace bilibili2
                 //public string title { get; set; }
                 public long online { get; set; }
                 public string room_id { get; set; }
+    }
+
+    public class MessageModel
+    {
+        public int code { get; set; }
+        public object data { get; set; }
+        public string message { get; set; }
+
+        public int reply_me { get; set; }
+        public int praise_me { get; set; }
+        public int notify_me { get; set; }
+        public int at_me { get; set; }
+        public int chat_me { get; set; }
+    }
+    public class MessageReplyModel
+    {
+        public int code { get; set; }
+        public object data { get; set; }
+        public string message { get; set; }
+        public string id { get; set; }
+        public string cursor { get; set; }
+       
+        public string title { get; set; }
+        
+        public string Title
+        {
+            get {
+                //#{【4月】迷家 04【独家正版】}{"http://www.bilibili.com/video/av4439268/"}评论中回复了你
+                Match ban = Regex.Match(title, @"#{(.*?)}{""(.*?)""}");
+                if (ban.Groups[1].Value.Length == 0)
+                {
+                    return title;
+                }
+                else
+                {
+                    string a= ban.Groups[1].Value+ title.Replace(ban.Groups[0].Value, string.Empty);
+                    link = ban.Groups[2].Value;
+                    return a;
+                }
+              
+            }
+        }
+        public string link { get; set; }
+        public string content { get; set; }
+        public string Content {
+            get
+            {
+                string ban = Regex.Match(content, @"^#{(.*?)}{""(.*?)""}$").Groups[1].Value;
+                if (ban.Length == 0)
+                {
+                    return title;
+                }
+                else
+                {
+                    return ban;
+                }
+            }
+
+        }
+        public string Content_Notiy
+        {
+            get
+            {
+                Match ban = Regex.Match(content, @"#{(.*?)}{""(.*?)""}");
+                if (ban.Groups[1].Value.Length == 0)
+                {
+                    return content;
+                }
+                else
+                {
+                    string a =  content.Replace(ban.Groups[0].Value, ban.Groups[1].Value);
+                    link = ban.Groups[2].Value;
+                    return a;
+                }
+            }
+        }
+        public object publisher { get; set; }
+        public string name { get; set; }
+        public string face { get; set; }
+        public string mid { get; set; }
+        public string time_at { get; set; }
+    }
+    public class MessageChatModel
+    {
+        public int code { get; set; }
+        public object data { get; set; }
+        public string message { get; set; }
+
+        public string rid { get; set; }
+        public string room_name { get; set; }
+        public string avatar_url { get; set; }
+        public int msg_count { get; set; }
+        public string last_msg { get; set; }
+        public long last_time  { get; set; }
+
+        public string Last_time {
+            get {
+                DateTime dtStart = new DateTime(1970, 1, 1);
+                long lTime = long.Parse(last_time + "0000");
+                //long lTime = long.Parse(textBox1.Text);
+                TimeSpan toNow = new TimeSpan(lTime);
+                DateTime dt= dtStart.Add(toNow).ToLocalTime();
+                TimeSpan span = DateTime.Now - dt;
+                if (span.TotalDays > 7)
+                {
+                    return dt.ToString("MM-dd");
+                }
+                else
+                if (span.TotalDays > 1)
+                {
+                    return string.Format("{0}天前", (int)Math.Floor(span.TotalDays));
+                }
+                else
+                if (span.TotalHours > 1)
+                {
+                    return string.Format("{0}小时前", (int)Math.Floor(span.TotalHours));
+                }
+                else
+                if (span.TotalMinutes > 1)
+                {
+                    return string.Format("{0}分钟前", (int)Math.Floor(span.TotalMinutes));
+                }
+                else
+                if (span.TotalSeconds >= 1)
+                {
+                    return string.Format("{0}秒前", (int)Math.Floor(span.TotalSeconds));
+                }
+                else
+                {
+                    return "1秒前";
+                }
+
+            } }
     }
 
 }

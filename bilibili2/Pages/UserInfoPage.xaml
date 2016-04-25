@@ -51,7 +51,7 @@
                         </ScrollViewer>
                         
                     </Grid>
-                    <Grid x:Name="grid_ASubit">
+                    <Grid x:Name="grid_ASubit" Visibility="Collapsed">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="auto"/>
                             <RowDefinition />
@@ -98,7 +98,57 @@
                                 </ListView>
                                 <HyperlinkButton x:Name="txt_Load" Content="加载.中.."  HorizontalAlignment="Center"></HyperlinkButton>
                             </StackPanel>
-                         
+
+                        </ScrollViewer>
+                    </Grid>
+                    <Grid x:Name="grid_ACoin">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <ProgressBar x:Name="pr_Load_ACoin" IsIndeterminate="True" VerticalAlignment="Top" Background="{x:Null}"></ProgressBar>
+                        <TextBlock FontSize="18" Margin="10 5">最近投币</TextBlock>
+                        <ScrollViewer Grid.Row="1" ViewChanged="sv1_ViewChanged">
+                            <StackPanel>
+                                <ListView x:Name="list_ACoin" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled" SelectionMode="None" IsItemClickEnabled="True" ItemClick="list_ASubit_ItemClick">
+                                    <ListView.ItemContainerStyle>
+                                        <Style TargetType="ListViewItem">
+                                            <!--<Setter Property="BorderThickness" Value="0 0 0 1"></Setter>
+                                        <Setter Property="BorderBrush" Value="Gray"></Setter>-->
+                                            <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
+                                        </Style>
+                                    </ListView.ItemContainerStyle>
+                                    <ListView.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid Margin="0,5" >
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="auto"></ColumnDefinition>
+                                                    <ColumnDefinition Width="*"></ColumnDefinition>
+                                                </Grid.ColumnDefinitions>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="auto"></RowDefinition>
+                                                    <RowDefinition Height="auto"></RowDefinition>
+                                                    <RowDefinition Height="auto"></RowDefinition>
+                                                </Grid.RowDefinitions>
+                                                <Image Source="{Binding pic}" Width="120"  Grid.RowSpan="4" VerticalAlignment="Center"></Image>
+                                                <TextBlock Text="{Binding title}" Grid.Column="1" FontSize="14" VerticalAlignment="Center" Margin="5,0" MaxLines="2" TextWrapping="Wrap" TextTrimming="CharacterEllipsis"></TextBlock>
+                                               
+                                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Grid.Column="1" Grid.Row="1" Margin="5,0,0,0">
+                                                    <TextBlock Text="播放:" FontSize="12"  Foreground="Gray" Margin="0,0,5,0"></TextBlock>
+                                                    <TextBlock Text="{Binding play}" FontSize="12"  Foreground="Gray" Margin="0,0,5,0"></TextBlock>
+                                                    <TextBlock Text="弹幕:" FontSize="12"  Foreground="Gray" Margin="5,0,0,0"></TextBlock>
+                                                    <TextBlock Text="{Binding video_review}" FontSize="12"  Foreground="Gray" Margin="0,0,5,0"></TextBlock>
+                                                </StackPanel>
+                                                <StackPanel Grid.Column="1" Grid.Row="2" Orientation="Horizontal" VerticalAlignment="Center">
+                                                    <TextBlock Text="UP:" FontSize="12"  Foreground="Gray" Margin="5,0,0,0"></TextBlock>
+                                                    <TextBlock Text="{Binding uname}" FontSize="12"  Foreground="Gray" Margin="0,0,5,0"></TextBlock>
+                                                </StackPanel>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ListView.ItemTemplate>
+                                </ListView>
+                                <HyperlinkButton x:Name="txt_Load_Coin" Content="加载.中.."  HorizontalAlignment="Center"></HyperlinkButton>
+                            </StackPanel>
                         </ScrollViewer>
                     </Grid>
                 </Grid>
@@ -174,7 +224,7 @@
                             </Grid.ColumnDefinitions>
                             <Button x:Name="Ban_btn_Sub" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Stretch" Margin="0 5 5 5" Background="{StaticResource BG}" Foreground="White" Content="全部投稿" Click="Ban_btn_Sub_Click"/>
                             <Button x:Name="Ban_btn_User" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" Margin="5" Background="{StaticResource BG}" Foreground="White" Content="关注的人" Click="Ban_btn_User_Click"/>
-                            <Button x:Name="Ban_btn_Timeline" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Stretch" Margin="5 5 0 5" Background="{StaticResource BG}" Foreground="White" Content="最近投币"/>
+                            <Button x:Name="Ban_btn_Coin" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Stretch" Margin="5 5 0 5" Background="{StaticResource BG}" Foreground="White" Content="最近投币" Click="Ban_btn_Coin_Click"/>
                         </Grid>
                         <HyperlinkButton Foreground="{ThemeResource Bili-FontColor}">
                             <StackPanel Orientation="Horizontal">

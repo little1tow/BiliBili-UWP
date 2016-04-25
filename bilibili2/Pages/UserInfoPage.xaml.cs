@@ -272,6 +272,7 @@ namespace bilibili2.Pages
         {
             grid_AUser.Visibility = Visibility.Visible;
             grid_ASubit.Visibility = Visibility.Collapsed;
+            grid_ACoin.Visibility = Visibility.Collapsed;
             sp.IsPaneOpen = true;
             page = 1;
             MaxPage = 0;
@@ -283,6 +284,7 @@ namespace bilibili2.Pages
         {
             grid_AUser.Visibility = Visibility.Collapsed;
             grid_ASubit.Visibility = Visibility.Visible;
+            grid_ACoin.Visibility = Visibility.Collapsed;
             txt_Load.IsEnabled = true;
             txt_Load.Content = "加载更多";
 
@@ -355,6 +357,39 @@ namespace bilibili2.Pages
         private void list_ASubit_ItemClick(object sender, ItemClickEventArgs e)
         {
             this.Frame.Navigate(typeof(VideoInfoPage), (e.ClickedItem as GetUserSubmit).aid);
+        }
+
+        private async void GetPutCoin()
+        {
+            try
+            {
+                pr_Load_ACoin.Visibility = Visibility.Visible;
+                WebClientClass wc = new WebClientClass();
+                txt_Load.IsEnabled = false;
+                txt_Load.Content = "加载中...";
+                string results = await wc.GetResults(new Uri("http://space.bilibili.com/ajax/member/getCoinVideos?mid=" + Uid + "&pagesize=100" + page+"&rnd="+new Random().Next(1,9999)));
+                //一层
+                GetUserSubmit model1 = JsonConvert.DeserializeObject<GetUserSubmit>(results);
+                //二层
+                GetUserSubmit model2 = JsonConvert.DeserializeObject<GetUserSubmit>(model1.data.ToString());
+                //三层
+                List<GetUserSubmit> lsModel = JsonConvert.DeserializeObject<List<GetUserSubmit>>(model2.list.ToString());
+                list_ACoin.ItemsSource = lsModel;
+                txt_Load_Coin.IsEnabled = false;
+                txt_Load_Coin.Content = "加载完了...";
+            }
+            catch (Exception)
+            {
+            }
+            finally
+            {
+                if (list_ACoin.Items.Count == 0)
+                {
+                    txt_Load_Coin.IsEnabled = false;
+                    txt_Load_Coin.Content = "没有投稿...";
+                }
+                pr_Load_ACoin.Visibility = Visibility.Collapsed;
+            }
         }
 
         private async void btn_Attention_Click(object sender, RoutedEventArgs e)
@@ -460,6 +495,15 @@ namespace bilibili2.Pages
             StorageFile file = await folder.CreateFileAsync("us.bili", CreationCollisionOption.OpenIfExists);
             await FileIO.WriteTextAsync(file, string.Empty);
             ExitEvent();
+        }
+
+        private void Ban_btn_Coin_Click(object sender, RoutedEventArgs e)
+        {
+            grid_AUser.Visibility = Visibility.Collapsed;
+            grid_ASubit.Visibility = Visibility.Collapsed;
+            grid_ACoin.Visibility = Visibility.Visible;
+            GetPutCoin();
+            sp.IsPaneOpen = true;
         }
     }
 }

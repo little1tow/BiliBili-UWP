@@ -47,7 +47,15 @@ namespace bilibili2.Pages
 
         private void webview_btn_Close_Click(object sender, RoutedEventArgs e)
         {
-            BackEvent();
+            if (this.Frame.CanGoBack)
+            {
+                this.Frame.GoBack();
+            }
+            else
+            {
+                BackEvent();
+            }
+           
         }
 
         private void webview_WebView_NavigationStarting(WebView sender, WebViewNavigationStartingEventArgs args)

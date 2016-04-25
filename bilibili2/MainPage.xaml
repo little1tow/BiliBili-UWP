@@ -394,8 +394,7 @@
                         <SplitView x:Name="sp_Live" PanePlacement="Right" >
                             <SplitView.Pane>
                                 <Grid>
-
-                                    <Grid x:Name="grid_AttenLive">
+                                    <Grid x:Name="grid_AttenLive" Visibility="Collapsed">
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="auto"/>
                                             <RowDefinition/>
@@ -433,6 +432,16 @@
                                             </ListView.ItemTemplate>
                                         </ListView>
                                     </Grid>
+                                    <Grid x:Name="grid_MyLiveInfo" Visibility="Visible">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="auto"/>
+                                            <RowDefinition/>
+                                        </Grid.RowDefinitions>
+                                        <TextBlock FontSize="16" Margin="5">
+											<Run Text="直播中心"/>
+                                        </TextBlock>
+                                     
+                                    </Grid>
                                     <ProgressBar x:Name="pro_Load_live" VerticalAlignment="Top" IsIndeterminate="True" Background="{x:Null}"/>
                                 </Grid>
                             </SplitView.Pane>
@@ -447,12 +456,14 @@
                                         <ColumnDefinition/>
                                         <ColumnDefinition/>
                                         <ColumnDefinition/>
+                                        <ColumnDefinition/>
                                     </Grid.ColumnDefinitions>
-                                    <FlipView Height="180" Grid.ColumnSpan="3"/>
+                                    <FlipView Height="180" Grid.ColumnSpan="4"/>
                                     <Button Grid.Row="1" Grid.Column="0" HorizontalAlignment="Stretch" Margin="5" Background="{ThemeResource Bili-ForeColor}" Foreground="White" Content="直播中心"/>
                                     <Button x:Name="btn_live_Atton" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" Margin="5" Background="{ThemeResource Bili-ForeColor}" Foreground="White" Content="关注主播" Click="btn_live_Atton_Click"/>
-                                    <Button Grid.Row="1" Grid.Column="2" HorizontalAlignment="Stretch" Margin="5" Background="{ThemeResource Bili-ForeColor}" Foreground="White" Content="全部直播"/>
-                                    <Controls:MyLiveControl x:Name="liveinfo" Grid.Row="2" Grid.ColumnSpan="3"/>
+                                    <Button Grid.Row="1" Grid.Column="2" HorizontalAlignment="Stretch" Margin="5" Background="{ThemeResource Bili-ForeColor}" Foreground="White" Content="搜索直播"/>
+                                    <Button x:Name="btn_live_All"  Grid.Row="1" Grid.Column="3" HorizontalAlignment="Stretch" Margin="5" Background="{ThemeResource Bili-ForeColor}" Foreground="White" Content="全部直播" Click="btn_live_All_Click"/>
+                                    <Controls:MyLiveControl x:Name="liveinfo" Grid.Row="2" Grid.ColumnSpan="4"/>
                                 </Grid>
                             </ScrollViewer>
                         </SplitView>
@@ -556,9 +567,9 @@
                                                         <RowDefinition />
                                                         <RowDefinition Height="auto"/>
                                                     </Grid.RowDefinitions>
-                                                    <Image Source="{Binding cover}" Width="100"/>
+                                                    <Image Source="{Binding cover}" Width="90"/>
                                                     <Grid  Grid.Row="1" Height="36">
-                                                        <TextBlock Width="100"  VerticalAlignment="Center"  Margin="2 0" Text="{Binding tag_name}" TextAlignment="Center" TextWrapping="Wrap" FontSize="14" Foreground="Gray"/>
+                                                        <TextBlock Width="90"  VerticalAlignment="Center"  Margin="2 0" Text="{Binding tag_name}" TextAlignment="Center" TextWrapping="Wrap" FontSize="14" Foreground="Gray"/>
                                                     </Grid>
                                                 </Grid>
                                             </DataTemplate>
@@ -884,12 +895,17 @@
                         <ScrollViewer x:Name="sc" VerticalScrollBarVisibility="Auto" ViewChanged="sc_ViewChanged">
                             <Grid>
                                 <StackPanel x:Name="DT_Info" Visibility="Visible">
-                                    <HyperlinkButton Margin="10 5 10 0" HorizontalContentAlignment="Stretch" HorizontalAlignment="Stretch" Foreground="{ThemeResource Bili-FontColor}" Click="Ban_btn_MyBan_Click">
-                                        <StackPanel Orientation="Horizontal">
-                                            <Image Source="Assets/PartIcon/BFJ.png" Width="24" Height="24" Margin="0 0 5 0"/>
-                                            <TextBlock Text="追番" VerticalAlignment="Center" FontSize="16"/>
-                                        </StackPanel>
-                                    </HyperlinkButton>
+                                    <Grid>
+                                        <HyperlinkButton Margin="10 5 10 0" HorizontalContentAlignment="Stretch" HorizontalAlignment="Stretch" Foreground="{ThemeResource Bili-FontColor}" Click="Ban_btn_MyBan_Click">
+                                            <StackPanel Orientation="Horizontal">
+                                                <Image Source="Assets/PartIcon/BFJ.png" Width="24" Height="24" Margin="0 0 5 0"/>
+                                                <TextBlock Text="追番" VerticalAlignment="Center" FontSize="16"/>
+                                            </StackPanel>
+                                        </HyperlinkButton>
+                                        <HyperlinkButton  Margin="15 0" Foreground="{ThemeResource Bili-FontColor}" HorizontalAlignment="Right" Click="btn_refresh_Atton_Click">
+                                            <SymbolIcon Symbol="Refresh"></SymbolIcon>
+                                        </HyperlinkButton>
+                                    </Grid>
                                     <TextBlock x:Name="DT_0" HorizontalAlignment="Center" Foreground="Gray">
 										<Run Text="╮(╯_╰)╭ 没有追番"/>
                                     </TextBlock>
@@ -915,12 +931,19 @@
                                             </GridView.ItemTemplate>
                                         </GridView>
                                     </ScrollViewer>
-                                    <HyperlinkButton Margin="10 0" Foreground="{ThemeResource Bili-FontColor}">
-                                        <StackPanel Orientation="Horizontal">
-                                            <Image Source="Assets/PartIcon/ic_header_dynamic.png" Width="18" Height="18" Margin="0 0 10 0"/>
-                                            <TextBlock Text="动态" VerticalAlignment="Center" FontSize="16"/>
-                                        </StackPanel>
-                                    </HyperlinkButton>
+                                    <Grid>
+                                        <HyperlinkButton Margin="10 0" Foreground="{ThemeResource Bili-FontColor}" >
+                                            <StackPanel Orientation="Horizontal">
+                                                <Image Source="Assets/PartIcon/ic_header_dynamic.png" Width="18" Height="18" Margin="0 0 10 0"/>
+                                                <TextBlock Text="动态" VerticalAlignment="Center" FontSize="16"/>
+                                            </StackPanel>
+
+                                        </HyperlinkButton>
+                                        <HyperlinkButton x:Name="btn_refresh_Atton" Margin="15 0" Foreground="{ThemeResource Bili-FontColor}" HorizontalAlignment="Right" Click="btn_refresh_Atton_Click">
+                                            <SymbolIcon Symbol="Refresh"></SymbolIcon>
+                                        </HyperlinkButton>
+                                    </Grid>
+                                   
                                     <TextBlock x:Name="DT_1" HorizontalAlignment="Center" Foreground="Gray">
 										<Run Text="╮(╯_╰)╭ 没有动态"/>
                                     </TextBlock>
@@ -1132,6 +1155,6 @@
             <!--<Ellipse Width="100" Height="100" Fill="Black"></Ellipse>-->
         </Frame>
         <local:MessageShow x:Name="messShow" Grid.RowSpan="4" Margin="10" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
-       
+   
     </Grid>
 </Page>

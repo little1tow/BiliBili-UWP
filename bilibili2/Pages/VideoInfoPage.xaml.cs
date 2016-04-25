@@ -462,7 +462,10 @@ namespace bilibili2
 
         private void btn_playP1_Click(object sender, RoutedEventArgs e)
         {
+            
             List<VideoModel> list= (List<VideoModel>)Video_List.ItemsSource;
+
+            
             KeyValuePair<List<VideoModel>, int> Par = new KeyValuePair<List<VideoModel>, int>(list,0);
             PostHistory();
             this.Frame.Navigate(typeof(PlayerPage),Par);

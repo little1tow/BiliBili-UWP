@@ -34,7 +34,7 @@ namespace bilibili2
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
 
-            switch (new Random().Next(1,9))
+            switch (new Random().Next(1,16))
             {
                 case 1:
                     txt_Load.Text = "子曰:要善用鼠标滚轮";
@@ -43,7 +43,7 @@ namespace bilibili2
                     txt_Load.Text = "(。・`ω´・) 卖个萌";
                     break;
                 case 3:
-                    txt_Load.Text = "2.0真的比1.0好用！";
+                    txt_Load.Text = "登录后能进入会员的世界哦";
                     break;
                 case 4:
                     txt_Load.Text = "你造吗，每过60秒，1分钟就过去了";
@@ -60,10 +60,38 @@ namespace bilibili2
                 case 8:
                     txt_Load.Text = "哔哩哔哩动画 UWP";
                     break;
+                case 9:
+                    txt_Load.Text = "只有帅哥才能看到这句话";
+                    break;
+                case 10:
+                    txt_Load.Text = "C#是世界上最好的语言！";
+                    break;
+                case 11:
+                    txt_Load.Text = "看到不爽的弹幕就要屏蔽掉";
+                    break;
+                case 12:
+                    txt_Load.Text = "书上说，看到白学家就要打死";
+                    break;
+                case 13:
+                    txt_Load.Text = "有妹子用这软件吗?";
+                    break;
+                case 14:
+                    txt_Load.Text = "看到这句话的自动为长者+1S";
+                    break;
+                case 15:
+                    txt_Load.Text = "年轻人不要整天习习蛤蛤的(好像打错字了";
+                    break;
                 default:
                     break;
             }
-            await RegisterBackgroundTask();
+            try
+            {
+                await RegisterBackgroundTask();
+            }
+            catch (Exception)
+            {
+            }
+           
 
         }
         private async void Page_Loaded(object sender, RoutedEventArgs e)

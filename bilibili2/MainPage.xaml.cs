@@ -50,10 +50,12 @@ namespace bilibili2
             SystemNavigationManager.GetForCurrentView().BackRequested += MainPage_BackRequested;
             home_Items.PlayEvent += Home_Items_PlayEvent;
             home_Items.ErrorEvent += Home_Items_ErrorEvent;
+            liveinfo.ErrorEvent += Home_Items_ErrorEvent;
             //this.RequestedTheme = ElementTheme.Dark;
         }
         string navInfo = string.Empty;
         private SettingHelper settings = new SettingHelper();
+        DispatcherTimer timer = new DispatcherTimer();
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             if (e.NavigationMode == NavigationMode.New)
@@ -62,11 +64,68 @@ namespace bilibili2
                 SetHomeInfo();
                 SetWeekInfo();
                 home_Items.SetHomeInfo();
+                timer.Interval = new TimeSpan(0, 0, 5);
+                timer.Start();
+                timer.Tick += Timer_Tick;
+
             }
+           
             ChangeTheme();
+            ChangeDrak();
             navInfo = infoFrame.GetNavigationState();
             infoFrame.Tag = (SolidColorBrush)top_grid.Background;
         }
+
+        private async void Timer_Tick(object sender, object e)
+        {
+            if (await HasMessage())
+            {
+                await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
+                    bor_HasMessage.Visibility = Visibility.Visible;
+                });
+            }
+            else
+            {
+                await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
+                    bor_HasMessage.Visibility = Visibility.Collapsed;
+                });
+            }
+        }
+
+        private async Task<bool> HasMessage()
+        {
+            try
+            {
+                 wc = new WebClientClass();
+                // http://message.bilibili.com/api/msg/query.room.list.do?access_key=a36a84cc8ef4ea2f92c416951c859a25&actionKey=appkey&appkey=c1b107428d337928&build=414000&page_size=100&platform=android&ts=1461404884000&sign=5e212e424761aa497a75b0fb7fbde775
+                string url = string.Format("http://message.bilibili.com/api/notify/query.notify.count.do?_device=wp&_ulv=10000&access_key={0}&actionKey=appkey&appkey={1}&build=411005&platform=android&ts={2}", ApiHelper.access_key, ApiHelper._appKey, ApiHelper.GetTimeSpen);
+                url += "&sign=" + ApiHelper.GetSign(url);
+                string results = await wc.GetResults(new Uri(url));
+                MessageModel model = JsonConvert.DeserializeObject<MessageModel>(results);
+                if (model.code == 0)
+                {
+                    MessageModel list = JsonConvert.DeserializeObject<MessageModel>(model.data.ToString());
+                    if (list.reply_me != 0||list.chat_me!=0|| list.notify_me!=0)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Exception)
+            {
+                return false;
+                //messShow.Show("读取通知失败", 3000);
+            }
+        }
+
         private void GetSetting()
         {
 
@@ -364,9 +423,35 @@ namespace bilibili2
         }
         #endregion
         //页面大小改变
-        private void Page_SizeChanged(object sender, SizeChangedEventArgs e)
+        private async void Page_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-           
+            if (!settings.SettingContains("HideTitleBar"))
+            {
+                settings.SetSettingValue("HideTitleBar", true);
+            }
+            ApplicationView av = ApplicationView.GetForCurrentView();
+            switch (av.Orientation)
+            {
+                case ApplicationViewOrientation.Landscape:
+                    if ((bool)settings.GetSettingValue("HideTitleBar"))
+                    {
+                        if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent(typeof(StatusBar).ToString()))
+                        {
+                            StatusBar statusBar = Windows.UI.ViewManagement.StatusBar.GetForCurrentView();
+                            await statusBar.HideAsync();
+                        }
+                    }
+                    break;
+                case ApplicationViewOrientation.Portrait:
+                    if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent(typeof(StatusBar).ToString()))
+                    {
+                        StatusBar statusBar = Windows.UI.ViewManagement.StatusBar.GetForCurrentView();
+                        await statusBar.ShowAsync();
+                    }
+                    break;
+                default:
+                    break;
+            }
 
             if (this.ActualWidth <= 640)
             {
@@ -768,22 +853,21 @@ namespace bilibili2
             switch ((e.ClickedItem as StackPanel).Tag.ToString())
             {
                 case "M_Drak_Light":
-                    if (txt_D_L.Text == "夜间模式")
+                    if (RequestedTheme== ElementTheme.Dark)
                     {
-                        txt_D_L.Text = "日间模式";
-                        RequestedTheme = ElementTheme.Dark;
-
-                        font_D_L.Glyph = "\uE706";
-                        ChangeTitbarColor();
+                        settings.SetSettingValue("Drak", false);
+                        txt_D_L.Text = "夜间模式";
+                        font_D_L.Glyph = "\uE708";
+                        RequestedTheme = ElementTheme.Light;
                     }
                     else
                     {
-                        txt_D_L.Text = "夜间模式";
-                        RequestedTheme = ElementTheme.Light;
-
-                        font_D_L.Glyph = "\uE708";
-                        ChangeTitbarColor();
+                        settings.SetSettingValue("Drak", true);
+                        txt_D_L.Text = "日间模式";
+                        font_D_L.Glyph = "\uE706";
+                        RequestedTheme = ElementTheme.Dark;
                     }
+                    ChangeTitbarColor();
                     break;
                 case "Favbox":
                     if (isLogin)
@@ -819,7 +903,7 @@ namespace bilibili2
                     break;
                 case "Setting":
                     infoFrame.Navigate(typeof(SettingPage));
-                    (infoFrame.Content as SettingPage).ChangeTheme += MainPage_ChangeTheme;
+                 
                     break;
                 case "Feedback":
                     break;
@@ -828,6 +912,12 @@ namespace bilibili2
             }
 
         }
+
+        private void MainPage_ChangeDrak()
+        {
+            ChangeDrak();
+        }
+
         //改变主题
         private void ChangeTheme()
         {
@@ -955,6 +1045,26 @@ namespace bilibili2
             titleBar.InactiveBackgroundColor = ((SolidColorBrush)top_grid.Background).Color;
             titleBar.ButtonInactiveBackgroundColor = ((SolidColorBrush)top_grid.Background).Color;
             infoFrame.Tag = (SolidColorBrush)top_grid.Background;
+        }
+        private void ChangeDrak()
+        {
+            if (!settings.SettingContains("Drak"))
+            {
+                settings.SetSettingValue("Drak", false);
+            }
+            if ((bool)settings.GetSettingValue("Drak"))
+            {
+                RequestedTheme = ElementTheme.Dark;
+                txt_D_L.Text = "日间模式";
+                font_D_L.Glyph = "\uE706";
+            }
+            else
+            {
+                RequestedTheme = ElementTheme.Light;
+                txt_D_L.Text = "夜间模式";
+                font_D_L.Glyph = "\uE708";
+            }
+             ChangeTitbarColor();
         }
         //动态加载更多
         bool Moreing = true;
@@ -1098,6 +1208,8 @@ namespace bilibili2
                     break;
                 case "设置":
                     (infoFrame.Content as SettingPage).BackEvent += MainPage_BackEvent;
+                    (infoFrame.Content as SettingPage).ChangeTheme += MainPage_ChangeTheme;
+                    (infoFrame.Content as SettingPage).ChangeDrak += MainPage_ChangeDrak;
                     break;
                 case "播放器":
                     (infoFrame.Content as PlayerPage).BackEvent += MainPage_BackEvent;
@@ -1140,6 +1252,9 @@ namespace bilibili2
                     break;
                 case "消息中心":
                     (infoFrame.Content as MessagePage).BackEvent += MainPage_BackEvent;
+                    break;
+                case "全部直播":
+                    (infoFrame.Content as AllLivePage).BackEvent += MainPage_BackEvent;
                     break;
                 default:
                     break;
@@ -1893,6 +2008,16 @@ namespace bilibili2
 
         }
 
-     
+        private void btn_refresh_Atton_Click(object sender, RoutedEventArgs e)
+        {
+            DT_PageNum = 1;
+            User_ListView_Attention.Items.Clear();
+            GetDt();
+        }
+
+        private void btn_live_All_Click(object sender, RoutedEventArgs e)
+        {
+            infoFrame.Navigate(typeof(AllLivePage));
+        }
     }
 }

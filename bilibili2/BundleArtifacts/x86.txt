@@ -1,2 +1,2 @@
-MainPackage=F:\UWP开发\APP项目\bilibili2\bilibili2\bin\x86\Release\bilibili2_1.0.9.0_x86.appx
-SymbolPackage=F:\UWP开发\APP项目\bilibili2\bilibili2\AppPackages\bilibili2_1.0.9.0_Test\bilibili2_1.0.9.0_x86.appxsym
+MainPackage=F:\UWP开发\APP项目\bilibili2\bilibili2\bin\x86\Release\bilibili2_1.1.1.0_x86.appx
+SymbolPackage=F:\UWP开发\APP项目\bilibili2\bilibili2\AppPackages\bilibili2_1.1.1.0_Test\bilibili2_1.1.1.0_x86.appxsym

@@ -52,9 +52,10 @@ namespace bilibili2.Pages
             if (e.NavigationMode == NavigationMode.New)
             {
                 list.Items.Clear();
+                pageNum = 1;
+                maxPage = 0;
                 uid = e.Parameter as string;
                 GetUserBangumi(uid, pageNum);
-
             }
         }
         protected override void OnNavigatedFrom(NavigationEventArgs e)

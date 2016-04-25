@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Graphics.Display;
 using Windows.Media;
 using Windows.Media.Playback;
 using Windows.System.Display;
@@ -100,7 +101,6 @@ namespace bilibili2.Pages
             datetimer.Start();
             VideoList = ((KeyValuePair<List<VideoModel>, int>)e.Parameter).Key;
             PlayP= ((KeyValuePair<List<VideoModel>, int>)e.Parameter).Value;
-          
 
             if (VideoList.Count<=1)
             {
@@ -151,6 +151,7 @@ namespace bilibili2.Pages
                 dispRequest = null;
             }
             ApplicationView.GetForCurrentView().ExitFullScreenMode();
+            DisplayInformation.AutoRotationPreferences = DisplayOrientations.None;
             timer.Stop();
             datetimer.Stop();
         }
@@ -159,12 +160,14 @@ namespace bilibili2.Pages
         {
 
             DanDis_Get();
+
             if (dispRequest == null)
             {
                 // 用户观看视频，需要保持屏幕的点亮状态
                 dispRequest = new DisplayRequest();
                 dispRequest.RequestActive(); // 激活显示请求
             }
+            DisplayInformation.AutoRotationPreferences =(DisplayOrientations)5;
 
             if (setting.SettingContains("Full"))
             {
@@ -199,6 +202,39 @@ namespace bilibili2.Pages
                     btn_ExitFull.Visibility = Visibility.Collapsed;
                     tw_AutoFull.IsOn = false;
                 }
+            }
+
+            //弹幕字体
+            if (setting.SettingContains("FontFamily"))
+            {
+                switch ((string)setting.GetSettingValue("FontFamily"))
+                {
+                    case "默认":
+                        cb_Font.SelectedIndex = 0;
+                        break;
+                    case "雅黑":
+                        cb_Font.SelectedIndex = 1;
+                        break;
+                    case "黑体":
+                        cb_Font.SelectedIndex = 2;
+                        break;
+                    case "楷体":
+                        cb_Font.SelectedIndex = 3;
+                        break;
+                    case "宋体":
+                        cb_Font.SelectedIndex = 4;
+                        break;
+                    case "等线":
+                        cb_Font.SelectedIndex = 5;
+                        break;
+                    default:
+                        break;
+                }
+            }
+            else
+            {
+                setting.SetSettingValue("FontFamily", "默认");
+                cb_Font.SelectedIndex = 0;
             }
 
             if (setting.SettingContains("Quality"))
@@ -624,8 +660,35 @@ namespace bilibili2.Pages
 
         }
 
-        private void mediaElement_MediaEnded(object sender, RoutedEventArgs e)
+        private async void mediaElement_MediaEnded(object sender, RoutedEventArgs e)
         {
+            if (cb_setting_1.IsChecked.Value)
+            {
+                mediaElement.Play();
+                danmu.ClearDanmu();
+                return;
+            }
+            grid_Top.Visibility = Visibility.Visible;
+            grid_SendDanmu.Visibility = Visibility.Visible;
+            grid_PlayInfo.Visibility = Visibility.Visible;
+            if (gridview_List.SelectedIndex== gridview_List.Items.Count-1)
+            {
+                if (cb_setting_2.IsChecked.Value)
+                {
+                    gridview_List.SelectedIndex = 0;
+                }
+                else
+                {
+                    grid_end.Visibility = Visibility.Visible;
+                }
+            }
+            else
+            {
+                grid_next.Visibility = Visibility.Visible;
+                await Task.Delay(2000);
+                grid_next.Visibility = Visibility.Collapsed;
+                gridview_List.SelectedIndex += 1;
+            }
 
         }
 
@@ -1004,7 +1067,7 @@ namespace bilibili2.Pages
             if (IsYonghu)
             {
                 string b = (string)setting.GetSettingValue("Yonghu") + "|" + text;
-                setting.SetSettingValue("Guanjianzi",b);
+                setting.SetSettingValue("Yonghu", b);
                 Yonghu.Add(text);
             }
             else
@@ -1026,10 +1089,6 @@ namespace bilibili2.Pages
             if (tw_AutoFull.IsOn)
             {
                 mediaElement.AudioCategory = AudioCategory.BackgroundCapableMedia;
-                // BackgroundMediaPlayer.Current.
-                // BackgroundMediaPlayer.Current.AddAudioEffect
-                //BackgroundMediaPlayer.Current.
-          
             }
             else
             {
@@ -1088,6 +1147,18 @@ namespace bilibili2.Pages
             }
         }
 
+        private void btn_RePlay_Click(object sender, RoutedEventArgs e)
+        {
+            mediaElement.Play();
+            danmu.ClearDanmu();
+            grid_end.Visibility = Visibility.Collapsed;
+        }
 
+        private void cb_Font_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+           string a=  (cb_Font.SelectedItem as ComboBoxItem).Content.ToString();
+           danmu.fontFamily =a;
+           setting.SetSettingValue("FontFamily", a);
+        }
     }
 }

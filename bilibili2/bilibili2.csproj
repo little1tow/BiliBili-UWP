@@ -107,6 +107,9 @@
     <Compile Include="Class\SqlHelper.cs" />
     <Compile Include="Class\UserClass.cs" />
     <Compile Include="Class\WebClientClass.cs" />
+    <Compile Include="Controls\LoadControl.xaml.cs">
+      <DependentUpon>LoadControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\MyDanmaku.xaml.cs">
       <DependentUpon>MyDanmaku.xaml</DependentUpon>
     </Compile>
@@ -117,6 +120,9 @@
     <Compile Include="Controls\WrapPanel.cs" />
     <Compile Include="Controls\MessageShow.xaml.cs">
       <DependentUpon>MessageShow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\AllLivePage.xaml.cs">
+      <DependentUpon>AllLivePage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\BanByTagPage.xaml.cs">
       <DependentUpon>BanByTagPage.xaml</DependentUpon>
@@ -264,6 +270,11 @@
     <Content Include="Assets\MiniIcon\注册时间.png" />
     <Content Include="Assets\MiniIcon\生日.png" />
     <Content Include="Assets\MiniIcon\硬币.png" />
+    <Content Include="Assets\other\bili_anim_tv_chan_1.png" />
+    <Content Include="Assets\other\bili_anim_tv_chan_2.png" />
+    <Content Include="Assets\other\bili_anim_tv_chan_3.png" />
+    <Content Include="Assets\other\bili_anim_tv_chan_4.png" />
+    <Content Include="Assets\other\bili_anim_tv_chan_5.png" />
     <Content Include="Assets\other\NoAvatar.png" />
     <Content Include="Assets\PartIcon\BDH.png" />
     <Content Include="Assets\PartIcon\BDSJ.png" />
@@ -294,6 +305,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Controls\LoadControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\MessageShow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -303,6 +318,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\MyLiveControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\AllLivePage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

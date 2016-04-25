@@ -1,0 +1,252 @@
+﻿<Page
+    x:Class="bilibili2.SettingPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:bilibili2"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Tag="设置"
+    RequestedTheme="Light" 
+    >
+    <Page.Resources>
+        <SolidColorBrush x:Name="bg" x:Key="BG" Color="#FFDC638F" />
+    </Page.Resources>
+    <Grid Background="{ThemeResource Bili-Background}">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="48"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid Background="{StaticResource BG}" Grid.Row="0" Height="48" >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="48"/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="auto"/>
+                </Grid.ColumnDefinitions>
+                <AppBarButton x:Name="btn_back" Click="btn_back_Click" Icon="Back" Width="48" Height="48" Foreground="White"/>
+                <TextBlock  Text="设置" Margin="5 0" FontSize="16" x:Name="top_txt_Header" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" />
+            </Grid>
+            <SplitView x:Name="dan_Sp" Grid.Row="1"  OpenPaneLength="350" PanePlacement="Right">
+                <SplitView.Pane>
+                    <Grid>
+                        <Grid x:Name="grid_Guanjianzi">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition/>
+                                <RowDefinition Height="auto"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock FontSize="18" Margin="5">弹幕屏蔽关键字管理</TextBlock>
+                            <Grid Grid.Row="1" Margin="5 0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition Width="auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBox BorderThickness="0" x:Name="txt_Guanjianzi"></TextBox>
+                                <Button Grid.Column="1" x:Name="btn_AddGuanjianzi" Click="btn_AddGuanjianzi_Click">添加</Button>
+                            </Grid>
+                            <ListView x:Name="list_Guanjianzi" SelectionMode="Multiple" Grid.Row="2"></ListView>
+                            <StackPanel Orientation="Horizontal" Grid.Row="3">
+                                <Button Margin="5" x:Name="btn_DeleteGuanjianzi" Click="btn_DeleteGuanjianzi_Click">删除选中</Button>
+                                <Button Margin="5" x:Name="btn_GetGuanjianzi" Click="btn_GetGuanjianzi_Click" IsEnabled="False">获取网页屏蔽信息</Button>
+                            </StackPanel>
+
+                        </Grid>
+                        <Grid x:Name="grid_Yonghu">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition/>
+                                <RowDefinition Height="auto"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock FontSize="18" Margin="5">弹幕屏蔽用户管理</TextBlock>
+                            <Grid Grid.Row="1" Margin="5 0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition Width="auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBox BorderThickness="0" x:Name="txt_Yonghu"></TextBox>
+                                <Button Grid.Column="1" x:Name="btn_AddYonghu" Click="btn_AddYonghu_Click">添加</Button>
+                            </Grid>
+                            <ListView x:Name="list_Yonghu" SelectionMode="Multiple" Grid.Row="2"></ListView>
+                            <StackPanel Orientation="Horizontal" Grid.Row="3">
+                                <Button Margin="5" x:Name="btn_DeleteYonghu" Click="btn_DeleteYonghu_Click">删除选中</Button>
+                                <Button Margin="5" x:Name="btn_GetYonghu" Click="btn_GetYonghu_Click" IsEnabled="False">获取网页屏蔽信息</Button>
+                            </StackPanel>
+
+                        </Grid>
+                    </Grid>
+                </SplitView.Pane>
+                <Pivot>
+                    <PivotItem Margin="0">
+                        <PivotItem.Header>
+                            <TextBlock FontSize="18">常规</TextBlock>
+                        </PivotItem.Header>
+                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                            <StackPanel Margin="10 0">
+                                <TextBlock FontSize="16" >外观主题</TextBlock>
+                                <ComboBox  x:Name="cb_Theme" Margin="0,5" Width="150"  Foreground="{Binding ElementName=cb_Theme,Path=SelectedItem.Foreground}" SelectionChanged="cb_Theme_SelectionChanged">
+                                    <ComboBoxItem >
+                                        <StackPanel Orientation="Horizontal">
+                                            <Ellipse Width="16" Height="16" Fill="#FFDF85A0" Margin="0,0,5,0"></Ellipse>
+                                            <TextBlock Foreground="#FFDF85A0">少女粉</TextBlock>
+                                        </StackPanel>
+                                    </ComboBoxItem>
+                                    <ComboBoxItem >
+                                        <StackPanel Orientation="Horizontal">
+                                            <Ellipse Width="16" Height="16" Fill="#FFF70D0D" Margin="0,0,5,0"></Ellipse>
+                                            <TextBlock Foreground="#FFF70D0D">姨妈红</TextBlock>
+                                        </StackPanel>
+                                    </ComboBoxItem>
+                                    <ComboBoxItem>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Ellipse Width="16" Height="16" Fill="#FFF9EF23" Margin="0,0,5,0"></Ellipse>
+                                            <TextBlock Foreground="#FFF9EF23">咸蛋黄</TextBlock>
+                                        </StackPanel>
+                                    </ComboBoxItem>
+                                    <ComboBoxItem >
+                                        <StackPanel Orientation="Horizontal">
+                                            <Ellipse Width="16" Height="16" Fill="#FF71F923" Margin="0,0,5,0"></Ellipse>
+                                            <TextBlock Foreground="#FF71F923">早苗绿</TextBlock>
+                                        </StackPanel>
+                                    </ComboBoxItem>
+                                    <ComboBoxItem >
+                                        <StackPanel Orientation="Horizontal">
+                                            <Ellipse Width="16" Height="16" Fill="#FF18BDFB" Margin="0,0,5,0"></Ellipse>
+                                            <TextBlock Foreground="#FF18BDFB">胖次蓝</TextBlock>
+                                        </StackPanel>
+                                    </ComboBoxItem>
+                                    <ComboBoxItem>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Ellipse Width="16" Height="16" Fill="#FFB92CBF" Margin="0,0,5,0"></Ellipse>
+                                            <TextBlock Foreground="#FFB92CBF">基佬紫</TextBlock>
+                                        </StackPanel>
+                                    </ComboBoxItem>
+                                </ComboBox>
+                                <ToggleSwitch x:Name="tw_Drak" OffContent="日间模式" OnContent="夜间模式" HorizontalAlignment="Left" Toggled="tw_Drak_Toggled"></ToggleSwitch>
+                                <ToggleSwitch  x:Name="tw_HideStatusBar" OffContent="横屏不自动隐藏状态条" OnContent="横屏自动隐藏状态条" HorizontalAlignment="Left" Toggled="tw_HideStatusBar_Toggled" />
+                                <ToggleSwitch x:Name="tw_CT"  OffContent="不更新动态磁贴" OnContent="动态磁贴显示关注动态(需登录)" HorizontalAlignment="Left" Toggled="tw_CT_Toggled" />
+                            </StackPanel>
+                        </ScrollViewer>
+                    </PivotItem>
+                    <PivotItem Margin="0">
+                        <PivotItem.Header>
+                            <TextBlock FontSize="18">视频</TextBlock>
+                        </PivotItem.Header>
+
+                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                            <StackPanel Margin="10 0">
+                                <TextBlock FontSize="16" >默认清晰度</TextBlock>
+                                <ComboBox x:Name="cb_Quality" Margin="0 5" SelectionChanged="cb_Quality_SelectionChanged">
+                                    <ComboBoxItem>清晰</ComboBoxItem>
+                                    <ComboBoxItem>高清</ComboBoxItem>
+                                    <ComboBoxItem>原画</ComboBoxItem>
+                                </ComboBox>
+                                <TextBlock FontSize="16" >默认格式</TextBlock>
+                                <ComboBox x:Name="cb_Format" Margin="0,5" SelectedIndex="0" IsEnabled="False">
+                                    <ComboBoxItem>MP4</ComboBoxItem>
+                                    <ComboBoxItem>FLV</ComboBoxItem>
+                                </ComboBox>
+                                <TextBlock Foreground="Gray">*很快就能更改格式啦</TextBlock>
+                                <ToggleSwitch x:Name="tw_AutoFull" OffContent="播放时不自动全屏" OnContent="播放时自动全屏" HorizontalAlignment="Left" Toggled="tw_AutoFull_Toggled"></ToggleSwitch>
+                                <ToggleSwitch  x:Name="tw_AutoPlay" Visibility="Collapsed" OffContent="不自动播放视频" OnContent="自动播放视频" HorizontalAlignment="Left" Toggled="tw_AutoPlay_Toggled"/>
+                            </StackPanel>
+                        </ScrollViewer>
+                    </PivotItem>
+                    <PivotItem Margin="0">
+                        <PivotItem.Header>
+                            <TextBlock FontSize="18">弹幕</TextBlock>
+                        </PivotItem.Header>
+
+                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                            <StackPanel Margin="10 0">
+                                <TextBlock FontSize="16" >弹幕隐蔽</TextBlock>
+                                <StackPanel Orientation="Horizontal">
+                                    <Button x:Name="btn_OpenGuanjianzi" Click="btn_OpenGuanjianzi_Click">关键字管理</Button>
+                                    <Button Margin="5" x:Name="btn_OpenYonghu" Click="btn_OpenYonghu_Click">用户管理</Button>
+                                </StackPanel>
+                                <TextBlock FontSize="16" >弹幕字体</TextBlock>
+                                <ComboBox x:Name="cb_Font"   SelectionChanged="slider_DanmuFont_SelectionChanged">
+                                    <ComboBoxItem Content="默认"/>
+                                    <ComboBoxItem>微软雅黑</ComboBoxItem>
+                                    <ComboBoxItem>黑体</ComboBoxItem>
+                                    <ComboBoxItem>楷体</ComboBoxItem>
+                                    <ComboBoxItem>宋体</ComboBoxItem>
+                                    <ComboBoxItem>等线</ComboBoxItem>
+                                </ComboBox>
+                                <TextBlock Foreground="Black" FontSize="16" >
+									<Run Text="弹幕大小" />
+									<Run Text="{Binding Value, ElementName=slider_DanmuSize}" />
+                                </TextBlock>
+                                <Slider x:Name="slider_DanmuSize" Width="250" HorizontalAlignment="Left" Maximum="50" ValueChanged="slider_DanmuSize_ValueChanged" />
+                                <TextBlock Foreground="Black" FontSize="16" >
+									<Run Text="弹幕速度" />
+									<Run Text="{Binding Value, ElementName=slider_DanmuSpeed}"/>
+                                </TextBlock>
+                                <Slider x:Name="slider_DanmuSpeed"  Width="250" HorizontalAlignment="Left"   Maximum="25" ValueChanged="slider_DanmuSpeed_ValueChanged"/>
+                                <TextBlock Foreground="Black" FontSize="16" >
+									<Run Text="弹幕间距" />
+									<Run Text="{Binding Value, ElementName=slider_DanmuJianju}" />
+                                </TextBlock>
+                                <Slider x:Name="slider_DanmuJianju"  Width="250" HorizontalAlignment="Left"  Maximum="500"  ValueChanged="slider_DanmuJianju_ValueChanged"/>
+                                <TextBlock Foreground="Black" FontSize="16" >
+									<Run Text="弹幕透明度" />
+									<Run Text="{Binding Value, ElementName=slider_DanmuTran}"/>
+                                </TextBlock>
+                                <Slider x:Name="slider_DanmuTran"  Width="250" HorizontalAlignment="Left"  Maximum="100" ValueChanged="slider_DanmuTran_ValueChanged"/>
+                            </StackPanel>
+                        </ScrollViewer>
+
+                    </PivotItem>
+                    <PivotItem Margin="0">
+                        <PivotItem.Header>
+                            <TextBlock FontSize="18">下载</TextBlock>
+                        </PivotItem.Header>
+                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                            <StackPanel Margin="10 0">
+                                <TextBlock FontSize="16" >默认位置</TextBlock>
+                            </StackPanel>
+                        </ScrollViewer>
+                    </PivotItem>
+                    <PivotItem Margin="0">
+                        <PivotItem.Header>
+                            <TextBlock FontSize="18">关于</TextBlock>
+                        </PivotItem.Header>
+                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                            <StackPanel Margin="10 0">
+                                <TextBlock FontSize="18" >版本</TextBlock>
+                                <TextBlock Foreground="Gray" x:Name="txt_Ver" FontSize="18" Margin="0 5" IsTextSelectionEnabled="True"></TextBlock>
+                                <TextBlock FontSize="18" >作者</TextBlock>
+                                <TextBlock Foreground="Gray" Margin="0 5" IsTextSelectionEnabled="True">逍遥橙子(Xiaoyaocz)</TextBlock>
+                                <TextBlock FontSize="18" >帮助及反馈</TextBlock>
+                                <HyperlinkButton>反馈</HyperlinkButton>
+                                <HyperlinkButton>常见问题</HyperlinkButton>
+                                <TextBlock Foreground="Gray" Margin="0 5" IsTextSelectionEnabled="True">交流群:530991215</TextBlock>
+                                <TextBlock FontSize="18" >说明及联系</TextBlock>
+                                <TextBlock Foreground="Gray"  IsTextSelectionEnabled="True" TextWrapping="Wrap" Margin="0 5 0 0">本程序仅供学习交流使用，如侵犯任何合法权益请及时联系本人</TextBlock>
+                                <TextBlock Foreground="Gray" IsTextSelectionEnabled="True">本程序开源，遵循MIT协议</TextBlock>
+                                <TextBlock Foreground="Gray"  Margin="0 0 0 5" IsTextSelectionEnabled="True">Email:771102271@qq.com</TextBlock>
+                                <HyperlinkButton NavigateUri="https://github.com/xiaoyaocz/BiliBili-UWP">访问Github</HyperlinkButton>
+                                <TextBlock FontSize="18" >捐赠</TextBlock>
+                                <TextBlock Foreground="Gray" Margin="0 5 0 0" IsTextSelectionEnabled="True">如果觉得好用，请给我点支持</TextBlock>
+                                <TextBlock  Foreground="Gray"  Margin="0 0 0 5" IsTextSelectionEnabled="True">支付宝：2500655055@qq.com,**程</TextBlock>
+                                <TextBlock FontSize="18" >感谢</TextBlock>
+                                <TextBlock Foreground="Gray" Margin="0 5"></TextBlock>
+                                <TextBlock FontSize="18" >引用及参考</TextBlock>
+                                <HyperlinkButton  NavigateUri="http://www.bilibili.com/">哔哩哔哩/源数据</HyperlinkButton>
+                                <HyperlinkButton  NavigateUri="http://www.dilidili.com/">嘀哩嘀哩/源数据</HyperlinkButton>
+                                <HyperlinkButton  NavigateUri="http://www.cnblogs.com/ms-uap/p/4814507.html">MS-UAP/下拉刷新</HyperlinkButton>
+                                <HyperlinkButton  NavigateUri="http://www.newtonsoft.com/json">Newtonsoft/JSON.NET</HyperlinkButton>
+                                <HyperlinkButton  NavigateUri="https://github.com/fython/BilibiliAPIDocs">fython/BilibiliAPIDocs</HyperlinkButton>
+                                <HyperlinkButton  NavigateUri="https://github.com/WhiteBlue/bilibili-service">WhiteBlue/bilibili-service</HyperlinkButton>
+                                <HyperlinkButton  NavigateUri="http://www.cnblogs.com/hebeiDGL/p/4775377.html">段博琼/侧滑打开菜单</HyperlinkButton>
+                                <HyperlinkButton  NavigateUri="http://www.fuckbilibili.com/biliapi.html">fuckbilibili/biliapi</HyperlinkButton>
+                            </StackPanel>
+                        </ScrollViewer>
+                    </PivotItem>
+                </Pivot>
+            </SplitView>
+        </Grid>
+    </Grid>
+</Page>

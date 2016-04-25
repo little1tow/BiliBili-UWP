@@ -1,0 +1,150 @@
+﻿<Page
+    x:Class="bilibili2.Pages.AllLivePage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:bilibili2.Pages"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+      Tag="全部直播"
+    SizeChanged="Page_SizeChanged"
+    >
+    <Page.Resources>
+        <SolidColorBrush x:Name="bg" x:Key="BG" Color="#FFDF85A0" />
+        <Style x:Key="itemStyle" TargetType="GridViewItem">
+                <Setter Property="Margin" Value="5"></Setter>
+                <Setter Property="Background" Value="{ ThemeResource Bili-List-Background}"></Setter>
+                <Setter Property="BorderBrush" Value="{ ThemeResource Bili-Background}"></Setter>
+                <Setter Property="BorderThickness" Value="1"></Setter>
+            </Style>
+        <DataTemplate x:Key="GridItem">
+            <Viewbox MaxWidth="{Binding ElementName=ViewBox_num,Path=Width}">
+                <Grid MaxWidth="200" >
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="125"></RowDefinition>
+                        <RowDefinition Height="24"></RowDefinition>
+                        <RowDefinition Height="24"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="48"></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Image Source="{Binding cover}" Width="200" VerticalAlignment="Top" Height="125" Grid.ColumnSpan="2"></Image>
+                    <Ellipse Width="44" Height="44" VerticalAlignment="Bottom" HorizontalAlignment="Left" Grid.RowSpan="2" Margin="2">
+                        <Ellipse.Fill>
+                            <ImageBrush ImageSource="{Binding face}"></ImageBrush>
+                        </Ellipse.Fill>
+                    </Ellipse>
+                    <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding title}"  TextTrimming="CharacterEllipsis" Margin="5,0"></TextBlock>
+                    <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.ColumnSpan="2">
+                        <Image  Source="ms-appx:///Assets/MiniIcon/up.png" Width="16" Height="16" HorizontalAlignment="Left" Margin="5,2,0,0"></Image>
+                        <TextBlock FontSize="12" VerticalAlignment="Center" Foreground="Gray" Text="{Binding uname}"></TextBlock>
+                        <Image  Source="ms-appx:///Assets/Icon/Play.png" Width="16" Height="16" HorizontalAlignment="Left" Margin="5,2,0,0"></Image>
+                        <TextBlock FontSize="12" VerticalAlignment="Center" Foreground="Gray" Text="{Binding online}"></TextBlock>
+                    </StackPanel>
+                </Grid>
+            </Viewbox>
+        </DataTemplate>
+    </Page.Resources>
+    <Grid  Background="{ThemeResource Bili-Background}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="48"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid Background="{StaticResource BG}" Grid.Row="0" Height="48" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="48"/>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
+            <AppBarButton x:Name="btn_back" Click="btn_back_Click" Icon="Back" Width="48" Height="48" Foreground="White"/>
+            <TextBlock  Text="全部直播" Margin="5 0" FontSize="16" x:Name="top_txt_Header" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" />
+            <AppBarButton Foreground="White" ToolTipService.ToolTip="刷新" Grid.Column="2" Width="48" Height="48" Icon="Refresh" Click="AppBarButton_Click"></AppBarButton>
+        </Grid>
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition></RowDefinition>
+            </Grid.RowDefinitions>
+            <Border x:Name="ViewBox_num" Width="200" Height="1" VerticalAlignment="Top"></Border>
+            <Pivot x:Name="pivot" SelectionChanged="pivot_SelectionChanged">
+                <Pivot.ItemContainerStyle>
+                    <Style TargetType="PivotItem">
+                        <Setter Property="Margin" Value="0"></Setter>
+                    </Style>
+                </Pivot.ItemContainerStyle>
+                <PivotItem >
+                    <PivotItem.Header>
+                        <TextBlock Text="热门直播" FontSize="18"></TextBlock>
+                    </PivotItem.Header>
+                    <!--<pr:PullToRefreshBox x:Name="Pull1" RefreshInvoked="Pull_RefreshInvoked">-->
+                    <ScrollViewer x:Name="Sc_Live" ViewChanged="Sc_Live_ViewChanged">
+                        <GridView x:Name="live_HOT" SelectionMode="None" IsItemClickEnabled="True" ItemClick="live_HOT_ItemClick" HorizontalAlignment="Center" ScrollViewer.VerticalScrollMode="Disabled" VerticalAlignment="Top" ItemContainerStyle="{StaticResource itemStyle}" ItemTemplate="{StaticResource GridItem}"></GridView>
+                    </ScrollViewer>
+                    <!--</pr:PullToRefreshBox>-->
+
+                </PivotItem>
+                <PivotItem>
+                    <PivotItem.Header>
+                        <TextBlock Text="御宅文化" FontSize="18"></TextBlock>
+                    </PivotItem.Header>
+                    <!--<pr:PullToRefreshBox x:Name="Pull2" RefreshInvoked="Pull_RefreshInvoked">-->
+                    <ScrollViewer x:Name="Sc_Yz" ViewChanged="Sc_Yz_ViewChanged">
+                        <GridView x:Name="live_Yz" SelectionMode="None" IsItemClickEnabled="True" ItemClick="live_Dzj_ItemClick" HorizontalAlignment="Center" ScrollViewer.VerticalScrollMode="Disabled" VerticalAlignment="Top" ItemContainerStyle="{StaticResource itemStyle}" ItemTemplate="{StaticResource GridItem}"></GridView>
+                    </ScrollViewer>
+                    <!--</pr:PullToRefreshBox>-->
+                </PivotItem>
+                <PivotItem>
+                    <PivotItem.Header>
+                        <TextBlock Text="生活娱乐" FontSize="18"></TextBlock>
+                    </PivotItem.Header>
+                    <!--<pr:PullToRefreshBox x:Name="Pull3" RefreshInvoked="Pull_RefreshInvoked">-->
+                    <ScrollViewer x:Name="Sc_Sh">
+                        <GridView x:Name="live_Sh" SelectionMode="None" IsItemClickEnabled="True" ItemClick="live_Dzj_ItemClick" HorizontalAlignment="Center" ScrollViewer.VerticalScrollMode="Disabled" VerticalAlignment="Top" ItemContainerStyle="{StaticResource itemStyle}" ItemTemplate="{StaticResource GridItem}"></GridView>
+                    </ScrollViewer>
+                    <!--</pr:PullToRefreshBox>-->
+                </PivotItem>
+                <PivotItem>
+                    <PivotItem.Header>
+                        <TextBlock Text="单机联网" FontSize="18"></TextBlock>
+                    </PivotItem.Header>
+                    <!--<pr:PullToRefreshBox x:Name="Pull4" RefreshInvoked="Pull_RefreshInvoked">-->
+                    <ScrollViewer x:Name="Sc_D">
+                        <GridView x:Name="live_Dj" SelectionMode="None" IsItemClickEnabled="True" ItemClick="live_Dzj_ItemClick" HorizontalAlignment="Center" ScrollViewer.VerticalScrollMode="Disabled" VerticalAlignment="Top" ItemContainerStyle="{StaticResource itemStyle}" ItemTemplate="{StaticResource GridItem}"></GridView>
+                    </ScrollViewer>
+                    <!--</pr:PullToRefreshBox>-->
+                </PivotItem>
+                <PivotItem>
+                    <PivotItem.Header>
+                        <TextBlock Text="网络游戏" FontSize="18"></TextBlock>
+                    </PivotItem.Header>
+                    <!--<pr:PullToRefreshBox x:Name="Pull5" RefreshInvoked="Pull_RefreshInvoked">-->
+                    <ScrollViewer x:Name="Sc_W">
+                        <GridView x:Name="live_Wl" SelectionMode="None" IsItemClickEnabled="True" ItemClick="live_Dzj_ItemClick" HorizontalAlignment="Center" ScrollViewer.VerticalScrollMode="Disabled" VerticalAlignment="Top" ItemContainerStyle="{StaticResource itemStyle}" ItemTemplate="{StaticResource GridItem}"></GridView>
+                    </ScrollViewer>
+                    <!--</pr:PullToRefreshBox>-->
+                </PivotItem>
+                <PivotItem>
+                    <PivotItem.Header>
+                        <TextBlock Text="电子竞技" FontSize="18"></TextBlock>
+                    </PivotItem.Header>
+                    <!--<pr:PullToRefreshBox x:Name="Pull6" RefreshInvoked="Pull_RefreshInvoked">-->
+                    <ScrollViewer x:Name="Sc_Dj">
+                        <GridView x:Name="live_Dzj" SelectionMode="None" IsItemClickEnabled="True" ItemClick="live_Dzj_ItemClick" HorizontalAlignment="Center" ScrollViewer.VerticalScrollMode="Disabled" VerticalAlignment="Top" ItemContainerStyle="{StaticResource itemStyle}" ItemTemplate="{StaticResource GridItem}"></GridView>
+                    </ScrollViewer>
+                    <!--</pr:PullToRefreshBox>-->
+                </PivotItem>
+                <PivotItem>
+                    <PivotItem.Header>
+                        <TextBlock Text="放映厅" FontSize="18"></TextBlock>
+                    </PivotItem.Header>
+                    <!--<pr:PullToRefreshBox x:Name="Pull" RefreshInvoked="Pull_RefreshInvoked">-->
+                    <ScrollViewer x:Name="Sc_Dy">
+                        <GridView x:Name="live_Dy" SelectionMode="None" IsItemClickEnabled="True" ItemClick="live_Dzj_ItemClick" HorizontalAlignment="Center" ScrollViewer.VerticalScrollMode="Disabled" VerticalAlignment="Top" ItemContainerStyle="{StaticResource itemStyle}" ItemTemplate="{StaticResource GridItem}"></GridView>
+                    </ScrollViewer>
+                    <!--</pr:PullToRefreshBox>-->
+                </PivotItem>
+            </Pivot>
+
+        </Grid>
+    </Grid>
+</Page>

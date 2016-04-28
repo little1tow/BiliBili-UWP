@@ -7,6 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"    Tag="电影"
       SizeChanged="Page_SizeChanged"
+    xmlns:pr="using:PullToRefresh.UWP"
     >
     <Page.Resources>
         <SolidColorBrush x:Name="bg" x:Key="BG" Color="#FFDF85A0" />
@@ -115,8 +116,8 @@
                     <PivotItem.Header>
                         <TextBlock Text="推荐" FontSize="18"></TextBlock>
                     </PivotItem.Header>
-               
-                        <ScrollViewer x:Name="sv" VerticalScrollBarVisibility="Auto" ViewChanged="sv_ViewChanged" >
+                    <pr:PullToRefreshBox RefreshInvoked="PullToRefreshBox_RefreshInvoked">
+                        <ScrollViewer x:Name="sv" VerticalScrollBarVisibility="Auto"  >
                             <StackPanel  Margin="5,0">
                                 <Viewbox MaxWidth="620">
                                     <FlipView  x:Name="home_flipView"  Height="180"  Width="620" VerticalAlignment="Top" >
@@ -137,15 +138,22 @@
 
                                 <!--</ScrollViewer>-->
                                 <!--<ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Margin="0,0,10,0">-->
-                                <StackPanel Orientation="Horizontal" Margin="0,5" >
-                                <Border Background="{StaticResource BG}" Width="10" Margin="10 0 5 0" Height="24" ></Border>
-                                <TextBlock Text="全区动态" FontSize="18" ></TextBlock>
-                            </StackPanel>
+                                <Grid>
+                                    <StackPanel Orientation="Horizontal" Margin="0,5" >
+                                        <Border Background="{StaticResource BG}" Width="10" Margin="10 0 5 0" Height="24" ></Border>
+                                        <TextBlock Text="全区动态" FontSize="18" ></TextBlock>
+                                    </StackPanel>
+                                    <HyperlinkButton x:Name="btn_Refresh_DT" HorizontalAlignment="Right" Margin="10 0" Foreground="{ThemeResource Bili-FontColor}" Click="btn_Refresh_DT_Click">
+                                        <SymbolIcon Symbol="Refresh"></SymbolIcon>
+                                    </HyperlinkButton>
+                                </Grid>
                                 <GridView x:Name="GridView_DT" HorizontalAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled" HorizontalContentAlignment="Center" ItemClick="ZH_HotList_ItemClick" ItemTemplate="{StaticResource HomeItemTemplate}" IsItemClickEnabled="True"   SelectionMode="None" ItemContainerStyle="{StaticResource GridViewItemStyle}" >
                                 </GridView>
                                 <!--</ScrollViewer>-->
                             </StackPanel>
                         </ScrollViewer>
+                    </pr:PullToRefreshBox>
+                     
 
                 </PivotItem>
                 <PivotItem Margin="0">

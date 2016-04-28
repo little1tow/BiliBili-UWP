@@ -1,6 +1,10 @@
 ﻿using bilibili2.Class;
 using bilibili2.Pages;
 using bilibili2.PartPages;
+using JyUserFeedback;
+using JyUserFeedback.view;
+using JyUserInfo;
+using JyUserInfo.Model;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -15,6 +19,7 @@ using Windows.ApplicationModel.Core;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Storage;
+using Windows.Storage.Pickers;
 using Windows.UI;
 using Windows.UI.Core;
 using Windows.UI.Popups;
@@ -51,8 +56,27 @@ namespace bilibili2
             home_Items.PlayEvent += Home_Items_PlayEvent;
             home_Items.ErrorEvent += Home_Items_ErrorEvent;
             liveinfo.ErrorEvent += Home_Items_ErrorEvent;
+            liveinfo.PlayEvent += Liveinfo_PlayEvent;
+            JyFeedbackControl.FeedbackImageRequested += async delegate
+            {
+                var fileOpenPicker = new FileOpenPicker();
+                fileOpenPicker.FileTypeFilter.Add(".png");
+                fileOpenPicker.FileTypeFilter.Add(".jpg");
+
+                var file = await fileOpenPicker.PickSingleFileAsync();
+                if (file != null)
+                {
+                    _jyUserFeedbackSdkManager.UploadPicture(ApiHelper.JyAppkey, ApiHelper.JySecret, file);
+                }
+            };
             //this.RequestedTheme = ElementTheme.Dark;
         }
+
+        private void Liveinfo_PlayEvent(string aid)
+        {
+            infoFrame.Navigate(typeof(LiveInfoPage),aid);
+        }
+
         string navInfo = string.Empty;
         private SettingHelper settings = new SettingHelper();
         DispatcherTimer timer = new DispatcherTimer();
@@ -60,6 +84,7 @@ namespace bilibili2
         {
             if (e.NavigationMode == NavigationMode.New)
             {
+                GetFeedInfo();
                 GetLoadInfo();
                 SetHomeInfo();
                 SetWeekInfo();
@@ -253,15 +278,15 @@ namespace bilibili2
         private async void pivot_Home_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             UpdateUI();
-
-            top_txt_find.PlaceholderText = "搜索关键字或AV号";
             switch (pivot_Home.SelectedIndex)
             {
                 case 0:
-                    top_txt_find.PlaceholderText = "搜索房间或主播";
+                 
                     if (!liveinfo.isLoaded)
                     {
+                        GetLiveBanner();
                         liveinfo.GetLiveInfo();
+
                     }
                     break;
                 case 1:
@@ -275,6 +300,7 @@ namespace bilibili2
                     }
                     if (!liveinfo.isLoaded)
                     {
+                        GetLiveBanner();
                         liveinfo.GetLiveInfo();
                     }
                     break;
@@ -465,6 +491,11 @@ namespace bilibili2
                 grid_c_left_Ban.Width = new GridLength(0, GridUnitType.Auto);
                 grid_c_right_Ban.Width = new GridLength(0, GridUnitType.Auto);
                 grid_c_center_Ban.Width = new GridLength(1, GridUnitType.Star);
+                fvLeft_Live.Visibility = Visibility.Collapsed;
+                fvRight_Live.Visibility = Visibility.Collapsed;
+                grid_c_left_Live.Width = new GridLength(0, GridUnitType.Auto);
+                grid_c_right_Live.Width = new GridLength(0, GridUnitType.Auto);
+                grid_c_center_Live.Width = new GridLength(1, GridUnitType.Star);
             }
             else
             {
@@ -478,6 +509,11 @@ namespace bilibili2
                 grid_c_left_Ban.Width = new GridLength(1, GridUnitType.Star);
                 grid_c_right_Ban.Width = new GridLength(1, GridUnitType.Star);
                 grid_c_center_Ban.Width = new GridLength(0, GridUnitType.Auto);
+                fvLeft_Live.Visibility = Visibility.Visible;
+                fvRight_Live.Visibility = Visibility.Visible;
+                grid_c_left_Live.Width = new GridLength(1, GridUnitType.Star);
+                grid_c_right_Live.Width = new GridLength(1, GridUnitType.Star);
+                grid_c_center_Live.Width = new GridLength(0, GridUnitType.Auto);
             }
 
             if (this.ActualWidth < 1000)
@@ -627,13 +663,13 @@ namespace bilibili2
             }
             if (this.home_flipView_Ban.SelectedIndex == 0)
             {
-                this.fvLeft_Ban.SelectedIndex = this.fvLeft.Items.Count - 1;
+                this.fvLeft_Ban.SelectedIndex = this.fvLeft_Ban.Items.Count - 1;
                 this.fvRight_Ban.SelectedIndex = 1;
             }
             else if (this.home_flipView_Ban.SelectedIndex == 1)
             {
                 this.fvLeft_Ban.SelectedIndex = 0;
-                this.fvRight_Ban.SelectedIndex = this.fvRight.Items.Count - 1;
+                this.fvRight_Ban.SelectedIndex = this.fvRight_Ban.Items.Count - 1;
             }
             else if (this.home_flipView_Ban.SelectedIndex == this.home_flipView_Ban.Items.Count - 1)
             {
@@ -903,16 +939,16 @@ namespace bilibili2
                     break;
                 case "Setting":
                     infoFrame.Navigate(typeof(SettingPage));
-                 
                     break;
                 case "Feedback":
+                    Feedback();
                     break;
                 default:
                     break;
             }
 
         }
-
+        //触发主题改变
         private void MainPage_ChangeDrak()
         {
             ChangeDrak();
@@ -1210,6 +1246,9 @@ namespace bilibili2
                     (infoFrame.Content as SettingPage).BackEvent += MainPage_BackEvent;
                     (infoFrame.Content as SettingPage).ChangeTheme += MainPage_ChangeTheme;
                     (infoFrame.Content as SettingPage).ChangeDrak += MainPage_ChangeDrak;
+                    (infoFrame.Content as SettingPage).Feedback += delegate {
+                        Feedback();
+                    };
                     break;
                 case "播放器":
                     (infoFrame.Content as PlayerPage).BackEvent += MainPage_BackEvent;
@@ -1255,6 +1294,18 @@ namespace bilibili2
                     break;
                 case "全部直播":
                     (infoFrame.Content as AllLivePage).BackEvent += MainPage_BackEvent;
+                    break;
+                case "直播间":
+                    (infoFrame.Content as LiveInfoPage).BackEvent += MainPage_BackEvent;
+                    break;
+                case "dili":
+                    (infoFrame.Content as DiliDiliPage).BackEvent += MainPage_BackEvent;
+                    break;
+                case "dili-info":
+                    (infoFrame.Content as DiliInfo).BackEvent += MainPage_BackEvent;
+                    break;
+                case "搜索直播":
+                    (infoFrame.Content as SearchLivePage).BackEvent += MainPage_BackEvent;
                     break;
                 default:
                     break;
@@ -1942,10 +1993,6 @@ namespace bilibili2
 
         private async void top_txt_find_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
         {
-            if (sender.PlaceholderText != "搜索关键字或AV号")
-            {
-                return;
-            }
             if (sender.Text.Length != 0)
             {
                 sender.ItemsSource = await GetSugges(sender.Text);
@@ -1986,7 +2033,7 @@ namespace bilibili2
         //dilidili点击
         private void btn_dilidili_Click(object sender, RoutedEventArgs e)
         {
-            //infoFrame.Navigate(typeof(PlayerPage));
+            infoFrame.Navigate(typeof(DiliDiliPage));
         }
         //打开直播关注
         private async void btn_live_Atton_Click(object sender, RoutedEventArgs e)
@@ -2007,17 +2054,180 @@ namespace bilibili2
 
 
         }
-
+        private void list_AttLive_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            infoFrame.Navigate(typeof(LiveInfoPage),(e.ClickedItem as GetAttentionLive).roomid);
+        }
+        //刷新动态
         private void btn_refresh_Atton_Click(object sender, RoutedEventArgs e)
         {
             DT_PageNum = 1;
             User_ListView_Attention.Items.Clear();
             GetDt();
         }
-
+        //打开全部直播
         private void btn_live_All_Click(object sender, RoutedEventArgs e)
         {
             infoFrame.Navigate(typeof(AllLivePage));
+        }
+        //读取直播Banner
+        private async void GetLiveBanner()
+        {
+            wc = new WebClientClass();
+            string url = string.Format("http://live.bilibili.com/AppIndex/home?_device=wp&_ulv=10000&access_key={0}&appkey={1}&build=411005&platform=android&scale=xxhdpi", ApiHelper.access_key, ApiHelper._appKey);
+            url += "&sign=" + ApiHelper.GetSign(url);
+            string results = await wc.GetResults(new Uri(url));
+            HomeLiveModel model = JsonConvert.DeserializeObject<HomeLiveModel>(results);
+            if (model.code == 0)
+            {
+                HomeLiveModel dataModel = JsonConvert.DeserializeObject<HomeLiveModel>(model.data.ToString());
+                List<HomeLiveModel> bannerModel = JsonConvert.DeserializeObject<List<HomeLiveModel>>(dataModel.banner.ToString());
+                home_flipView_Live.ItemsSource = bannerModel;
+                fvLeft_Live.ItemsSource = bannerModel;
+                fvRight_Live.ItemsSource = bannerModel;
+                this.home_flipView_Live.SelectedIndex = 0;
+                try
+                {
+                    if (fvLeft_Live.Visibility != Visibility.Collapsed || fvRight_Live.Visibility != Visibility.Collapsed)
+                    {
+                        this.fvLeft_Live.SelectedIndex = this.fvLeft_Live.Items.Count - 1;
+                        this.fvRight_Live.SelectedIndex = this.home_flipView_Live.SelectedIndex + 1;
+                    }
+                }
+                catch (Exception)
+                {
+                }
+                
+            }
+        }
+        //直播Banner点击
+        private void btn_Banner_Live_Click(object sender, RoutedEventArgs e)
+        {
+            string ban = Regex.Match((home_flipView_Live.SelectedItem as HomeLiveModel).link, @"^bilibili://live/(.*?)$").Groups[1].Value;
+            if (ban.Length != 0)
+            {
+                infoFrame.Navigate(typeof(LiveInfoPage), ban);
+                return;
+            }
+        }
+        //直播Banner选择改变
+        private void home_flipView_Live_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (home_flipView_Live.Items.Count == 0 || fvLeft_Live.Items.Count == 0 || fvRight_Live.Items.Count == 0)
+            {
+                return;
+            }
+            if (fvLeft_Live.Visibility == Visibility.Collapsed || fvRight_Live.Visibility == Visibility.Collapsed)
+            {
+                return;
+            }
+            if (this.home_flipView_Live.SelectedIndex == 0)
+            {
+                this.fvLeft_Live.SelectedIndex = this.fvLeft_Live.Items.Count - 1;
+                this.fvRight_Live.SelectedIndex = 1;
+            }
+            else if (this.home_flipView_Live.SelectedIndex == 1)
+            {
+                this.fvLeft_Live.SelectedIndex = 0;
+                this.fvRight_Live.SelectedIndex = this.fvRight_Live.Items.Count - 1;
+            }
+            else if (this.home_flipView_Live.SelectedIndex == this.home_flipView_Live.Items.Count - 1)
+            {
+                this.fvLeft_Live.SelectedIndex = this.fvLeft_Live.Items.Count - 2;
+                this.fvRight_Live.SelectedIndex = 0;
+            }
+            else if ((this.home_flipView_Live.SelectedIndex < (this.home_flipView_Live.Items.Count - 1)) && this.home_flipView_Live.SelectedIndex > -1)
+            {
+                this.fvLeft_Live.SelectedIndex = this.home_flipView_Live.SelectedIndex - 1;
+                this.fvRight_Live.SelectedIndex = this.home_flipView_Live.SelectedIndex + 1;
+            }
+            else
+            {
+                return;
+            }
+        }
+
+
+
+        #region 九幽反馈
+        private UserInfo _userInfo;
+        private readonly JyUserFeedbackSDKManager _jyUserFeedbackSdkManager = new JyUserFeedbackSDKManager();
+        private async void Feedback()
+        {
+            if (_userInfo==null)
+            {
+                var userInfo = await JyUserInfoManager.QuickLogin(ApiHelper.JyAppkey);
+                if (userInfo.isLoginSuccess)
+                {
+                    _userInfo = userInfo;
+                    _jyUserFeedbackSdkManager.ShowFeedBack(Feedback_Grid, false, ApiHelper.JyAppkey, _userInfo.U_Key);
+                    bor_HasFeedback.Visibility = Visibility.Collapsed;
+                }
+                else
+                {
+                    await new MessageDialog("打开反馈失败，请重试").ShowAsync();
+                }
+            }
+            else
+            {
+                _jyUserFeedbackSdkManager.ShowFeedBack(Feedback_Grid, false, ApiHelper.JyAppkey, _userInfo.U_Key);
+            }
+        }
+        private async void GetFeedInfo()
+        {
+        
+            var userInfo = await JyUserInfoManager.QuickLogin(ApiHelper.JyAppkey);
+            if (userInfo.isLoginSuccess)
+            {
+                _userInfo = userInfo;
+                var newFeedBackRemindCount = await _jyUserFeedbackSdkManager.GetNewFeedBackRemindCount(ApiHelper.JyAppkey, _userInfo.U_Key);
+                if (newFeedBackRemindCount!=0)
+                {
+                    bor_HasFeedback.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    bor_HasFeedback.Visibility = Visibility.Collapsed;
+                }
+            }
+
+        }
+        #endregion
+
+        #region 下拉刷新
+        private void pr_Live_RefreshInvoked(DependencyObject sender, object args)
+        {
+            GetLiveBanner();
+            liveinfo.GetLiveInfo();
+        }
+
+        private async void pr_Bangumi_RefreshInvoked(DependencyObject sender, object args)
+        {
+            LoadBan = false;
+            await GetBanUpdate();
+            await GetBanBanner();
+            await GetBanTJ();
+            LoadBan = true;
+        }
+
+        private void pr_Home_RefreshInvoked(DependencyObject sender, object args)
+        {
+            SetHomeInfo();
+            home_Items.SetHomeInfo();
+        }
+
+        private void pr_Atton_RefreshInvoked(DependencyObject sender, object args)
+        {
+            DT_PageNum = 1;
+            User_ListView_Attention.Items.Clear();
+            GetDt();
+        }
+
+        #endregion
+
+        private void btn_Live_Search_Click(object sender, RoutedEventArgs e)
+        {
+            infoFrame.Navigate(typeof(SearchLivePage));
         }
     }
 }

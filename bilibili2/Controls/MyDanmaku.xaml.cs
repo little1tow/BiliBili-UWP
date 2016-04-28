@@ -98,7 +98,7 @@ namespace bilibili2.Controls
                 grid.HorizontalAlignment = HorizontalAlignment.Left;
 
                 TranslateTransform moveTransform = new TranslateTransform();
-                moveTransform.X = ActualWidth;
+                moveTransform.X = grid_Danmu.ActualWidth;
                 grid.RenderTransform = moveTransform;
                 //将弹幕加载入控件中,并且设置位置
                 grid_Danmu.Children.Add(grid);

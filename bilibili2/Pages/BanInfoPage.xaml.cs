@@ -20,6 +20,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using Windows.UI.Core;
+using Windows.ApplicationModel.DataTransfer;
 
 // “空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=234238 上提供
 
@@ -36,8 +37,18 @@ namespace bilibili2.Pages
         {
             this.InitializeComponent();
             NavigationCacheMode = NavigationCacheMode.Enabled;
+            DataTransferManager dataTransferManager = DataTransferManager.GetForCurrentView();
+            dataTransferManager.DataRequested += DataTransferManager_DataRequested;
         }
-       
+
+        private void DataTransferManager_DataRequested(DataTransferManager sender, DataRequestedEventArgs args)
+        {
+            DataRequest request = args.Request;
+            request.Data.Properties.Title = "【番剧】"+txt_Name.Text;
+            request.Data.Properties.Description = txt_Desc.Text + "\r\n——分享自BiliBili UWP";
+            request.Data.SetWebLink(new Uri("http://bangumi.bilibili.com/anime/" + banID));
+        }
+
 
         private void btn_back_Click(object sender, RoutedEventArgs e)
         {
@@ -193,10 +204,19 @@ namespace bilibili2.Pages
             bor_Width.Width = Width / 3;
         }
 
-        private void grid_E_ItemClick(object sender, ItemClickEventArgs e)
+        private async void grid_E_ItemClick(object sender, ItemClickEventArgs e)
         {
             if (cb_IsPlay.IsChecked.Value)
             {
+                if (CheckNetworkHelper.CheckInternetConnectionType() == InternetConnectionType.WwanConnection)
+                {
+                    var dialog = new MessageDialog("当前为移动网络，是否继续播放", "警告");
+                    dialog.Commands.Add(new UICommand("确定", cmd => { }, commandId: 0));
+                    dialog.Commands.Add(new UICommand("不再提醒", cmd =>
+                    {
+                    }, commandId: 1));
+                    await dialog.ShowAsync();
+                }
                 BangumiInfoModel model = e.ClickedItem as BangumiInfoModel;
                 List<VideoModel> listVideo = new List<VideoModel>();
                 List<BangumiInfoModel> ls = ((List<BangumiInfoModel>)list_E.ItemsSource).OrderByDescending(s => Convert.ToDouble(s.Num)).ToList();
@@ -419,6 +439,11 @@ namespace bilibili2.Pages
             Windows.ApplicationModel.DataTransfer.Clipboard.SetContent(pack); // 保存 DataPackage 对象到剪切板
             Windows.ApplicationModel.DataTransfer.Clipboard.Flush();
             messShow.Show("已将内容复制到剪切板",3000);
+        }
+
+        private void btn_Share_Click(object sender, RoutedEventArgs e)
+        {
+            DataTransferManager.ShowShareUI();
         }
     }
 }

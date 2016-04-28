@@ -76,6 +76,7 @@ namespace bilibili2.Pages
             try
             {
                 CanLoad = false;
+                pr_Load.Visibility = Visibility.Visible;
                 WebClientClass wc = new WebClientClass();
                 string results = await wc.GetResults(new Uri("http://api.bilibili.com/live/room_list?page=" + PageNum + "&pagesize=30&status=LIVE"));
                 InfoModel model = new InfoModel();
@@ -101,12 +102,17 @@ namespace bilibili2.Pages
             catch (Exception)
             {
             }
+            finally
+            {
+                pr_Load.Visibility = Visibility.Collapsed;
+            }
         }
 
         public async void GetYz()
         {
             try
             {
+                pr_Load.Visibility = Visibility.Visible;
                 WebClientClass wc = new WebClientClass();
                 string results = await wc.GetResults(new Uri("http://live.bilibili.com/otaku?page=1&ajax=1"));
                 InfoModel data = JsonConvert.DeserializeObject<InfoModel>(results);
@@ -121,12 +127,17 @@ namespace bilibili2.Pages
             catch (Exception)
             {
             }
+            finally
+            {
+                pr_Load.Visibility = Visibility.Collapsed;
+            }
         }
 
         public async void GetSh()
         {
             try
             {
+                pr_Load.Visibility = Visibility.Visible;
                 WebClientClass wc = new WebClientClass();
                 string results = await wc.GetResults(new Uri("http://live.bilibili.com/ent-life?page=1&ajax=1"));
                 InfoModel data = JsonConvert.DeserializeObject<InfoModel>(results);
@@ -141,12 +152,17 @@ namespace bilibili2.Pages
             catch (Exception)
             {
             }
+            finally
+            {
+                pr_Load.Visibility = Visibility.Collapsed;
+            }
         }
 
         public async void GetDj()
         {
             try
             {
+                pr_Load.Visibility = Visibility.Visible;
                 WebClientClass wc = new WebClientClass();
                 string results = await wc.GetResults(new Uri("http://live.bilibili.com/single?page=1&ajax=1"));
                 InfoModel data = JsonConvert.DeserializeObject<InfoModel>(results);
@@ -161,12 +177,17 @@ namespace bilibili2.Pages
             catch (Exception)
             {
             }
+            finally
+            {
+                pr_Load.Visibility = Visibility.Collapsed;
+            }
         }
 
         public async void GetWl()
         {
             try
             {
+                pr_Load.Visibility = Visibility.Visible;
                 WebClientClass wc = new WebClientClass();
                 string results = await wc.GetResults(new Uri("http://live.bilibili.com/online?page=1&ajax=1"));
                 InfoModel data = JsonConvert.DeserializeObject<InfoModel>(results);
@@ -181,12 +202,17 @@ namespace bilibili2.Pages
             catch (Exception)
             {
             }
+            finally {
+                pr_Load.Visibility = Visibility.Collapsed;
+            }
+            
         }
 
         public async void GetDzj()
         {
             try
             {
+                pr_Load.Visibility = Visibility.Visible;
                 WebClientClass wc = new WebClientClass();
                 string results = await wc.GetResults(new Uri("http://live.bilibili.com/e-sports?page=1&ajax=1"));
                 InfoModel data = JsonConvert.DeserializeObject<InfoModel>(results);
@@ -201,12 +227,17 @@ namespace bilibili2.Pages
             catch (Exception)
             {
             }
+            finally
+            {
+                pr_Load.Visibility = Visibility.Collapsed;
+            }
         }
 
         public async void GetDy()
         {
             try
             {
+                pr_Load.Visibility = Visibility.Visible;
                 WebClientClass wc = new WebClientClass();
                 string results = await wc.GetResults(new Uri("http://live.bilibili.com/movie?page=1&ajax=1"));
                 InfoModel data = JsonConvert.DeserializeObject<InfoModel>(results);
@@ -221,10 +252,15 @@ namespace bilibili2.Pages
             catch (Exception)
             {
             }
+            finally {
+                pr_Load.Visibility = Visibility.Collapsed;
+            }
+
         }
 
         private void live_HOT_ItemClick(object sender, ItemClickEventArgs e)
         {
+            this.Frame.Navigate(typeof(LiveInfoPage), ((InfoModel)e.ClickedItem).room_id);
             // this.Frame.Navigate(typeof(LivePlayerPage), ((InfoModel)e.ClickedItem).room_id);
             //livePlayVideo(((InfoModel)e.ClickedItem).room_id);
         }
@@ -381,8 +417,7 @@ namespace bilibili2.Pages
 
         private void live_Dzj_ItemClick(object sender, ItemClickEventArgs e)
         {
-            //this.Frame.Navigate(typeof(LivePlayerPage), ((InfoModel)e.ClickedItem).roomid);
-            //livePlayVideo(((InfoModel)e.ClickedItem).roomid);
+            this.Frame.Navigate(typeof(LiveInfoPage), ((InfoModel)e.ClickedItem).roomid);
         }
 
     }

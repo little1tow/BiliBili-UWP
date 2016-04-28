@@ -20,6 +20,9 @@ namespace bilibili2
 {
     class ApiHelper
     {
+        public const string JyAppkey = @"1afd8ae4b933daa51a39573a5719bba5";
+        public const string JySecret = @"d9e7262e70801e795c18dc20e0972df6";
+
         public const string _appSecret = "ba3a4e554e9a6e15dc4d1d70c2b154e3";
         public const string _appKey = "422fd9d7289a1dd9";
         public static string access_key = string.Empty;
@@ -84,7 +87,7 @@ namespace bilibili2
             {
                 //发送第一次请求，得到access_key
                 WebClientClass wc = new WebClientClass();
-                string results =await wc.GetResults(new Uri("https://api.bilibili.com/login?appkey=422fd9d7289a1dd9&platform=wp&pwd=" + Password + "&type=json&userid=" + UserName));
+                string results =await wc.GetResults(new Uri("https://api.bilibili.com/login?appkey=422fd9d7289a1dd9&platform=wp&pwd=" +WebUtility.UrlEncode(Password) + "&type=json&userid=" + WebUtility.UrlEncode(UserName)));
                 //Json解析及数据判断
                 LoginModel model = new LoginModel();
                 model = JsonConvert.DeserializeObject<LoginModel>(results);

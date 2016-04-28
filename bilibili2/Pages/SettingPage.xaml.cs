@@ -29,6 +29,7 @@ namespace bilibili2
         public event GoBackHandler BackEvent;
         public event GoBackHandler ChangeTheme;
         public event GoBackHandler ChangeDrak;
+        public event GoBackHandler Feedback;
         public SettingPage()
         {
             this.InitializeComponent();
@@ -116,7 +117,7 @@ namespace bilibili2
 
             if (settings.SettingContains("Quality"))
             {
-                cb_Quality.SelectedIndex = (int)settings.GetSettingValue("Quality");
+                cb_Quality.SelectedIndex =int.Parse( settings.GetSettingValue("Quality").ToString());
             }
             else
             {
@@ -129,6 +130,7 @@ namespace bilibili2
             }
             else
             {
+                settings.SetSettingValue("AutoPlay",false);
                 tw_AutoPlay.IsOn = false;
             }
 
@@ -167,7 +169,7 @@ namespace bilibili2
 
             if (settings.SettingContains("Full"))
             {
-                 tw_AutoFull.IsOn = (bool)settings.GetSettingValue("Full");
+                 tw_AutoFull.IsOn = bool.Parse( settings.GetSettingValue("Full").ToString());
             }
             else
             {
@@ -185,7 +187,7 @@ namespace bilibili2
 
             if (settings.SettingContains("DanmuJianju"))
             {
-                slider_DanmuJianju.Value = (double)settings.GetSettingValue("DanmuJianju");
+                slider_DanmuJianju.Value =double.Parse( settings.GetSettingValue("DanmuJianju").ToString());
             }
             else
             {
@@ -194,7 +196,7 @@ namespace bilibili2
 
             if (settings.SettingContains("DanmuTran"))
             {
-                slider_DanmuTran.Value = (double)settings.GetSettingValue("DanmuTran");
+                slider_DanmuTran.Value = double.Parse(settings.GetSettingValue("DanmuTran").ToString());
             }
             else
             {
@@ -203,7 +205,7 @@ namespace bilibili2
 
             if (settings.SettingContains("DanmuSpeed"))
             {
-                slider_DanmuSpeed.Value = (double)settings.GetSettingValue("DanmuSpeed");
+                slider_DanmuSpeed.Value = double.Parse(settings.GetSettingValue("DanmuSpeed").ToString());
             }
             else
             {
@@ -211,7 +213,7 @@ namespace bilibili2
             }
             if (settings.SettingContains("DanmuSize"))
             {
-                slider_DanmuSize.Value = (double)settings.GetSettingValue("DanmuSize");
+                slider_DanmuSize.Value = double.Parse( settings.GetSettingValue("DanmuSize").ToString());
             }
             else
             {
@@ -435,6 +437,11 @@ namespace bilibili2
             settings.SetSettingValue("Guanjianzi", b);
             list_Yonghu.Items.Add(txt_Guanjianzi.Text);
             txt_Guanjianzi.Text = string.Empty;
+        }
+
+        private void btn_feedback_Click(object sender, RoutedEventArgs e)
+        {
+            Feedback();
         }
     }
 }

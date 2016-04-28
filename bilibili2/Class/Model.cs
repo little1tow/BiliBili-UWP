@@ -4,6 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Windows.Foundation;
+using Windows.UI;
+using Windows.UI.Xaml.Data;
+using Windows.UI.Xaml.Media;
 
 namespace bilibili2
 {
@@ -109,10 +113,10 @@ namespace bilibili2
             get
             {
                 DateTime dt = Convert.ToDateTime(created_at);
-                if (dt.Date==DateTime.Now.Date)
+                if (dt.Date == DateTime.Now.Date)
                 {
                     TimeSpan ts = DateTime.Now - dt;
-                    return ts.Hours+"小时前";
+                    return ts.Hours + "小时前";
                 }
                 else
                 {
@@ -136,28 +140,28 @@ namespace bilibili2
         public string desc { get; set; }
         //UP信息
         public object owner { get; set; }
-            public string mid { get; set; }
-            public string name { get; set; }
-            public string face { get; set; }
+        public string mid { get; set; }
+        public string name { get; set; }
+        public string face { get; set; }
         //视频数据
         public object stat { get; set; }
-          public string view { get; set; }
-          public string danmaku { get; set; }
-          public string reply { get; set; }
-          public string favorite { get; set; }
-          public string coin { get; set; }
-          public string share { get; set; }
+        public string view { get; set; }
+        public string danmaku { get; set; }
+        public string reply { get; set; }
+        public string favorite { get; set; }
+        public string coin { get; set; }
+        public string share { get; set; }
         //TAG
         public object tags { get; set; }
         //视频P
         public object pages { get; set; }
-            public string cid { get; set; }
-            public string page { get; set; }
-            public string from { get; set; }
-            public string part { get; set; }
+        public string cid { get; set; }
+        public string page { get; set; }
+        public string from { get; set; }
+        public string part { get; set; }
         //视频关注信息
         public object req_user { get; set; }
-          public int attention { get; set; }//关注Up主,-999为关注,1已关注
+        public int attention { get; set; }//关注Up主,-999为关注,1已关注
         //public int favorite { get; set; }//是否已经收藏，0为未收藏，1为已经收藏
 
         public string Play
@@ -226,10 +230,10 @@ namespace bilibili2
             get
             {
                 DateTime dtStart = new DateTime(1970, 1, 1);
-                long lTime = long.Parse(pubdate+ "0000000");
+                long lTime = long.Parse(pubdate + "0000000");
                 //long lTime = long.Parse(textBox1.Text);
                 TimeSpan toNow = new TimeSpan(lTime);
-              
+
                 DateTime dt = dtStart.Add(toNow);
                 if (dt.Date == DateTime.Now.Date)
                 {
@@ -347,7 +351,7 @@ namespace bilibili2
         }
     }
     //用户信息
-   public  class GetLoginInfoModel
+    public class GetLoginInfoModel
     {
         public string mid { get; set; }//ID
         public string name { get; set; }//昵称
@@ -404,7 +408,7 @@ namespace bilibili2
         public int current_level { get; set; }
         public string place { get; set; }//地址
     }
-    public  class GetFavouriteBoxsVideoModel
+    public class GetFavouriteBoxsVideoModel
     {
         //Josn：http://space.bilibili.com/ajax/fav/getList?mid=用户ID&pagesize=30&fid=收藏夹编号
         //第一层
@@ -445,7 +449,7 @@ namespace bilibili2
         public int max_count { get; set; }//最大数量
 
     }
-   public  class GetUserAttention
+    public class GetUserAttention
     {
         //Josn：http://space.bilibili.com/ajax/friend/GetAttentionList?mid=XXXX&pagesize=999
         //第一层
@@ -462,7 +466,7 @@ namespace bilibili2
         public int pages { get; set; }
 
     }
-   public class GetUserSubmit
+    public class GetUserSubmit
     {
         //Josn：http://space.bilibili.com/ajax/friend/GetAttentionList?mid=XXXX&pagesize=999
         //第一层
@@ -471,7 +475,7 @@ namespace bilibili2
                                         //第二层
         public object vlist { get; set; }//结果，包含第三层
         public object list { get; set; }//结果，包含第三层
-                                         //第三层
+                                        //第三层
         public string aid { get; set; }//视频ID
         public string title { get; set; }//标题
         public string pic { get; set; }//图片
@@ -484,7 +488,7 @@ namespace bilibili2
         public int count { get; set; }
         public int pages { get; set; }
     }
-   public class GetHistoryModel
+    public class GetHistoryModel
     {
         //必须有登录Cookie
         //Josn：http://api.bilibili.com/x/history?jsonp=jsonp&ps=20&pn=1
@@ -517,7 +521,7 @@ namespace bilibili2
         {
             get
             {
-                if (live_status==1)
+                if (live_status == 1)
                 {
                     return "正在直播";
                 }
@@ -618,7 +622,7 @@ namespace bilibili2
         public string create { get; set; }//上传时间
         public string pic { get; set; }//封面
 
-      public string Create
+        public string Create
         {
             get
             {
@@ -631,7 +635,7 @@ namespace bilibili2
                 }
                 else
                 {
-                        return create;
+                    return create;
                 }
             }
         }
@@ -1006,23 +1010,23 @@ namespace bilibili2
 
         public object data { get; set; }
         public object banner { get; set; }
-            public string title { get; set; }
-            public string img { get; set; }
-            public string remark { get; set; }
-            public string link { get; set; }
+        public string title { get; set; }
+        public string img { get; set; }
+        public string remark { get; set; }
+        public string link { get; set; }
         public object partitions { get; set; }
-            public object partition { get; set; }
-                public string name { get; set; }
-                 public int id { get; set; }
-           public object lives { get; set; }
-                public object owner { get; set; }
-                    public string face { get; set; }
-                    public string mid { get; set; }
-                public object cover { get; set; }
-                    public string src { get; set; }
-                //public string title { get; set; }
-                public long online { get; set; }
-                public string room_id { get; set; }
+        public object partition { get; set; }
+        public string name { get; set; }
+        public int id { get; set; }
+        public object lives { get; set; }
+        public object owner { get; set; }
+        public string face { get; set; }
+        public string mid { get; set; }
+        public object cover { get; set; }
+        public string src { get; set; }
+        //public string title { get; set; }
+        public long online { get; set; }
+        public string room_id { get; set; }
     }
 
     public class MessageModel
@@ -1044,9 +1048,9 @@ namespace bilibili2
         public string message { get; set; }
         public string id { get; set; }
         public string cursor { get; set; }
-       
+
         public string title { get; set; }
-        
+
         public string Title
         {
             get {
@@ -1058,11 +1062,11 @@ namespace bilibili2
                 }
                 else
                 {
-                    string a= ban.Groups[1].Value+ title.Replace(ban.Groups[0].Value, string.Empty);
+                    string a = ban.Groups[1].Value + title.Replace(ban.Groups[0].Value, string.Empty);
                     link = ban.Groups[2].Value;
                     return a;
                 }
-              
+
             }
         }
         public string link { get; set; }
@@ -1093,7 +1097,7 @@ namespace bilibili2
                 }
                 else
                 {
-                    string a =  content.Replace(ban.Groups[0].Value, ban.Groups[1].Value);
+                    string a = content.Replace(ban.Groups[0].Value, ban.Groups[1].Value);
                     link = ban.Groups[2].Value;
                     return a;
                 }
@@ -1116,7 +1120,7 @@ namespace bilibili2
         public string avatar_url { get; set; }
         public int msg_count { get; set; }
         public string last_msg { get; set; }
-        public long last_time  { get; set; }
+        public long last_time { get; set; }
 
         public string Last_time {
             get {
@@ -1124,7 +1128,7 @@ namespace bilibili2
                 long lTime = long.Parse(last_time + "0000");
                 //long lTime = long.Parse(textBox1.Text);
                 TimeSpan toNow = new TimeSpan(lTime);
-                DateTime dt= dtStart.Add(toNow).ToLocalTime();
+                DateTime dt = dtStart.Add(toNow).ToLocalTime();
                 TimeSpan span = DateTime.Now - dt;
                 if (span.TotalDays > 7)
                 {
@@ -1156,6 +1160,169 @@ namespace bilibili2
                 }
 
             } }
+    }
+
+    //直播信息
+    public class LiveInfoModel
+    {
+        public int code { get; set; }
+        public string message { get; set; }
+
+        public object data { get; set; }
+        public string room_id { get; set; }
+        public string title { get; set; }
+
+        public string mid { get; set; }
+        public string uname { get; set; }
+        public string face { get; set; }
+        public int background_id { get; set; }//？？不明
+        public long online { get; set; }
+        public string start { get; set; }
+        public string create_at { get; set; }
+        public string status { get; set; }//LIVE or 
+        public int is_attention { get; set; }//0-false,1-true
+
+        public object meta { get; set; }
+        public List<string> tag { get; set; }
+        public string description { get; set; }//Html格式
+        public int typeid { get; set; }
+        public string cover { get; set; }
+        public string check_status { get; set; }//VERIFY
+
+        public string prepare { get; set; }
+
+        public object roomgifts { get; set; }
+        public string id { get; set; }
+        public string name { get; set; }
+        public string price { get; set; }
+        public object coin_type { get; set; }
+        public string gold { get; set; }
+        public string silver { get; set; }
+        public string img{ get; set; }
+
+        public string Price
+        {
+            get
+            {
+                if (silver==null|| silver==string.Empty)
+                {
+                    return "金瓜子:"+price;
+                }
+                else
+                {
+                    return "银瓜子:" + price;
+                }
+            }
+        }
+    }
+
+
+    public class LiveRankModel
+    {
+        public int code { get; set; }
+        public string message { get; set; }
+        public object data { get; set; }
+        public object list { get; set; }
+        public string uid { get; set; }
+        public string uname { get; set; }
+        public string coin { get; set; }
+        public int rank { get; set; }
+        public string medal_name { get; set; }//前缀
+        public int level { get; set; }
+        public string color { get; set; }
+        public SolidColorBrush PColor
+        { get;set;}
+        //用于颜色
+        public SolidColorBrush DColor
+        {
+            get
+            {
+                try
+                {
+                    color = Convert.ToInt32(color).ToString("X2");
+                    if (color.StartsWith("#"))
+                        color = color.Replace("#", string.Empty);
+                    int v = int.Parse(color, System.Globalization.NumberStyles.HexNumber);
+                    SolidColorBrush solid = new SolidColorBrush(new Color()
+                    {
+                        A = Convert.ToByte(125),
+                        R = Convert.ToByte((v >> 16) & 255),
+                        G = Convert.ToByte((v >> 8) & 255),
+                        B = Convert.ToByte((v >> 0) & 255)
+                    });
+                    return solid;
+                }
+                catch (Exception)
+                {
+                    SolidColorBrush solid = new SolidColorBrush(new Color()
+                    {
+                        A = 125,
+                        R = 255,
+                        G = 255,
+                        B = 255
+                    });
+                    return solid;
+                }
+
+            }
+        }
+
+    }
+
+    public class SearchLiveModel
+    {
+        public int code { get; set; }
+        public string message { get; set; }
+
+        public object data { get; set; }
+        public int page { get; set; }
+        public int pagesize { get; set; }
+
+        public object room { get; set; }
+        public object list { get; set; }
+        public string roomid { get; set; }
+        public string cover { get; set; }
+        public string title { get; set; }
+        public string name { get; set; }
+        public string face { get; set; }
+        public int online { get; set; }
+        public int total_room { get; set; }
+        public int total_page { get; set; }
+
+        public object user { get; set; }
+        public int live_status { get; set; }//0False,1True
+        public string areaName { get; set; }
+        public int fansNum { get; set; }
+        public int total_user { get; set; }
+
+        public string Live_Status
+        {
+            get {
+                if (live_status == 1)
+                {
+                    return "直播中";
+                }
+                else
+                {
+                    return "闲置中";
+                }
+            }
+        }
+        public SolidColorBrush color
+        {
+            get
+            {
+                if (live_status==0)
+                {
+                    return new SolidColorBrush(Colors.Gray);
+                }
+                else
+                {
+                    return new SolidColorBrush(Colors.OrangeRed);
+                }
+            }
+        }
+
     }
 
 }

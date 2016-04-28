@@ -66,7 +66,7 @@ namespace bilibili2
                 sc.IsEnabled = false;
                 btn_Login.Content = "正在登录";
                 pr_Load.Visibility = Visibility.Visible;
-                 string result= await  ApiHelper.LoginBilibili(txt_User.Text, txt_Pass.Password);
+                 string result= await  ApiHelper.LoginBilibili( txt_User.Text, txt_Pass.Password);
                 if (result=="登录成功")
                 {
                     LoginEd();
@@ -175,6 +175,11 @@ namespace bilibili2
                 btn_Login.Content = "登录";
                 sc.IsEnabled = true;
             }
+        }
+
+        private void Page_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+
         }
     }
 }

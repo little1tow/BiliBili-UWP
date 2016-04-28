@@ -131,7 +131,7 @@ namespace bilibili2.PartPages
                         GridView_DT.Items.Clear();
                     }
                     CanLoad = false;
-                    HttpResponseMessage hr = await hc.GetAsync(new Uri("http://www.bilibili.com/index/ding/3.json?page=" + PageNum + "&pagesize=20"));
+                    HttpResponseMessage hr = await hc.GetAsync(new Uri("http://www.bilibili.com/index/ding/3.json?page=" + PageNum + "&pagesize=24&rnd=" + new Random().Next(1, 9999)));
                     hr.EnsureSuccessStatusCode();
 
                     // var encodeResults = await hr.Content.ReadAsBufferAsync();
@@ -142,7 +142,6 @@ namespace bilibili2.PartPages
                     {
                         GridView_DT.Items.Add(item);
                     }
-                    PageNum++;
                     CanLoad = true;
                     pro_Bar.Visibility = Visibility.Collapsed;
                 }
@@ -1079,5 +1078,16 @@ namespace bilibili2.PartPages
             }
         }
 
+        private void btn_Refresh_DT_Click(object sender, RoutedEventArgs e)
+        {
+            GetDT();
+        }
+
+        private void PullToRefreshBox_RefreshInvoked(DependencyObject sender, object args)
+        {
+            PageNum = 1;
+            GetDT();
+            GetDYHome();
+        }
     }
 }

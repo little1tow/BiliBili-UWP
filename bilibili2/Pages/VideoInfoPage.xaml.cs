@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Storage;
@@ -43,7 +44,18 @@ namespace bilibili2
         {
             this.InitializeComponent();
             NavigationCacheMode = NavigationCacheMode.Enabled;
+            DataTransferManager dataTransferManager = DataTransferManager.GetForCurrentView();
+            dataTransferManager.DataRequested += DataTransferManager_DataRequested;
         }
+
+        private void DataTransferManager_DataRequested(DataTransferManager sender, DataRequestedEventArgs args)
+        {
+            DataRequest request = args.Request;
+            request.Data.Properties.Title = Video_Title.Text;
+            request.Data.Properties.Description = txt_Desc.Text+"\r\n——分享自BiliBili UWP";
+            request.Data.SetWebLink(new Uri("http://www.bilibili.com/video/av"+aid));
+        }
+
         string aid = "";
         bool Back = false;
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -451,8 +463,17 @@ namespace bilibili2
             ListView_Comment_Hot.Items.Clear();
         }
 
-        private void Video_List_ItemClick(object sender, ItemClickEventArgs e)
+        private async void Video_List_ItemClick(object sender, ItemClickEventArgs e)
         {
+            if (CheckNetworkHelper.CheckInternetConnectionType()== InternetConnectionType.WwanConnection)
+            {
+                var dialog = new MessageDialog("当前为移动网络，是否继续播放", "警告");
+                dialog.Commands.Add(new UICommand("确定", cmd => { }, commandId: 0));
+                dialog.Commands.Add(new UICommand("不再提醒", cmd =>
+                {
+                }, commandId: 1));
+               await  dialog.ShowAsync();
+            } 
             List<VideoModel> list = (List<VideoModel>)Video_List.ItemsSource;
             KeyValuePair<List<VideoModel>, int> Par = new KeyValuePair<List<VideoModel>, int>(list, list.IndexOf((VideoModel)e.ClickedItem));
             PostHistory();
@@ -460,9 +481,17 @@ namespace bilibili2
             //this.Frame.Navigate(typeof(PlayerPage), (e.ClickedItem as VideoModel).cid);
         }
 
-        private void btn_playP1_Click(object sender, RoutedEventArgs e)
+        private async void btn_playP1_Click(object sender, RoutedEventArgs e)
         {
-            
+            if (CheckNetworkHelper.CheckInternetConnectionType() == InternetConnectionType.WwanConnection)
+            {
+                var dialog = new MessageDialog("当前为移动网络，是否继续播放", "警告");
+                dialog.Commands.Add(new UICommand("确定", cmd => { }, commandId: 0));
+                dialog.Commands.Add(new UICommand("不再提醒", cmd =>
+                {
+                }, commandId: 1));
+                await dialog.ShowAsync();
+            }
             List<VideoModel> list= (List<VideoModel>)Video_List.ItemsSource;
 
             
@@ -1049,6 +1078,11 @@ namespace bilibili2
             catch (Exception)
             {
             }
+        }
+
+        private void btn_ShareData_Click(object sender, RoutedEventArgs e)
+        {
+            DataTransferManager.ShowShareUI();
         }
     }
 }

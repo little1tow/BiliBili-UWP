@@ -61,11 +61,14 @@
             <TextBlock  Text="全部直播" Margin="5 0" FontSize="16" x:Name="top_txt_Header" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" />
             <AppBarButton Foreground="White" ToolTipService.ToolTip="刷新" Grid.Column="2" Width="48" Height="48" Icon="Refresh" Click="AppBarButton_Click"></AppBarButton>
         </Grid>
+        <ProgressBar x:Name="pr_Load" VerticalAlignment="Top" Background="{x:Null}" Foreground="White" IsIndeterminate="True"></ProgressBar>
         <Grid Grid.Row="1">
             <Grid.RowDefinitions>
                 <RowDefinition></RowDefinition>
             </Grid.RowDefinitions>
+            
             <Border x:Name="ViewBox_num" Width="200" Height="1" VerticalAlignment="Top"></Border>
+          
             <Pivot x:Name="pivot" SelectionChanged="pivot_SelectionChanged">
                 <Pivot.ItemContainerStyle>
                     <Style TargetType="PivotItem">

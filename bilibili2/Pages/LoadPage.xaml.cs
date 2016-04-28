@@ -29,8 +29,10 @@ namespace bilibili2
     {
         public LoadPage()
         {
+           
             this.InitializeComponent();
         }
+
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
 
@@ -87,6 +89,10 @@ namespace bilibili2
             try
             {
                 await RegisterBackgroundTask();
+                if (!CheckNetworkHelper.CheckNetwork())
+                {
+                    new MessageDialog("请检查网络连接！").ShowAsync();
+                }
             }
             catch (Exception)
             {
@@ -96,12 +102,7 @@ namespace bilibili2
         }
         private async void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            //SqlHelper sql = new SqlHelper();
-            //sql.CreateShieldingTable();
-            //sql.InsertShieldingValue("ces",0);
-            //sql.InsertShieldingValue("ces2", 0);
-            //sql.GetShieldingText();
-            //await new MessageDialog(sql.QueryValue()).ShowAsync();
+
             await Task.Delay(3000);
             this.Frame.Navigate(typeof(MainPage));
         }

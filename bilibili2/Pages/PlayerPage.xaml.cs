@@ -75,6 +75,15 @@ namespace bilibili2.Pages
                     mediaElement.Volume-= 0.1;
                     messShow.Show("音量:" + mediaElement.Volume.ToString("P"), 3000);
                     break;
+                case Windows.System.VirtualKey.Escape:
+                    if (btn_Full.Visibility==Visibility.Collapsed)
+                    {
+                        setting.SetSettingValue("Full", false);
+                        btn_Full.Visibility = Visibility.Visible;
+                        btn_ExitFull.Visibility = Visibility.Collapsed;
+                        ApplicationView.GetForCurrentView().ExitFullScreenMode();
+                    }
+                    break;
                 default:
                     break;
             }
@@ -133,6 +142,8 @@ namespace bilibili2.Pages
             pro_Num.Text = "读取视频信息...";
             await GetPlayInfo(model.cid, top_cb_Quality.SelectedIndex+1);
         }
+
+
 
         private async void Datetimer_Tick(object sender, object e)
         {
@@ -511,7 +522,7 @@ namespace bilibili2.Pages
             }
             TimeSpan ts = new TimeSpan(0,0,Convert.ToInt32(slider.Value));
             txt_Post.Text = ts.Hours.ToString("00") + ":" + ts.Minutes.ToString("00") + ":" + ts.Seconds.ToString("00") + "/" + mediaElement.NaturalDuration.TimeSpan.Hours.ToString("00") + ":" + mediaElement.NaturalDuration.TimeSpan.Minutes.ToString("00") + ":" + mediaElement.NaturalDuration.TimeSpan.Seconds.ToString("00");
-            
+            messShow.Show(mediaElement.Position.Hours.ToString("00") + ":" + mediaElement.Position.Minutes.ToString("00") + ":" + mediaElement.Position.Seconds.ToString("00"), 3000);
         }
 
         private void Grid_ManipulationCompleted(object sender, ManipulationCompletedRoutedEventArgs e)
@@ -561,6 +572,7 @@ namespace bilibili2.Pages
                 double d = dd * slider_V.Maximum;
                 slider_V.Value += d;
             }
+            messShow.Show("音量:" + mediaElement.Volume.ToString("P"), 3000);
         }
         #endregion
 
@@ -972,6 +984,12 @@ namespace bilibili2.Pages
             setting.SetSettingValue("DanVisButtom", true);
         }
 
+        private void cb_Font_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            string a = (cb_Font.SelectedItem as ComboBoxItem).Content.ToString();
+            danmu.fontFamily = a;
+            setting.SetSettingValue("FontFamily", a);
+        }
         #endregion
 
         #region 选集操作
@@ -1079,9 +1097,6 @@ namespace bilibili2.Pages
 
         }
 
-
-
-
         #endregion
        
         private void tw_Background_Toggled(object sender, RoutedEventArgs e)
@@ -1154,11 +1169,5 @@ namespace bilibili2.Pages
             grid_end.Visibility = Visibility.Collapsed;
         }
 
-        private void cb_Font_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-           string a=  (cb_Font.SelectedItem as ComboBoxItem).Content.ToString();
-           danmu.fontFamily =a;
-           setting.SetSettingValue("FontFamily", a);
-        }
     }
 }

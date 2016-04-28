@@ -1,0 +1,588 @@
+﻿<Page
+    x:Class="bilibili2.Pages.LiveInfoPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:bilibili2.Pages"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"        Tag="直播间"
+    xmlns:danmu="using:bilibili2.Controls"
+    >
+    <Page.Resources>
+        <SolidColorBrush x:Key="BG" x:Name="bg" Color="#FFDF85A0"></SolidColorBrush>
+        <Style x:Key="SliderStyle1" TargetType="Slider">
+            <Setter Property="Background" Value="{ThemeResource SystemControlForegroundBaseMediumLowBrush}"/>
+            <Setter Property="BorderThickness" Value="{ThemeResource SliderBorderThemeThickness}"/>
+            <Setter Property="Foreground" Value="{ThemeResource SystemControlHighlightAccentBrush}"/>
+            <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}"/>
+            <Setter Property="FontSize" Value="{ThemeResource ControlContentThemeFontSize}"/>
+            <Setter Property="ManipulationMode" Value="None"/>
+            <Setter Property="UseSystemFocusVisuals" Value="True"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Slider">
+                        <Grid Margin="{TemplateBinding Padding}">
+                            <Grid.Resources>
+                                <Style x:Key="SliderThumbStyle" TargetType="Thumb">
+                                    <Setter Property="BorderThickness" Value="0"/>
+                                    <Setter Property="Background" Value="{ThemeResource SystemControlForegroundAccentBrush}"/>
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="Thumb">
+                                                <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" CornerRadius="10"/>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </Grid.Resources>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal"/>
+                                    <VisualState x:Name="Pressed">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="VerticalThumb">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightChromeHighBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Disabled">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="HeaderContentPresenter">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledBaseMediumLowBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="HorizontalDecreaseRect">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledChromeDisabledHighBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="HorizontalTrackRect">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledChromeDisabledHighBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="VerticalDecreaseRect">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledChromeDisabledHighBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="VerticalTrackRect">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledChromeDisabledHighBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="VerticalThumb">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledChromeDisabledHighBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="TopTickBar">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledBaseMediumLowBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="BottomTickBar">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledBaseMediumLowBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="LeftTickBar">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledBaseMediumLowBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="RightTickBar">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledBaseMediumLowBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="PointerOver">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="HorizontalTrackRect">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="#33000000"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="VerticalTrackRect">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="#000000"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="VerticalThumb">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightChromeAltLowBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <ContentPresenter x:Name="HeaderContentPresenter" ContentTemplate="{TemplateBinding HeaderTemplate}" Content="{TemplateBinding Header}" Foreground="{ThemeResource SystemControlForegroundBaseHighBrush}" FontWeight="{ThemeResource SliderHeaderThemeFontWeight}" Margin="{ThemeResource SliderHeaderThemeMargin}" TextWrapping="Wrap" Visibility="Collapsed" x:DeferLoadStrategy="Lazy"/>
+                            <Grid x:Name="SliderContainer" Background="Transparent" Control.IsTemplateFocusTarget="True" Grid.Row="1">
+                                <Grid x:Name="HorizontalTemplate" MinHeight="32" VerticalAlignment="Center">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="18"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="18"/>
+                                    </Grid.RowDefinitions>
+                                    <Rectangle x:Name="HorizontalTrackRect" Grid.ColumnSpan="3" Fill="{TemplateBinding Background}" Height="5" Grid.Row="1" />
+                                    <Rectangle x:Name="HorizontalDecreaseRect" Fill="{TemplateBinding Foreground}" Grid.Row="1" />
+                                    <TickBar x:Name="TopTickBar" Grid.ColumnSpan="3"  Height="5" Margin="0,0,0,4" Visibility="Collapsed" VerticalAlignment="Bottom" Fill="#FF6C6C6C"/>
+                                    <TickBar x:Name="HorizontalInlineTickBar" Grid.ColumnSpan="3" Fill="{ThemeResource SystemControlBackgroundAltHighBrush}" Height="5" Grid.Row="1" Visibility="Collapsed"/>
+                                    <TickBar x:Name="BottomTickBar" Grid.ColumnSpan="3"  Height="5" Margin="0,4,0,0" Grid.Row="2" Visibility="Collapsed" VerticalAlignment="Top" Fill="Black"/>
+                                    <Thumb x:Name="HorizontalThumb"  Height="16" AutomationProperties.AccessibilityView="Raw" Grid.Column="1" DataContext="{TemplateBinding Value}"  Grid.Row="0" Grid.RowSpan="3" Style="{StaticResource SliderThumbStyle}" Width="16" Background="White"/>
+                                </Grid>
+                                <Grid x:Name="VerticalTemplate" MinWidth="44" Visibility="Collapsed">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="18"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="18"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+                                    <Rectangle x:Name="VerticalTrackRect" Grid.Column="1" Fill="{TemplateBinding Background}" Grid.RowSpan="3" Width="{ThemeResource SliderTrackThemeHeight}"/>
+                                    <Rectangle x:Name="VerticalDecreaseRect" Grid.Column="1" Fill="{TemplateBinding Foreground}" Grid.Row="2"/>
+                                    <TickBar x:Name="LeftTickBar" Fill="{ThemeResource SystemControlForegroundBaseMediumLowBrush}" HorizontalAlignment="Right" Margin="0,0,4,0" Grid.RowSpan="3" Visibility="Collapsed" Width="{ThemeResource SliderOutsideTickBarThemeHeight}"/>
+                                    <TickBar x:Name="VerticalInlineTickBar" Grid.Column="1" Fill="#00000000" Grid.RowSpan="3" Visibility="Collapsed" Width="{ThemeResource SliderTrackThemeHeight}"/>
+                                    <TickBar x:Name="RightTickBar" Grid.Column="2" Fill="#00000000" HorizontalAlignment="Left" Margin="4,0,0,0" Grid.RowSpan="3" Visibility="Collapsed" Width="{ThemeResource SliderOutsideTickBarThemeHeight}"/>
+                                    <Thumb x:Name="VerticalThumb" AutomationProperties.AccessibilityView="Raw" Background="{ThemeResource SystemControlForegroundAccentBrush}" Grid.ColumnSpan="3" Grid.Column="0" DataContext="{TemplateBinding Value}" Height="8" Grid.Row="1" Style="{StaticResource SliderThumbStyle}" Width="24"/>
+                                </Grid>
+                            </Grid>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+      
+    </Page.Resources>
+
+    <Grid  Background="{ThemeResource Bili-Background}">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup >
+                <VisualState x:Name="a">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0"></AdaptiveTrigger>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="row_1.Height" Value="0.4*"/>
+                        <Setter Target="row_2.Height" Value="0.6*"/>
+                        <Setter Target="column_1.Width" Value="*"/>
+                        <Setter Target="column_2.Width" Value="auto"/>
+                        <Setter Target="grid_Info.(Grid.Row)" Value="2"/>
+                        <Setter Target="grid_Info.(Grid.Column)" Value="0"/>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="b">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="701"></AdaptiveTrigger>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="row_1.Height" Value="*"/>
+                        <Setter Target="row_2.Height" Value="auto"/>
+                        <Setter Target="column_1.Width" Value="0.7*"/>
+                        <Setter Target="column_2.Width" Value="0.3*"/>
+                        <Setter Target="grid_Info.(Grid.Row)" Value="0"/>
+                        <Setter Target="grid_Info.(Grid.RowSpan)" Value="2"/>
+                        <Setter Target="grid_Info.(Grid.Column)" Value="1"/>
+                        <Setter Target="danmu.(Grid.Column)" Value="0"/>
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+      
+        <Grid  Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition x:Name="row_1"/>
+                <RowDefinition Height="auto" />
+                <RowDefinition x:Name="row_2" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition x:Name="column_1"/>
+                <ColumnDefinition x:Name="column_2" Width="auto"/>
+            </Grid.ColumnDefinitions>
+            <Grid x:Name="grid_NotFull">
+                <SplitView PanePlacement="Right" x:Name="sp">
+                    <SplitView.Pane>
+                        <Grid>
+                            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                <StackPanel Margin="10 5">
+                                    <TextBlock  FontSize="18" Margin="0 5">弹幕设置</TextBlock>
+                                    <TextBlock  FontSize="12" Margin="0 5">(与视频弹幕设置不一致)</TextBlock>
+                                    <TextBlock Foreground="Black" Visibility="Visible">
+									<Run Text="弹幕字体" />
+                                    </TextBlock>
+                                    <ComboBox x:Name="cb_Font"  Visibility="Visible" SelectionChanged="cb_Font_SelectionChanged">
+                                        <ComboBoxItem Content="默认"/>
+                                        <ComboBoxItem>微软雅黑</ComboBoxItem>
+                                        <ComboBoxItem>黑体</ComboBoxItem>
+                                        <ComboBoxItem>楷体</ComboBoxItem>
+                                        <ComboBoxItem>宋体</ComboBoxItem>
+                                        <ComboBoxItem>等线</ComboBoxItem>
+                                    </ComboBox>
+                                    <TextBlock Foreground="Black">
+									<Run Text="弹幕大小" />
+									<Run Text="{Binding Value, ElementName=slider_DanmuSize}" />
+                                    </TextBlock>
+                                    <Slider x:Name="slider_DanmuSize"  Style="{StaticResource SliderStyle1}" Maximum="50" ValueChanged="slider_DanmuSize_ValueChanged" />
+                                    <TextBlock Foreground="Black">
+									<Run Text="弹幕速度" />
+									<Run Text="{Binding Value, ElementName=slider_DanmuSpeed}"/>
+                                    </TextBlock>
+                                    <Slider x:Name="slider_DanmuSpeed"  Style="{StaticResource SliderStyle1}"   Maximum="25" ValueChanged="slider_DanmuSpeed_ValueChanged"/>
+                                    <TextBlock Foreground="Black">
+									<Run Text="弹幕间距" />
+									<Run Text="{Binding Value, ElementName=slider_DanmuJianju}" />
+                                    </TextBlock>
+                                    <Slider x:Name="slider_DanmuJianju"  Style="{StaticResource SliderStyle1}" Maximum="500"  ValueChanged="slider_DanmuJianju_ValueChanged"/>
+                                    <TextBlock Foreground="Black">
+									<Run Text="弹幕透明度" />
+									<Run Text="{Binding Value, ElementName=slider_DanmuTran}"/>
+                                    </TextBlock>
+                                    <Slider x:Name="slider_DanmuTran"  Style="{StaticResource SliderStyle1}" Maximum="100" ValueChanged="slider_DanmuTran_ValueChanged"/>
+                                    <TextBlock Foreground="Black">关键字屏蔽(设置中管理)</TextBlock>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition Width="auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBox x:Name="txt_Dis" BorderThickness="0"/>
+                                        <Button x:Name="btn_OK" Grid.Column="1" VerticalAlignment="Stretch" Click="btn_OK_Click" Content="添加"/>
+                                    </Grid>
+                                    <TextBlock x:Name="txt_Pingbi" Foreground="Black" TextWrapping="WrapWholeWords"></TextBlock>
+                                </StackPanel>
+                            </ScrollViewer>
+
+                        </Grid>
+                    </SplitView.Pane>
+                    <Grid>
+                        <MediaElement x:Name="mediaElement" Tapped="mediaElement_Tapped" BufferingProgressChanged="mediaElement_BufferingProgressChanged" CurrentStateChanged="mediaElement_CurrentStateChanged"></MediaElement>
+                        <danmu:MyDanmaku x:Name="danmu" Grid.Column="0" Grid.Row="0" ></danmu:MyDanmaku>
+                        <StackPanel x:Name="progress" Visibility="Collapsed"  Width="120" Height="100"  VerticalAlignment="Center" HorizontalAlignment="Center" >
+                            <danmu:LoadControl  Width="72" Height="72" VerticalAlignment="Center"/>
+                            <TextBlock x:Name="pro_Num" Text="正在缓冲中..." HorizontalAlignment="Center" Margin="5" Foreground="Gray"/>
+                        </StackPanel>
+                        <Grid x:Name="media_Controls" Height="48" Grid.Row="0" VerticalAlignment="Bottom" Background="#7F808080">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Orientation="Horizontal">
+                                <AppBarButton x:Name="btn_Play" Icon="Play" Width="48" Foreground="White" ToolTipService.ToolTip="播放" Click="btn_Play_Click"></AppBarButton>
+                                <AppBarButton x:Name="btn_Pause" Icon="Pause" Visibility="Collapsed" Width="48" Foreground="White" ToolTipService.ToolTip="暂停" Click="btn_Pause_Click"></AppBarButton>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Grid.Column="2">
+                                <AppBarButton x:Name="btn_GetSliver" Width="48" Foreground="White" ToolTipService.ToolTip="领瓜子" Margin="10 0" Click="btn_GetSliver_Click">
+                                    <AppBarButton.Icon>
+                                        <BitmapIcon UriSource="ms-appx:///Assets/Icon/礼物.png" Height="16"  />
+                                    </AppBarButton.Icon>
+                                </AppBarButton>
+
+                                <AppBarButton x:Name="btn_OpenCloseDanmu" Icon="LeaveChat" Width="48" Foreground="White" ToolTipService.ToolTip="弹幕开关" Click="btn_OpenCloseDanmu_Click"></AppBarButton>
+                                <AppBarButton x:Name="btn_Setting" Icon="Setting" Width="48" Foreground="White" ToolTipService.ToolTip="设置" Click="btn_Setting_Click"></AppBarButton>
+                                <AppBarButton x:Name="btn_Full" Icon="FullScreen" Width="48" Foreground="White" ToolTipService.ToolTip="全屏" Click="btn_Full_Click"></AppBarButton>
+                                <AppBarButton x:Name="btn_ExitFull" Icon="BackToWindow" Visibility="Collapsed" Width="48" Foreground="White" ToolTipService.ToolTip="退出全屏" Click="btn_ExitFull_Click"></AppBarButton>
+                            </StackPanel>
+                        </Grid>
+                    </Grid>
+                </SplitView>
+            </Grid>
+            <Grid x:Name="Video_UP" Grid.Row="1" >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="auto"/>
+                </Grid.ColumnDefinitions>
+                <HyperlinkButton x:Name="btn_UP"  HorizontalAlignment="Left" Foreground="{ThemeResource Bili-FontColor}" Margin="5 0">
+                    <Grid >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Ellipse Width="36" Grid.RowSpan="2" Height="36" Margin="0,0,10 0">
+                            <Ellipse.Fill>
+                                <ImageBrush ImageSource="{Binding face}"/>
+                            </Ellipse.Fill>
+                        </Ellipse>
+                        <TextBlock x:Name="txt_title" Grid.Column="1" Text="{Binding title}" FontSize="16" />
+                        <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="1">
+                            <TextBlock  FontSize="14"  Foreground="{StaticResource BG}" Text="{Binding uname}"></TextBlock>
+                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE13D;" FontSize="14" Margin="10 0 5 0"/>
+                            <TextBlock  FontSize="14"  Text="{Binding online}"></TextBlock>
+                        </StackPanel>
+                        
+                    </Grid>
+                </HyperlinkButton>
+                <HyperlinkButton x:Name="btn_AttUp" Grid.Column="1" Foreground="White" Margin="5 0" Click="btn_AttUp_Click">
+                    <Border CornerRadius="5" Background="{StaticResource BG}"  >
+                        <TextBlock x:Name="txt_guanzhu" Margin="10 5">
+									<Run Text="关注"/>
+                        </TextBlock>
+                    </Border>
+                </HyperlinkButton>
+
+            </Grid>
+            <Grid x:Name="grid_Info"  Grid.Column="1" Grid.Row="2"  BorderThickness="0.5 0 0 0" BorderBrush="#33808080" Background="{ThemeResource Bili-Background}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="36"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid Background="{StaticResource BG}" >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Button x:Name="btn_Live"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Background="{StaticResource BG}"  FontSize="16" Foreground="#B2FFFFFF" Tag="0"  Content="互动" Click="btn_Live_Click"/>
+                    <Button  x:Name="btn_Info"  Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Background="{StaticResource BG}"  FontSize="16" Foreground="#B2FFFFFF" Tag="1"  Content="信息" Click="btn_Live_Click"/>
+                    <Button  x:Name="btn_Weitou"  Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Background="{StaticResource BG}"  FontSize="16" Foreground="#B2FFFFFF" Tag="2"  Content="喂投榜" Click="btn_Live_Click"/>
+                    <Button x:Name="btn_Fans"  Grid.Column="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Background="{StaticResource BG}"  FontSize="16" Foreground="#B2FFFFFF"  Tag="3"  Content="粉丝榜" Click="btn_Live_Click"/>
+                </Grid>
+                <Pivot x:Name="pivot" Style="{StaticResource PivotStyle1}" Grid.Row="1" SelectionChanged="pivot_SelectionChanged" >
+                    <PivotItem Margin="0">
+                        <Grid >
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition/>
+                                <RowDefinition Height="48"/>
+                            </Grid.RowDefinitions>
+                            
+                                <Grid  x:Name="grid_UserInfo" BorderThickness="0 0 0 1"  BorderBrush="#33808080">
+                                <HyperlinkButton x:Name="btn_User">
+                                    <Grid HorizontalAlignment="Left" Margin="0 5">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition Width="auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                        </Grid.RowDefinitions>
+                                        <Ellipse Width="36" Grid.RowSpan="2" Height="36" Margin="5,0,10 0" >
+                                            <Ellipse.Fill>
+                                                <ImageBrush ImageSource="{Binding face}"/>
+                                            </Ellipse.Fill>
+                                        </Ellipse>
+
+                                        <TextBlock  Grid.Column="1" Text="{Binding uname}" FontSize="16" />
+                                        <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="1">
+                                            <TextBlock  FontSize="14"  Foreground="OrangeRed">
+                                            <Run>金:</Run>
+                                            <Run Text="{Binding gold}"></Run>
+                                            </TextBlock>
+                                            <TextBlock  FontSize="14"  Foreground="Gray"  Margin="10 0">
+                                             <Run>银:</Run>
+                                            <Run Text="{Binding silver}"></Run>
+                                            </TextBlock>
+                                        </StackPanel>
+                                    </Grid>
+                                </HyperlinkButton>
+                                <HyperlinkButton x:Name="btn_Sign"  HorizontalAlignment="Right" Foreground="White" Margin="5 0" Click="btn_Sign_Click">
+                                        <Border CornerRadius="5" Background="{StaticResource BG}"  >
+                                            <TextBlock x:Name="txt_Sign" Margin="10 5" FontSize="14">
+									<Run Text="签到"/>
+                                            </TextBlock>
+                                        </Border>
+                                    </HyperlinkButton>
+                                </Grid>
+
+                      
+                            <ScrollViewer x:Name="sc" Grid.Row="1" VerticalScrollBarVisibility="Auto" >
+                                <StackPanel x:Name="stack_Comment">
+
+                                </StackPanel>
+                            </ScrollViewer>
+                            <Grid Grid.Row="2"  >
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition Width="auto"/>
+                                </Grid.ColumnDefinitions>
+                                <AppBarButton x:Name="btn_OpenSendGift" Width="48" Height="48" Background="{StaticResource BG}"  Foreground="White">
+                                    <AppBarButton.Icon>
+                                        <BitmapIcon UriSource="ms-appx:///Assets/Icon/礼物.png" Height="16"  />
+                                    </AppBarButton.Icon>
+                                    <AppBarButton.Flyout>
+                                        <Flyout>
+                                            <Grid>
+                                                <GridView x:Name="gridview_Gifts" MaxWidth="350" SelectionMode="None" IsItemClickEnabled="True" ItemClick="gridview_Gifts_ItemClick">
+                                                    <GridView.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <StackPanel ToolTipService.ToolTip="{Binding Price}">
+                                                                <Image Source="{Binding img}" Width="48" ></Image>
+                                                                <TextBlock HorizontalAlignment="Center" FontSize="10" Text="{Binding name}" ></TextBlock>
+                                                                <TextBlock HorizontalAlignment="Center" FontSize="10" Text="{Binding price}" Visibility="Collapsed"></TextBlock>
+                                                            </StackPanel>
+                                                        </DataTemplate>
+                                                    </GridView.ItemTemplate>
+                                                </GridView>
+                                            </Grid>
+                                        </Flyout>
+                                    </AppBarButton.Flyout>
+                                </AppBarButton>
+                                <AppBarButton x:Name="btn_OpenEmoji" Width="48" Icon="Emoji2" Grid.Column="1" Height="48" Background="{StaticResource BG}"  Foreground="White">
+                                    <AppBarButton.Flyout>
+                                        <Flyout>
+                                            <Flyout.FlyoutPresenterStyle>
+                                                <Style TargetType="FlyoutPresenter">
+                                                    <Setter Property="ScrollViewer.ZoomMode" Value="Enabled"/>
+                                                    <Setter Property="Background" Value="#FFF9F9F9"/>
+                                                    <Setter Property="MinHeight" Value="300"/>
+                                                    <Setter Property="MinWidth" Value="300"/>
+                                                </Style>
+                                            </Flyout.FlyoutPresenterStyle>
+                                            <Grid>
+                                                <Grid.Resources>
+                                                    <Style x:Name="btn_Style2" TargetType="Button">
+                                                        <Setter Property="Width" Value="100"></Setter>
+                                                        <Setter Property="Background" Value="#FFF9F9F9"></Setter>
+                                                        <Setter Property="Foreground" Value="Black"></Setter>
+                                                    </Style>
+                                                </Grid.Resources>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition></ColumnDefinition>
+                                                    <ColumnDefinition></ColumnDefinition>
+                                                    <ColumnDefinition></ColumnDefinition>
+                                                </Grid.ColumnDefinitions>
+                                                <StackPanel>
+                                                    <Button Click="Button_Click_2" Style="{StaticResource btn_Style2}">(⌒▽⌒)</Button>
+                                                    <Button Click="Button_Click_2" Style="{StaticResource btn_Style2}">（￣▽￣）</Button>
+                                                    <Button Click="Button_Click_2" Style="{StaticResource btn_Style2}">(=・ω・=)</Button>
+                                                    <Button Click="Button_Click_2" Style="{StaticResource btn_Style2}">(｀・ω・´)</Button>
+                                                    <Button Click="Button_Click_2" Style="{StaticResource btn_Style2}">(〜￣△￣)〜</Button>
+                                                    <Button Click="Button_Click_2" Style="{StaticResource btn_Style2}">(･∀･)</Button>
+                                                    <Button Click="Button_Click_2" Style="{StaticResource btn_Style2}">(°∀°)ﾉ</Button>
+                                                    <Button Click="Button_Click_2" Style="{StaticResource btn_Style2}">(｡･ω･｡)</Button>
+                                                    <Button Click="Button_Click_2" Style="{StaticResource btn_Style2}">(●￣(ｴ)￣●)</Button>
+                                                    <Button Click="Button_Click_2" Style="{StaticResource btn_Style2}">ε=ε=(ノ≧∇≦)ノ</Button>
+                                                    <Button Click="Button_Click_2" Style="{StaticResource btn_Style2}">（#-_-)┯━┯</Button>
+                                                    <Button Click="Button_Click_2" Style="{StaticResource btn_Style2}">_(:3」∠)_</Button>
+                                                </StackPanel>
+                                                <StackPanel Grid.Column="1">
+                                                    <Button Click="Button_Click_2" Style="{StaticResource btn_Style2}">(￣3￣)</Button>
+                                                    <Button Click="Button_Click_2" Style="{StaticResource btn_Style2}">╮(￣▽￣)╭</Button>
+                                                    <Button Click="Button_Click_2" Style="{StaticResource btn_Style2}">( ´_ゝ｀)</Button>
+                                                    <Button Click="Button_Click_2" Style="{StaticResource btn_Style2}">←_←</Button>
+                                                    <Button Click="Button_Click_2" Style="{StaticResource btn_Style2}">→_→</Button>
+                                                    <Button Click="Button_Click_2" Style="{StaticResource btn_Style2}">(&lt; _&lt; )</Button>
+                                                    <Button Click="Button_Click_2" Style="{StaticResource btn_Style2}">(&gt; _&lt; )</Button>
+                                                    <Button Click="Button_Click_2" Style="{StaticResource btn_Style2}">(´･_･`)</Button>
+                                                    <Button Click="Button_Click_2" Style="{StaticResource btn_Style2}">(-_-#)</Button>
+                                                    <Button Click="Button_Click_2" Style="{StaticResource btn_Style2}">（￣へ￣）</Button>
+                                                    <Button Click="Button_Click_2" Style="{StaticResource btn_Style2}">(笑)</Button>
+                                                    <Button Click="Button_Click_2" Style="{StaticResource btn_Style2}">(汗)</Button>
+                                                </StackPanel>
+                                                <StackPanel Grid.Column="2">
+                                                    <Button Click="Button_Click_2" Style="{StaticResource btn_Style2}">("▔□▔)/</Button>
+                                                    <Button Click="Button_Click_2" Style="{StaticResource btn_Style2}">(ﾟДﾟ≡ﾟдﾟ)!?</Button>
+                                                    <Button Click="Button_Click_2" Style="{StaticResource btn_Style2}">Σ(ﾟдﾟ;)</Button>
+                                                    <Button Click="Button_Click_2" Style="{StaticResource btn_Style2}">Σ( ￣□￣||)</Button>
+                                                    <Button Click="Button_Click_2" Style="{StaticResource btn_Style2}">(´；ω；`)</Button>
+                                                    <Button Click="Button_Click_2" Style="{StaticResource btn_Style2}">（/TДT)/</Button>
+                                                    <Button Click="Button_Click_2" Style="{StaticResource btn_Style2}">(^・ω・^ )</Button>
+                                                    <Button Click="Button_Click_2" Style="{StaticResource btn_Style2}">(￣ε(#￣) Σ</Button>
+                                                    <Button Click="Button_Click_2" Style="{StaticResource btn_Style2}">ヽ(`Д´)ﾉ</Button>
+                                                    <Button Click="Button_Click_2" Style="{StaticResource btn_Style2}">(╯°口°)╯(┴—┴</Button>
+                                                    <Button Click="Button_Click_2" Style="{StaticResource btn_Style2}">(泣)</Button>
+                                                    <Button Click="Button_Click_2" Style="{StaticResource btn_Style2}">(苦笑)</Button>
+                                                </StackPanel>
+                                            </Grid>
+                                        </Flyout>
+                                    </AppBarButton.Flyout>
+                                </AppBarButton>
+                                <TextBox x:Name="txt_Comment" Grid.Column="2" BorderThickness="0" PlaceholderText="说点什么吧"></TextBox>
+                                <AppBarButton x:Name="btn_SendComment" Width="48" Height="48" Grid.Column="3" Icon="Send" Background="{StaticResource BG}" Foreground="White" Click="btn_SendComment_Click"/>
+                            </Grid>
+                        </Grid>
+                    </PivotItem>
+                    <PivotItem Margin="0">
+                        <WebView x:Name="web_Desc"></WebView>
+                    </PivotItem>
+                    <PivotItem Margin="0">
+                        <ListView x:Name="list_Gift_Top" SelectionMode="None" >
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="ListViewItem">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
+                                </Style>
+                            </ListView.ItemContainerStyle>
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="32"/>
+                                            <ColumnDefinition/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock HorizontalAlignment="Center" FontSize="18" Foreground="{Binding PColor}" Text="{Binding rank}"></TextBlock>
+                                        <TextBlock Grid.Column="1" VerticalAlignment="Center" Text="{Binding uname}"></TextBlock>
+                                        <TextBlock Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Right" Text="{Binding coin}" ></TextBlock>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+
+                        </ListView>
+                    </PivotItem>
+                    <PivotItem Margin="0">
+                        <ListView x:Name="list_Fans_Top" SelectionMode="None" >
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="ListViewItem">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
+                                </Style>
+                            </ListView.ItemContainerStyle>
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="32"/>
+                                            <ColumnDefinition Width="auto"/>
+                                            <ColumnDefinition/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock HorizontalAlignment="Center" FontSize="18" Foreground="{Binding PColor}" Text="{Binding rank}"></TextBlock>
+                                        <Border Grid.Column="1" Background="{Binding DColor}" CornerRadius="5" Margin="2" >
+                                            <TextBlock Margin="5 0" FontSize="14" Foreground="White" HorizontalAlignment="Center">
+                                            <Run Text="{Binding medal_name}"></Run>
+                                            <Run Text="{Binding level}"></Run>
+                                            </TextBlock>
+                                        </Border>
+                                        <TextBlock Grid.Column="2" VerticalAlignment="Center" Text="{Binding uname}"></TextBlock>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+
+                        </ListView>
+                    </PivotItem>
+                </Pivot>
+
+            </Grid>
+        </Grid>
+        <Grid x:Name="grid_Full" Visibility="Collapsed" Background="{ThemeResource Bili-Background}">
+            <Grid x:Name="media_top_Control" VerticalAlignment="Top" Height="48"  Background="#7F808080">
+                <TextBlock Text="{Binding ElementName=txt_title,Path=Text}" FontSize="16" VerticalAlignment="Center" Margin="48 0" HorizontalAlignment="Left" Foreground="White"></TextBlock>
+                <TextBlock  x:Name="txt_Timer" FontSize="18" VerticalAlignment="Center" Margin="10 0" HorizontalAlignment="Right" Foreground="White"></TextBlock>
+            </Grid>
+        </Grid>
+        <StackPanel x:Name="grid_Error" Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Center" Background="#7F474747" Tapped="grid_Error_Tapped">
+            <Image Source="ms-appx:///Assets/LOGO88.png" Height="72" Width="72" ></Image>
+            <TextBlock x:Name="txt_ErrorInfo" HorizontalAlignment="Center" Margin="10 0">主播正在换女装</TextBlock>
+            <TextBlock HorizontalAlignment="Center" Margin="10 0" FontSize="14">点击刷新</TextBlock>
+        </StackPanel>
+        <StackPanel x:Name="grid_Chptcha" Visibility="Collapsed" Width="200" HorizontalAlignment="Center" VerticalAlignment="Center" Background="#B2808080">
+            <TextBlock  Margin="10 5">请输入验证码</TextBlock>
+            <Image x:Name="img_Chptcha" Margin="10" Height="40" ></Image>
+            <TextBox x:Name="txt_Chptcha" Margin="10 5" PlaceholderText="输入验证码"></TextBox>
+            <Button x:Name="btn_Yes" Margin="10 5"  HorizontalAlignment="Right" Click="btn_Yes_Click">确定</Button>
+        </StackPanel>
+        <StackPanel x:Name="grid_SendGift" Visibility="Collapsed" Width="auto" HorizontalAlignment="Center" VerticalAlignment="Center" Background="#B2808080">
+            <TextBlock  Margin="10 5">
+                <Run>投送</Run>
+                <Run Text="{Binding name}"></Run>
+            </TextBlock>
+            <StackPanel Orientation="Horizontal" Margin="10 5">
+                <RadioButton x:Name="rb_Gold">金瓜子</RadioButton>
+                <RadioButton x:Name="rb_Sliver">银瓜子</RadioButton>
+            </StackPanel>
+            <TextBox x:Name="txt_Num" Margin="10 5" PlaceholderText="数量"></TextBox>
+            
+            <Grid>
+                <Button Margin="10 5"  HorizontalAlignment="Left" Click="Button_Click_1">取消</Button>
+                <Button Margin="10 5"  HorizontalAlignment="Right" Click="Button_Click">确定</Button>
+            </Grid>
+            
+        </StackPanel>
+        <ProgressBar x:Name="pr_Load" VerticalAlignment="Top" Background="{x:Null}" IsIndeterminate="True"></ProgressBar>
+        <AppBarButton x:Name="btn_back" Click="btn_back_Click" Icon="Back" Width="48" Height="48" Foreground="Gray"/>
+    </Grid>
+</Page>

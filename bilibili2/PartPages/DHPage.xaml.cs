@@ -129,7 +129,7 @@ namespace bilibili2.PartPages
                         GridView_DT.Items.Clear();
                     }
                     CanLoad = false;
-                    HttpResponseMessage hr = await hc.GetAsync(new Uri("http://www.bilibili.com/index/ding/1.json?page=" + PageNum + "&pagesize=20"));
+                    HttpResponseMessage hr = await hc.GetAsync(new Uri("http://www.bilibili.com/index/ding/1.json?page=" + PageNum + "&pagesize=24&rnd=" + new Random().Next(1, 9999)));
                     hr.EnsureSuccessStatusCode();
 
                     // var encodeResults = await hr.Content.ReadAsBufferAsync();
@@ -140,7 +140,6 @@ namespace bilibili2.PartPages
                     {
                         GridView_DT.Items.Add(item);
                     }
-                    PageNum++;
                     CanLoad = true;
                     pro_Bar.Visibility = Visibility.Collapsed;
                 }
@@ -437,13 +436,13 @@ namespace bilibili2.PartPages
         bool CanLoad = true;
         private void sv_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
         {
-            if (sv.VerticalOffset == sv.ScrollableHeight)
-            {
-                if (CanLoad)
-                {
-                    GetDT();
-                }
-            }
+            //if (sv.VerticalOffset == sv.ScrollableHeight)
+            //{
+            //    if (CanLoad)
+            //    {
+            //        GetDT();
+            //    }
+            //}
         }
 
         //用了判断是否已经加载相关信息
@@ -746,6 +745,18 @@ namespace bilibili2.PartPages
                 default:
                     break;
             }
+        }
+
+        private void btn_Refresh_DT_Click(object sender, RoutedEventArgs e)
+        {
+            GetDT();
+        }
+
+        private void PullToRefreshBox_RefreshInvoked(DependencyObject sender, object args)
+        {
+            PageNum = 1;
+            GetDT();
+            GetDYHome();
         }
     }
 }

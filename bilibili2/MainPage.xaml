@@ -8,6 +8,7 @@
     xmlns:Controls="using:bilibili2.Controls"
     x:Class="bilibili2.MainPage"
     mc:Ignorable="d"
+    xmlns:pr="using:PullToRefresh.UWP"
     SizeChanged="Page_SizeChanged"
 
     >
@@ -220,7 +221,7 @@
             <Setter Property="MaxWidth" Value="640"/>
         </Style>
     </Page.Resources>
-    <Grid Background="{ThemeResource Bili-Background}">
+    <Grid  Background="{ThemeResource Bili-Background}">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition/>
@@ -241,17 +242,6 @@
                         <Setter Target="top_txt_find.Visibility" Value="Visible"/>
                     </VisualState.Setters>
                 </VisualState>
-                <!--<VisualState x:Name="wide800">
-                    <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="501"></AdaptiveTrigger>
-                    </VisualState.StateTriggers>
-                    <VisualState.Setters>
-                        <Setter Target="sp_View.DisplayMode" Value="CompactOverlay"></Setter>
-                        <Setter Target="sp_View.IsPaneOpen" Value="false"></Setter>
-                        <Setter Target="top_txt_find.Visibility" Value="Visible"></Setter>
-                        <Setter Target="top_btn_find.Visibility" Value="Collapsed"></Setter>
-                    </VisualState.Setters>
-                </VisualState>-->
                 <VisualState x:Name="narrow">
                     <VisualState.StateTriggers>
                         <AdaptiveTrigger MinWindowWidth="0"/>
@@ -353,13 +343,14 @@
                         <ListViewItem>
                             <StackPanel Orientation="Horizontal" Tag="Feedback">
                                 <SymbolIcon Symbol="Mail" Width="26" Height="26" Foreground="Gray"/>
-                                <TextBlock Text="问题反馈" VerticalAlignment="Center" Margin="20,0" Foreground="Gray" />
+                                <TextBlock Text="问题反馈" VerticalAlignment="Center" Margin="20,0,0,0" Foreground="Gray" />
+                                <Ellipse x:Name="bor_HasFeedback" Visibility="Collapsed" Fill="Red" Width="5" Height="5" VerticalAlignment="Top" Margin="3 8"/>
                             </StackPanel>
                         </ListViewItem>
                     </ListView>
                 </Grid>
             </SplitView.Pane>
-            <Grid>
+            <Grid >
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="36"/>
@@ -402,7 +393,7 @@
                                         <TextBlock FontSize="16" Margin="5">
 											<Run Text="关注的主播"/>
                                         </TextBlock>
-                                        <ListView x:Name="list_AttLive" Grid.Row="1" IsItemClickEnabled="True" SelectionMode="None">
+                                        <ListView x:Name="list_AttLive" Grid.Row="1" IsItemClickEnabled="True" SelectionMode="None" ItemClick="list_AttLive_ItemClick">
                                             <ListView.ItemContainerStyle>
                                                 <Style TargetType="ListViewItem">
                                                     <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
@@ -432,7 +423,7 @@
                                             </ListView.ItemTemplate>
                                         </ListView>
                                     </Grid>
-                                    <Grid x:Name="grid_MyLiveInfo" Visibility="Visible">
+                                    <Grid x:Name="grid_MyLiveInfo" Visibility="Collapsed">
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="auto"/>
                                             <RowDefinition/>
@@ -445,27 +436,88 @@
                                     <ProgressBar x:Name="pro_Load_live" VerticalAlignment="Top" IsIndeterminate="True" Background="{x:Null}"/>
                                 </Grid>
                             </SplitView.Pane>
-                            <ScrollViewer VerticalScrollBarVisibility="Auto">
-                                <Grid>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="auto"/>
-                                        <RowDefinition Height="auto"/>
-                                        <RowDefinition/>
-                                    </Grid.RowDefinitions>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition/>
-                                        <ColumnDefinition/>
-                                        <ColumnDefinition/>
-                                        <ColumnDefinition/>
-                                    </Grid.ColumnDefinitions>
-                                    <FlipView Height="180" Grid.ColumnSpan="4"/>
-                                    <Button Grid.Row="1" Grid.Column="0" HorizontalAlignment="Stretch" Margin="5" Background="{ThemeResource Bili-ForeColor}" Foreground="White" Content="直播中心"/>
-                                    <Button x:Name="btn_live_Atton" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" Margin="5" Background="{ThemeResource Bili-ForeColor}" Foreground="White" Content="关注主播" Click="btn_live_Atton_Click"/>
-                                    <Button Grid.Row="1" Grid.Column="2" HorizontalAlignment="Stretch" Margin="5" Background="{ThemeResource Bili-ForeColor}" Foreground="White" Content="搜索直播"/>
-                                    <Button x:Name="btn_live_All"  Grid.Row="1" Grid.Column="3" HorizontalAlignment="Stretch" Margin="5" Background="{ThemeResource Bili-ForeColor}" Foreground="White" Content="全部直播" Click="btn_live_All_Click"/>
-                                    <Controls:MyLiveControl x:Name="liveinfo" Grid.Row="2" Grid.ColumnSpan="4"/>
-                                </Grid>
-                            </ScrollViewer>
+                            <pr:PullToRefreshBox x:Name="pr_Live" RefreshInvoked="pr_Live_RefreshInvoked">
+                                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="auto"/>
+                                            <RowDefinition Height="auto"/>
+                                            <RowDefinition/>
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid Grid.ColumnSpan="3">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition x:Name="grid_c_left_Live" Width="*"/>
+                                                <ColumnDefinition x:Name="grid_c_center_Live" Width="auto" />
+                                                <ColumnDefinition x:Name="grid_c_right_Live" Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Grid  Grid.Column="0" MaxHeight="200">
+                                                <Grid.Background>
+                                                    <LinearGradientBrush StartPoint="0,0.5" EndPoint="1,0.5">
+                                                        <LinearGradientBrush.GradientStops>
+                                                            <GradientStopCollection>
+                                                                <GradientStop Offset="1" Color="Black"/>
+                                                                <GradientStop Offset="0.101" Color="Gray"/>
+                                                            </GradientStopCollection>
+                                                        </LinearGradientBrush.GradientStops>
+                                                    </LinearGradientBrush>
+                                                </Grid.Background>
+                                                <FlipView x:Name="fvLeft_Live" Opacity="0.5" IsEnabled="False">
+                                                    <FlipView.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <Image Source="{Binding img}" Height="200" Width="640"/>
+                                                        </DataTemplate>
+                                                    </FlipView.ItemTemplate>
+                                                </FlipView>
+                                            </Grid>
+                                            <Viewbox MaxWidth="640"  Grid.Column="1">
+                                                <FlipView  x:Name="home_flipView_Live"  Height="200" Width="640" Grid.Column="1"   SelectionChanged="home_flipView_Live_SelectionChanged"   Style="{StaticResource FlipViewStyle1}" VerticalAlignment="Top" >
+                                                    <FlipView.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <Grid>
+                                                                <Image Source="{Binding img}"  Height="200"/>
+                                                                <HyperlinkButton x:Name="btn_Banner_Live" Click="btn_Banner_Live_Click">
+                                                                    <Grid Width="640" Height="200" >
+                                                                        <TextBlock/>
+                                                                    </Grid>
+                                                                </HyperlinkButton>
+                                                            </Grid>
+                                                        </DataTemplate>
+                                                    </FlipView.ItemTemplate>
+                                                </FlipView>
+                                            </Viewbox>
+                                            <Grid Grid.Column="2" MaxHeight="200" >
+                                                <Grid.Background>
+                                                    <LinearGradientBrush StartPoint="0,0.5" EndPoint="1,0.5">
+                                                        <LinearGradientBrush.GradientStops>
+                                                            <GradientStopCollection>
+                                                                <GradientStop Offset="0.101" Color="Black"/>
+                                                                <GradientStop Offset="1" Color="Gray"/>
+                                                            </GradientStopCollection>
+                                                        </LinearGradientBrush.GradientStops>
+                                                    </LinearGradientBrush>
+                                                </Grid.Background>
+                                                <FlipView x:Name="fvRight_Live" Opacity="0.3" IsEnabled="False">
+                                                    <FlipView.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <Image Source="{Binding img}" Height="200" Width="640"/>
+                                                        </DataTemplate>
+                                                    </FlipView.ItemTemplate>
+                                                </FlipView>
+                                            </Grid>
+                                        </Grid>
+                                        
+                                        <Button x:Name="btn_live_Atton" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Stretch" Margin="5" Background="{ThemeResource Bili-ForeColor}" Foreground="White" Content="关注主播" Click="btn_live_Atton_Click"/>
+                                        <Button x:Name="btn_Live_Search" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" Margin="5" Background="{ThemeResource Bili-ForeColor}" Foreground="White" Content="搜索直播" Click="btn_Live_Search_Click"/>
+                                        <Button x:Name="btn_live_All"  Grid.Row="1" Grid.Column="2" HorizontalAlignment="Stretch" Margin="5" Background="{ThemeResource Bili-ForeColor}" Foreground="White" Content="全部直播" Click="btn_live_All_Click"/>
+                                        <Controls:MyLiveControl x:Name="liveinfo" Grid.Row="2" Grid.ColumnSpan="3"/>
+                                    </Grid>
+                                </ScrollViewer>
+                            </pr:PullToRefreshBox>
                         </SplitView>
 
                     </PivotItem>
@@ -586,23 +638,164 @@
                                     <ProgressBar x:Name="pr_Load_Ban" IsIndeterminate="True" VerticalAlignment="Top" Background="{x:Null}"/>
                                 </Grid>
                             </SplitView.Pane>
-                            <ScrollViewer x:Name="sc_Ban" VerticalScrollBarVisibility="Auto" ViewChanged="sc_Ban_ViewChanged">
-                                <Grid>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="auto"/>
-                                        <RowDefinition Height="auto"/>
-                                        <RowDefinition/>
-                                    </Grid.RowDefinitions>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition/>
-                                        <ColumnDefinition/>
-                                        <ColumnDefinition/>
-                                    </Grid.ColumnDefinitions>
-                                    <Grid Grid.ColumnSpan="3">
+                            <pr:PullToRefreshBox x:Name="pr_Bangumi" RefreshInvoked="pr_Bangumi_RefreshInvoked">
+                                <ScrollViewer x:Name="sc_Ban" VerticalScrollBarVisibility="Auto" ViewChanged="sc_Ban_ViewChanged">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="auto"/>
+                                            <RowDefinition Height="auto"/>
+                                            <RowDefinition/>
+                                        </Grid.RowDefinitions>
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition x:Name="grid_c_left_Ban" Width="*"/>
-                                            <ColumnDefinition x:Name="grid_c_center_Ban" Width="auto" />
-                                            <ColumnDefinition x:Name="grid_c_right_Ban" Width="*"/>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid Grid.ColumnSpan="3">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition x:Name="grid_c_left_Ban" Width="*"/>
+                                                <ColumnDefinition x:Name="grid_c_center_Ban" Width="auto" />
+                                                <ColumnDefinition x:Name="grid_c_right_Ban" Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Grid  Grid.Column="0" MaxHeight="200">
+                                                <Grid.Background>
+                                                    <LinearGradientBrush StartPoint="0,0.5" EndPoint="1,0.5">
+                                                        <LinearGradientBrush.GradientStops>
+                                                            <GradientStopCollection>
+                                                                <GradientStop Offset="1" Color="Black"/>
+                                                                <GradientStop Offset="0.101" Color="Gray"/>
+                                                            </GradientStopCollection>
+                                                        </LinearGradientBrush.GradientStops>
+                                                    </LinearGradientBrush>
+                                                </Grid.Background>
+                                                <FlipView x:Name="fvLeft_Ban" Opacity="0.5" IsEnabled="False">
+                                                    <FlipView.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <Image Source="{Binding img}" Height="200" Width="640"/>
+                                                        </DataTemplate>
+                                                    </FlipView.ItemTemplate>
+                                                </FlipView>
+                                            </Grid>
+                                            <Viewbox MaxWidth="640"  Grid.Column="1">
+                                                <FlipView  x:Name="home_flipView_Ban"  Height="200" Width="640" Grid.Column="1"   SelectionChanged="home_flipView_SelectionChanged_1"   Style="{StaticResource FlipViewStyle1}" VerticalAlignment="Top" >
+                                                    <FlipView.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <Grid>
+                                                                <Image Source="{Binding img}"  Height="200"/>
+                                                                <HyperlinkButton x:Name="btn_Banner_Ban" Click="btn_Banner_Ban_Click">
+                                                                    <Grid Width="640" Height="200" >
+                                                                        <TextBlock/>
+                                                                    </Grid>
+                                                                </HyperlinkButton>
+                                                            </Grid>
+                                                        </DataTemplate>
+                                                    </FlipView.ItemTemplate>
+                                                </FlipView>
+                                            </Viewbox>
+                                            <Grid Grid.Column="2" MaxHeight="200" >
+                                                <Grid.Background>
+                                                    <LinearGradientBrush StartPoint="0,0.5" EndPoint="1,0.5">
+                                                        <LinearGradientBrush.GradientStops>
+                                                            <GradientStopCollection>
+                                                                <GradientStop Offset="0.101" Color="Black"/>
+                                                                <GradientStop Offset="1" Color="Gray"/>
+                                                            </GradientStopCollection>
+                                                        </LinearGradientBrush.GradientStops>
+                                                    </LinearGradientBrush>
+                                                </Grid.Background>
+                                                <FlipView x:Name="fvRight_Ban" Opacity="0.3" IsEnabled="False">
+                                                    <FlipView.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <Image Source="{Binding img}" Height="200" Width="640"/>
+                                                        </DataTemplate>
+                                                    </FlipView.ItemTemplate>
+                                                </FlipView>
+                                            </Grid>
+                                        </Grid>
+                                        <Button x:Name="Ban_btn_MyBan" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Stretch" Margin="5" Background="{ThemeResource Bili-ForeColor}" Foreground="White" Content="我的追番" Click="Ban_btn_MyBan_Click"/>
+                                        <Button x:Name="Ban_btn_Tag" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" Margin="5" Background="{ThemeResource Bili-ForeColor}" Foreground="White" Content="番剧索引" Click="Ban_btn_Tag_Click"/>
+                                        <Button x:Name="Ban_btn_Timeline" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Stretch" Margin="5" Background="{ThemeResource Bili-ForeColor}" Foreground="White" Content="放送时间表" Click="Ban_btn_Timeline_Click"/>
+                                        <StackPanel Grid.Row="2" Grid.ColumnSpan="3">
+                                            <HyperlinkButton   Foreground="{ThemeResource Bili-FontColor}" >
+                                                <StackPanel Orientation="Horizontal">
+                                                    <Border Background="{ThemeResource Bili-ForeColor}" Width="10"  Height="24"  Margin="5,0"/>
+                                                    <TextBlock Text="最近更新" FontSize="16" VerticalAlignment="Center" />
+                                                </StackPanel>
+                                            </HyperlinkButton>
+                                            <ScrollViewer VerticalScrollMode="Disabled" VerticalScrollBarVisibility="Disabled" HorizontalScrollMode="Enabled" HorizontalScrollBarVisibility="Hidden">
+                                                <GridView x:Name="GridView_Bangumi_NewUpdate"  HorizontalAlignment="Center" ItemContainerStyle="{StaticResource GridViewItemStyle}" ScrollViewer.VerticalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollMode="Disabled" SelectionMode="None"  IsItemClickEnabled="True"   ItemClick="GridView_Bangumi_NewUpdate_ItemClick">
+                                                    <GridView.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <StackPanel >
+                                                                <Grid>
+                                                                    <Image Source="{Binding cover}" Width="150" />
+                                                                    <Border VerticalAlignment="Bottom" HorizontalAlignment="Right" Background="#7F000000" Margin="5" CornerRadius="5">
+                                                                        <StackPanel Orientation="Horizontal" Margin="5,0">
+                                                                            <TextBlock Foreground="White" FontSize="12" Text="{Binding watchingCount}"/>
+                                                                            <TextBlock Foreground="White" FontSize="12" >
+																			<Run Text="人在看"/>
+                                                                            </TextBlock>
+                                                                        </StackPanel>
+                                                                    </Border>
+                                                                </Grid>
+                                                                <Grid MaxWidth="150" Margin="5">
+                                                                    <Grid.RowDefinitions>
+                                                                        <RowDefinition Height="32"/>
+                                                                        <RowDefinition/>
+                                                                    </Grid.RowDefinitions>
+                                                                    <TextBlock Text="{Binding title}"  FontSize="12" TextAlignment="Center" VerticalAlignment="Center"  HorizontalAlignment="Left" TextWrapping="Wrap" />
+                                                                    <StackPanel Orientation="Horizontal" Grid.Row="1">
+                                                                        <TextBlock Text="更新至第" FontSize="12" Foreground="#FF0078D7" />
+                                                                        <TextBlock Text="{Binding newest_ep_index}" FontSize="12" Foreground="#FF0078D7" />
+                                                                        <TextBlock Text="话" FontSize="12" Foreground="#FF0078D7" />
+                                                                    </StackPanel>
+                                                                </Grid>
+                                                            </StackPanel>
+                                                        </DataTemplate>
+                                                    </GridView.ItemTemplate>
+                                                </GridView>
+                                            </ScrollViewer>
+                                            <HyperlinkButton  Foreground="{ThemeResource Bili-FontColor}" >
+                                                <StackPanel Orientation="Horizontal">
+                                                    <Border Background="{ThemeResource Bili-ForeColor}" Width="10"  Height="24"  Margin="5,0"/>
+                                                    <TextBlock Text="番剧推荐" FontSize="16" VerticalAlignment="Center" />
+                                                </StackPanel>
+                                            </HyperlinkButton>
+                                            <Border x:Name="test" Width="auto" Margin="5 0" Height="1"  Background="#0001FFFF" VerticalAlignment="Top"/>
+                                            <GridView x:Name="list_Ban_TJ" HorizontalAlignment="Center"  ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled" ItemContainerStyle="{StaticResource grid_TJ}" SelectionMode="None" IsItemClickEnabled="True" ItemClick="list_Ban_TJ_ItemClick">
+                                                <GridView.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <Grid Width="{Binding Width, ElementName=test}">
+                                                            <Grid.RowDefinitions>
+                                                                <RowDefinition />
+                                                                <RowDefinition Height="30"/>
+                                                                <RowDefinition Height="48"/>
+                                                            </Grid.RowDefinitions>
+                                                            <Image  Source="{Binding cover}" />
+                                                            <TextBlock Grid.Row="1" FontSize="16"  Margin="5 0" Text="{Binding title}" VerticalAlignment="Center"/>
+                                                            <TextBlock Grid.Row="2" Foreground="Gray" Margin="5 0" VerticalAlignment="Center" TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis" Text="{Binding desc}"/>
+                                                        </Grid>
+                                                    </DataTemplate>
+                                                </GridView.ItemTemplate>
+                                            </GridView>
+                                            <TextBlock x:Name="Ban_TJ_more" Foreground="Gray" HorizontalAlignment="Center">
+											<Run Text="加载更多"/>
+                                            </TextBlock>
+                                        </StackPanel>
+                                    </Grid>
+                                </ScrollViewer>
+                            </pr:PullToRefreshBox>
+                        </SplitView>
+                    </PivotItem>
+                    <PivotItem Margin="0">
+                        <pr:PullToRefreshBox x:Name="pr_Home" RefreshInvoked="pr_Home_RefreshInvoked">
+                            <ScrollViewer  VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                                <StackPanel >
+                                    <Grid >
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition x:Name="grid_c_left" Width="*"/>
+                                            <ColumnDefinition x:Name="grid_c_center" Width="auto" />
+                                            <ColumnDefinition x:Name="grid_c_right" Width="*"/>
                                         </Grid.ColumnDefinitions>
                                         <Grid  Grid.Column="0" MaxHeight="200">
                                             <Grid.Background>
@@ -615,21 +808,21 @@
                                                     </LinearGradientBrush.GradientStops>
                                                 </LinearGradientBrush>
                                             </Grid.Background>
-                                            <FlipView x:Name="fvLeft_Ban" Opacity="0.5" IsEnabled="False">
+                                            <FlipView x:Name="fvLeft" Opacity="0.5" IsEnabled="False">
                                                 <FlipView.ItemTemplate>
                                                     <DataTemplate>
-                                                        <Image Source="{Binding img}" Height="200" Width="640"/>
+                                                        <Image Source="{Binding image}" Height="200" Width="640"/>
                                                     </DataTemplate>
                                                 </FlipView.ItemTemplate>
                                             </FlipView>
                                         </Grid>
                                         <Viewbox MaxWidth="640"  Grid.Column="1">
-                                            <FlipView  x:Name="home_flipView_Ban"  Height="200" Width="640" Grid.Column="1"   SelectionChanged="home_flipView_SelectionChanged_1"   Style="{StaticResource FlipViewStyle1}" VerticalAlignment="Top" >
+                                            <FlipView  x:Name="home_flipView"  Height="200" Width="640" Grid.Column="1"   SelectionChanged="home_flipView_SelectionChanged"   Style="{StaticResource FlipViewStyle1}" VerticalAlignment="Top" >
                                                 <FlipView.ItemTemplate>
                                                     <DataTemplate>
                                                         <Grid>
-                                                            <Image Source="{Binding img}"  Height="200"/>
-                                                            <HyperlinkButton x:Name="btn_Banner_Ban" Click="btn_Banner_Ban_Click">
+                                                            <Image Source="{Binding image}"  Height="200"/>
+                                                            <HyperlinkButton Click="HyperlinkButton_Click_1">
                                                                 <Grid Width="640" Height="200" >
                                                                     <TextBlock/>
                                                                 </Grid>
@@ -650,156 +843,19 @@
                                                     </LinearGradientBrush.GradientStops>
                                                 </LinearGradientBrush>
                                             </Grid.Background>
-                                            <FlipView x:Name="fvRight_Ban" Opacity="0.3" IsEnabled="False">
+                                            <FlipView x:Name="fvRight" Opacity="0.3" IsEnabled="False">
                                                 <FlipView.ItemTemplate>
                                                     <DataTemplate>
-                                                        <Image Source="{Binding img}" Height="200" Width="640"/>
+                                                        <Image Source="{Binding image}" Height="200" Width="640"/>
                                                     </DataTemplate>
                                                 </FlipView.ItemTemplate>
                                             </FlipView>
                                         </Grid>
                                     </Grid>
-                                    <Button x:Name="Ban_btn_MyBan" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Stretch" Margin="5" Background="{ThemeResource Bili-ForeColor}" Foreground="White" Content="我的追番" Click="Ban_btn_MyBan_Click"/>
-                                    <Button x:Name="Ban_btn_Tag" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" Margin="5" Background="{ThemeResource Bili-ForeColor}" Foreground="White" Content="番剧索引" Click="Ban_btn_Tag_Click"/>
-                                    <Button x:Name="Ban_btn_Timeline" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Stretch" Margin="5" Background="{ThemeResource Bili-ForeColor}" Foreground="White" Content="放送时间表" Click="Ban_btn_Timeline_Click"/>
-                                    <StackPanel Grid.Row="2" Grid.ColumnSpan="3">
-                                        <HyperlinkButton   Foreground="{ThemeResource Bili-FontColor}" >
-                                            <StackPanel Orientation="Horizontal">
-                                                <Border Background="{ThemeResource Bili-ForeColor}" Width="10"  Height="24"  Margin="5,0"/>
-                                                <TextBlock Text="最近更新" FontSize="16" VerticalAlignment="Center" />
-                                            </StackPanel>
-                                        </HyperlinkButton>
-                                        <ScrollViewer VerticalScrollMode="Disabled" VerticalScrollBarVisibility="Disabled" HorizontalScrollMode="Enabled" HorizontalScrollBarVisibility="Hidden">
-                                            <GridView x:Name="GridView_Bangumi_NewUpdate"  HorizontalAlignment="Center" ItemContainerStyle="{StaticResource GridViewItemStyle}" ScrollViewer.VerticalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollMode="Disabled" SelectionMode="None"  IsItemClickEnabled="True"   ItemClick="GridView_Bangumi_NewUpdate_ItemClick">
-                                                <GridView.ItemTemplate>
-                                                    <DataTemplate>
-                                                        <StackPanel >
-                                                            <Grid>
-                                                                <Image Source="{Binding cover}" Width="150" />
-                                                                <Border VerticalAlignment="Bottom" HorizontalAlignment="Right" Background="#7F000000" Margin="5" CornerRadius="5">
-                                                                    <StackPanel Orientation="Horizontal" Margin="5,0">
-                                                                        <TextBlock Foreground="White" FontSize="12" Text="{Binding watchingCount}"/>
-                                                                        <TextBlock Foreground="White" FontSize="12" >
-																			<Run Text="人在看"/>
-                                                                        </TextBlock>
-                                                                    </StackPanel>
-                                                                </Border>
-                                                            </Grid>
-                                                            <Grid MaxWidth="150" Margin="5">
-                                                                <Grid.RowDefinitions>
-                                                                    <RowDefinition Height="32"/>
-                                                                    <RowDefinition/>
-                                                                </Grid.RowDefinitions>
-                                                                <TextBlock Text="{Binding title}"  FontSize="12" TextAlignment="Center" VerticalAlignment="Center"  HorizontalAlignment="Left" TextWrapping="Wrap" />
-                                                                <StackPanel Orientation="Horizontal" Grid.Row="1">
-                                                                    <TextBlock Text="更新至第" FontSize="12" Foreground="#FF0078D7" />
-                                                                    <TextBlock Text="{Binding newest_ep_index}" FontSize="12" Foreground="#FF0078D7" />
-                                                                    <TextBlock Text="话" FontSize="12" Foreground="#FF0078D7" />
-                                                                </StackPanel>
-                                                            </Grid>
-                                                        </StackPanel>
-                                                    </DataTemplate>
-                                                </GridView.ItemTemplate>
-                                            </GridView>
-                                        </ScrollViewer>
-                                        <HyperlinkButton  Foreground="{ThemeResource Bili-FontColor}" >
-                                            <StackPanel Orientation="Horizontal">
-                                                <Border Background="{ThemeResource Bili-ForeColor}" Width="10"  Height="24"  Margin="5,0"/>
-                                                <TextBlock Text="番剧推荐" FontSize="16" VerticalAlignment="Center" />
-                                            </StackPanel>
-                                        </HyperlinkButton>
-                                        <Border x:Name="test" Width="auto" Margin="5 0" Height="1"  Background="#0001FFFF" VerticalAlignment="Top"/>
-                                        <GridView x:Name="list_Ban_TJ" HorizontalAlignment="Center"  ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled" ItemContainerStyle="{StaticResource grid_TJ}" SelectionMode="None" IsItemClickEnabled="True" ItemClick="list_Ban_TJ_ItemClick">
-                                            <GridView.ItemTemplate>
-                                                <DataTemplate>
-                                                    <Grid Width="{Binding Width, ElementName=test}">
-                                                        <Grid.RowDefinitions>
-                                                            <RowDefinition />
-                                                            <RowDefinition Height="30"/>
-                                                            <RowDefinition Height="48"/>
-                                                        </Grid.RowDefinitions>
-                                                        <Image  Source="{Binding cover}" />
-                                                        <TextBlock Grid.Row="1" FontSize="16"  Margin="5 0" Text="{Binding title}" VerticalAlignment="Center"/>
-                                                        <TextBlock Grid.Row="2" Foreground="Gray" Margin="5 0" VerticalAlignment="Center" TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis" Text="{Binding desc}"/>
-                                                    </Grid>
-                                                </DataTemplate>
-                                            </GridView.ItemTemplate>
-                                        </GridView>
-                                        <TextBlock x:Name="Ban_TJ_more" Foreground="Gray" HorizontalAlignment="Center">
-											<Run Text="加载更多"/>
-                                        </TextBlock>
-                                    </StackPanel>
-                                </Grid>
+                                    <local:MyControl x:Name="home_Items"/>
+                                </StackPanel>
                             </ScrollViewer>
-                        </SplitView>
-                    </PivotItem>
-                    <PivotItem Margin="0">
-                        <ScrollViewer  VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-                            <StackPanel >
-                                <Grid >
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition x:Name="grid_c_left" Width="*"/>
-                                        <ColumnDefinition x:Name="grid_c_center" Width="auto" />
-                                        <ColumnDefinition x:Name="grid_c_right" Width="*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <Grid  Grid.Column="0" MaxHeight="200">
-                                        <Grid.Background>
-                                            <LinearGradientBrush StartPoint="0,0.5" EndPoint="1,0.5">
-                                                <LinearGradientBrush.GradientStops>
-                                                    <GradientStopCollection>
-                                                        <GradientStop Offset="1" Color="Black"/>
-                                                        <GradientStop Offset="0.101" Color="Gray"/>
-                                                    </GradientStopCollection>
-                                                </LinearGradientBrush.GradientStops>
-                                            </LinearGradientBrush>
-                                        </Grid.Background>
-                                        <FlipView x:Name="fvLeft" Opacity="0.5" IsEnabled="False">
-                                            <FlipView.ItemTemplate>
-                                                <DataTemplate>
-                                                    <Image Source="{Binding image}" Height="200" Width="640"/>
-                                                </DataTemplate>
-                                            </FlipView.ItemTemplate>
-                                        </FlipView>
-                                    </Grid>
-                                    <Viewbox MaxWidth="640"  Grid.Column="1">
-                                        <FlipView  x:Name="home_flipView"  Height="200" Width="640" Grid.Column="1"   SelectionChanged="home_flipView_SelectionChanged"   Style="{StaticResource FlipViewStyle1}" VerticalAlignment="Top" >
-                                            <FlipView.ItemTemplate>
-                                                <DataTemplate>
-                                                    <Grid>
-                                                        <Image Source="{Binding image}"  Height="200"/>
-                                                        <HyperlinkButton Click="HyperlinkButton_Click_1">
-                                                            <Grid Width="640" Height="200" >
-                                                                <TextBlock/>
-                                                            </Grid>
-                                                        </HyperlinkButton>
-                                                    </Grid>
-                                                </DataTemplate>
-                                            </FlipView.ItemTemplate>
-                                        </FlipView>
-                                    </Viewbox>
-                                    <Grid Grid.Column="2" MaxHeight="200" >
-                                        <Grid.Background>
-                                            <LinearGradientBrush StartPoint="0,0.5" EndPoint="1,0.5">
-                                                <LinearGradientBrush.GradientStops>
-                                                    <GradientStopCollection>
-                                                        <GradientStop Offset="0.101" Color="Black"/>
-                                                        <GradientStop Offset="1" Color="Gray"/>
-                                                    </GradientStopCollection>
-                                                </LinearGradientBrush.GradientStops>
-                                            </LinearGradientBrush>
-                                        </Grid.Background>
-                                        <FlipView x:Name="fvRight" Opacity="0.3" IsEnabled="False">
-                                            <FlipView.ItemTemplate>
-                                                <DataTemplate>
-                                                    <Image Source="{Binding image}" Height="200" Width="640"/>
-                                                </DataTemplate>
-                                            </FlipView.ItemTemplate>
-                                        </FlipView>
-                                    </Grid>
-                                </Grid>
-                                <local:MyControl x:Name="home_Items"/>
-                            </StackPanel>
-                        </ScrollViewer>
+                        </pr:PullToRefreshBox>
                     </PivotItem>
                     <PivotItem Margin="0">
                         <ScrollViewer VerticalScrollBarVisibility="Auto">
@@ -892,111 +948,112 @@
                      
                     </PivotItem>
                     <PivotItem Margin="0" >
-                        <ScrollViewer x:Name="sc" VerticalScrollBarVisibility="Auto" ViewChanged="sc_ViewChanged">
-                            <Grid>
-                                <StackPanel x:Name="DT_Info" Visibility="Visible">
-                                    <Grid>
-                                        <HyperlinkButton Margin="10 5 10 0" HorizontalContentAlignment="Stretch" HorizontalAlignment="Stretch" Foreground="{ThemeResource Bili-FontColor}" Click="Ban_btn_MyBan_Click">
-                                            <StackPanel Orientation="Horizontal">
-                                                <Image Source="Assets/PartIcon/BFJ.png" Width="24" Height="24" Margin="0 0 5 0"/>
-                                                <TextBlock Text="追番" VerticalAlignment="Center" FontSize="16"/>
-                                            </StackPanel>
-                                        </HyperlinkButton>
-                                        <HyperlinkButton  Margin="15 0" Foreground="{ThemeResource Bili-FontColor}" HorizontalAlignment="Right" Click="btn_refresh_Atton_Click">
-                                            <SymbolIcon Symbol="Refresh"></SymbolIcon>
-                                        </HyperlinkButton>
-                                    </Grid>
-                                    <TextBlock x:Name="DT_0" HorizontalAlignment="Center" Foreground="Gray">
+                        <pr:PullToRefreshBox x:Name="pr_Atton" RefreshInvoked="pr_Atton_RefreshInvoked">
+                            <ScrollViewer x:Name="sc" VerticalScrollBarVisibility="Auto" ViewChanged="sc_ViewChanged">
+                                <Grid>
+                                    <StackPanel x:Name="DT_Info" Visibility="Visible">
+                                        <Grid>
+                                            <HyperlinkButton Margin="10 5 10 0" HorizontalContentAlignment="Stretch" HorizontalAlignment="Stretch" Foreground="{ThemeResource Bili-FontColor}" Click="Ban_btn_MyBan_Click">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <Image Source="Assets/PartIcon/BFJ.png" Width="24" Height="24" Margin="0 0 5 0"/>
+                                                    <TextBlock Text="追番" VerticalAlignment="Center" FontSize="16"/>
+                                                </StackPanel>
+                                            </HyperlinkButton>
+                                            <HyperlinkButton  Margin="15 0" Foreground="{ThemeResource Bili-FontColor}" HorizontalAlignment="Right" Click="btn_refresh_Atton_Click">
+                                                <SymbolIcon Symbol="Refresh"></SymbolIcon>
+                                            </HyperlinkButton>
+                                        </Grid>
+                                        <TextBlock x:Name="DT_0" HorizontalAlignment="Center" Foreground="Gray">
 										<Run Text="╮(╯_╰)╭ 没有追番"/>
-                                    </TextBlock>
-                                    <ScrollViewer HorizontalScrollBarVisibility="Hidden" HorizontalScrollMode="Enabled" VerticalScrollMode="Disabled" VerticalScrollBarVisibility="Disabled">
-                                        <GridView x:Name="user_GridView_Bangumi"  ScrollViewer.VerticalScrollBarVisibility="Disabled"  HorizontalAlignment="Left" SelectionMode="None" IsItemClickEnabled="True" ItemClick="user_GridView_Bangumi_ItemClick">
-                                            <GridView.ItemContainerStyle>
-                                                <Style TargetType="GridViewItem">
-                                                    <Setter Property="Margin" Value="5 5 5 0"/>
-                                                    <Setter Property="Width" Value="100"/>
-                                                    <Setter Property="BorderThickness" Value="1"/>
-                                                    <Setter Property="BorderBrush" Value="{ThemeResource Bili-Background}"/>
-                                                    <Setter Property="Background" Value="{ThemeResource Bili-List-Background}"/>
-                                                </Style>
-                                            </GridView.ItemContainerStyle>
-                                            <GridView.ItemTemplate>
-                                                <DataTemplate>
-                                                    <StackPanel >
-                                                        <Image Source="{Binding cover}" Width="100" Height="135" VerticalAlignment="Top" Stretch="Fill"/>
-                                                        <TextBlock Text="{Binding title}"  Height="32" TextWrapping="Wrap" MaxLines="2" FontSize="12"  Margin="5,0" />
-                                                        <TextBlock Text="{Binding NewOver}" TextWrapping="Wrap" MaxLines="2" FontSize="12" Foreground="#FF898989" Margin="5"/>
-                                                    </StackPanel>
-                                                </DataTemplate>
-                                            </GridView.ItemTemplate>
-                                        </GridView>
-                                    </ScrollViewer>
-                                    <Grid>
-                                        <HyperlinkButton Margin="10 0" Foreground="{ThemeResource Bili-FontColor}" >
-                                            <StackPanel Orientation="Horizontal">
-                                                <Image Source="Assets/PartIcon/ic_header_dynamic.png" Width="18" Height="18" Margin="0 0 10 0"/>
-                                                <TextBlock Text="动态" VerticalAlignment="Center" FontSize="16"/>
-                                            </StackPanel>
+                                        </TextBlock>
+                                        <ScrollViewer HorizontalScrollBarVisibility="Hidden" HorizontalScrollMode="Enabled" VerticalScrollMode="Disabled" VerticalScrollBarVisibility="Disabled">
+                                            <GridView x:Name="user_GridView_Bangumi"  ScrollViewer.VerticalScrollBarVisibility="Disabled"  HorizontalAlignment="Left" SelectionMode="None" IsItemClickEnabled="True" ItemClick="user_GridView_Bangumi_ItemClick">
+                                                <GridView.ItemContainerStyle>
+                                                    <Style TargetType="GridViewItem">
+                                                        <Setter Property="Margin" Value="5 5 5 0"/>
+                                                        <Setter Property="Width" Value="100"/>
+                                                        <Setter Property="BorderThickness" Value="1"/>
+                                                        <Setter Property="BorderBrush" Value="{ThemeResource Bili-Background}"/>
+                                                        <Setter Property="Background" Value="{ThemeResource Bili-List-Background}"/>
+                                                    </Style>
+                                                </GridView.ItemContainerStyle>
+                                                <GridView.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <StackPanel >
+                                                            <Image Source="{Binding cover}" Width="100" Height="135" VerticalAlignment="Top" Stretch="Fill"/>
+                                                            <TextBlock Text="{Binding title}"  Height="32" TextWrapping="Wrap" MaxLines="2" FontSize="12"  Margin="5,0" />
+                                                            <TextBlock Text="{Binding NewOver}" TextWrapping="Wrap" MaxLines="2" FontSize="12" Foreground="#FF898989" Margin="5"/>
+                                                        </StackPanel>
+                                                    </DataTemplate>
+                                                </GridView.ItemTemplate>
+                                            </GridView>
+                                        </ScrollViewer>
+                                        <Grid>
+                                            <HyperlinkButton Margin="10 0" Foreground="{ThemeResource Bili-FontColor}" >
+                                                <StackPanel Orientation="Horizontal">
+                                                    <Image Source="Assets/PartIcon/ic_header_dynamic.png" Width="18" Height="18" Margin="0 0 10 0"/>
+                                                    <TextBlock Text="动态" VerticalAlignment="Center" FontSize="16"/>
+                                                </StackPanel>
 
-                                        </HyperlinkButton>
-                                        <HyperlinkButton x:Name="btn_refresh_Atton" Margin="15 0" Foreground="{ThemeResource Bili-FontColor}" HorizontalAlignment="Right" Click="btn_refresh_Atton_Click">
-                                            <SymbolIcon Symbol="Refresh"></SymbolIcon>
-                                        </HyperlinkButton>
-                                    </Grid>
-                                   
-                                    <TextBlock x:Name="DT_1" HorizontalAlignment="Center" Foreground="Gray">
+                                            </HyperlinkButton>
+                                            <HyperlinkButton x:Name="btn_refresh_Atton" Margin="15 0" Foreground="{ThemeResource Bili-FontColor}" HorizontalAlignment="Right" Click="btn_refresh_Atton_Click">
+                                                <SymbolIcon Symbol="Refresh"></SymbolIcon>
+                                            </HyperlinkButton>
+                                        </Grid>
+
+                                        <TextBlock x:Name="DT_1" HorizontalAlignment="Center" Foreground="Gray">
 										<Run Text="╮(╯_╰)╭ 没有动态"/>
-                                    </TextBlock>
-                                    <ListView  x:Name="User_ListView_Attention" ScrollViewer.VerticalScrollMode="Disabled" SelectionMode="None" IsItemClickEnabled="True" ItemClick="User_ListView_Attention_ItemClick">
-                                        <ListView.ItemContainerStyle>
-                                            <Style TargetType="ListViewItem">
-                                                <Setter Property="BorderThickness" Value="0,0,0,0.5"/>
-                                                <Setter Property="BorderBrush" Value="#33808080"/>
-                                            </Style>
-                                        </ListView.ItemContainerStyle>
-                                        <ListView.ItemTemplate>
-                                            <DataTemplate>
-                                                <Grid Margin="0,5" Height="80">
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="120"/>
-                                                        <ColumnDefinition/>
-                                                    </Grid.ColumnDefinitions>
-                                                    <Grid.RowDefinitions>
-                                                        <RowDefinition Height="auto"/>
-                                                        <RowDefinition />
-                                                        <RowDefinition/>
-                                                        <RowDefinition />
-                                                    </Grid.RowDefinitions>
-                                                    <Image Source="{Binding pic}" Height="75" Width="120" Grid.RowSpan="4"/>
-                                                    <TextBlock Text="{Binding title}" FontSize="14" Grid.Column="1" TextWrapping="Wrap" MaxLines="2" Margin="10,0" />
-                                                    <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1" Margin="10,0" VerticalAlignment="Center">
-                                                        <Image Source="Assets/Icon/up.png" Width="16" Height="16"/>
-                                                        <TextBlock Text="{Binding author}"  FontSize="12"  TextWrapping="Wrap" MaxLines="2"  Foreground="#FF787878" VerticalAlignment="Center"/>
-                                                    </StackPanel>
-                                                    <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="1" Margin="10,0" VerticalAlignment="Center">
-                                                        <Image Source="Assets/Icon/Play.png" Width="16" Height="16"/>
-                                                        <TextBlock Text="{Binding play}"  FontSize="12"  TextWrapping="Wrap" MaxLines="2"  Foreground="#FF787878" Margin="0,0,10,0"/>
-                                                        <Image Source="Assets/Icon/DM.png" Width="16" Height="16"/>
-                                                        <TextBlock Text="{Binding video_review}"  FontSize="12"  TextWrapping="Wrap" MaxLines="2"  Foreground="#FF787878"/>
-                                                    </StackPanel>
-                                                    <StackPanel Orientation="Horizontal" Grid.Row="3" Grid.Column="1" Margin="10,0" VerticalAlignment="Center">
-                                                        <Image Source="Assets/Icon/Time.png" Width="16" Height="16"/>
-                                                        <TextBlock Text="{Binding Create}"  FontSize="12"  TextWrapping="Wrap" MaxLines="2"  Foreground="#FF898989"/>
-                                                    </StackPanel>
-                                                </Grid>
-                                            </DataTemplate>
-                                        </ListView.ItemTemplate>
-                                    </ListView>
-                                    <HyperlinkButton x:Name="User_load_more" HorizontalAlignment="Center" VerticalAlignment="Bottom" Content="加载更多"/>
-                                </StackPanel>
-                                <TextBlock x:Name="DT_noLoad" Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Gray">
+                                        </TextBlock>
+                                        <ListView  x:Name="User_ListView_Attention" ScrollViewer.VerticalScrollMode="Disabled" SelectionMode="None" IsItemClickEnabled="True" ItemClick="User_ListView_Attention_ItemClick">
+                                            <ListView.ItemContainerStyle>
+                                                <Style TargetType="ListViewItem">
+                                                    <Setter Property="BorderThickness" Value="0,0,0,0.5"/>
+                                                    <Setter Property="BorderBrush" Value="#33808080"/>
+                                                </Style>
+                                            </ListView.ItemContainerStyle>
+                                            <ListView.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Grid Margin="0,5" Height="80">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="120"/>
+                                                            <ColumnDefinition/>
+                                                        </Grid.ColumnDefinitions>
+                                                        <Grid.RowDefinitions>
+                                                            <RowDefinition Height="auto"/>
+                                                            <RowDefinition />
+                                                            <RowDefinition/>
+                                                            <RowDefinition />
+                                                        </Grid.RowDefinitions>
+                                                        <Image Source="{Binding pic}" Height="75" Width="120" Grid.RowSpan="4"/>
+                                                        <TextBlock Text="{Binding title}" FontSize="14" Grid.Column="1" TextWrapping="Wrap" MaxLines="2" Margin="10,0" />
+                                                        <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1" Margin="10,0" VerticalAlignment="Center">
+                                                            <Image Source="Assets/Icon/up.png" Width="16" Height="16"/>
+                                                            <TextBlock Text="{Binding author}"  FontSize="12"  TextWrapping="Wrap" MaxLines="2"  Foreground="#FF787878" VerticalAlignment="Center"/>
+                                                        </StackPanel>
+                                                        <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="1" Margin="10,0" VerticalAlignment="Center">
+                                                            <Image Source="Assets/Icon/Play.png" Width="16" Height="16"/>
+                                                            <TextBlock Text="{Binding play}"  FontSize="12"  TextWrapping="Wrap" MaxLines="2"  Foreground="#FF787878" Margin="0,0,10,0"/>
+                                                            <Image Source="Assets/Icon/DM.png" Width="16" Height="16"/>
+                                                            <TextBlock Text="{Binding video_review}"  FontSize="12"  TextWrapping="Wrap" MaxLines="2"  Foreground="#FF787878"/>
+                                                        </StackPanel>
+                                                        <StackPanel Orientation="Horizontal" Grid.Row="3" Grid.Column="1" Margin="10,0" VerticalAlignment="Center">
+                                                            <Image Source="Assets/Icon/Time.png" Width="16" Height="16"/>
+                                                            <TextBlock Text="{Binding Create}"  FontSize="12"  TextWrapping="Wrap" MaxLines="2"  Foreground="#FF898989"/>
+                                                        </StackPanel>
+                                                    </Grid>
+                                                </DataTemplate>
+                                            </ListView.ItemTemplate>
+                                        </ListView>
+                                        <HyperlinkButton x:Name="User_load_more" HorizontalAlignment="Center" VerticalAlignment="Bottom" Content="加载更多"/>
+                                    </StackPanel>
+                                    <TextBlock x:Name="DT_noLoad" Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Gray">
 									<Run Text="（￣工￣lll） 请先登录"/>
-                                </TextBlock>
-                                <ProgressBar  x:Name="pr_Load_DT" Visibility="Collapsed" IsIndeterminate="True" Background="{x:Null}" VerticalAlignment="Top"/>
-                            </Grid>
+                                    </TextBlock>
+                                    <ProgressBar  x:Name="pr_Load_DT" Visibility="Collapsed" IsIndeterminate="True" Background="{x:Null}" VerticalAlignment="Top"/>
+                                </Grid>
 
-                        </ScrollViewer>
-
+                            </ScrollViewer>
+                        </pr:PullToRefreshBox>
                     </PivotItem>
                     <PivotItem Margin="0" >
                         <SplitView x:Name="sp_Find" OpenPaneLength="320" PanePlacement="Right" >
@@ -1155,6 +1212,6 @@
             <!--<Ellipse Width="100" Height="100" Fill="Black"></Ellipse>-->
         </Frame>
         <local:MessageShow x:Name="messShow" Grid.RowSpan="4" Margin="10" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
-   
+        <Grid x:Name="Feedback_Grid"></Grid>
     </Grid>
 </Page>

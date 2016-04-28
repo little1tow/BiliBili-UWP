@@ -9,8 +9,8 @@
     Tag="测试播放器"
     >
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Grid Background="{ThemeResource Bili-Background}">
         <MediaElement x:Name="mediaElment" AreTransportControlsEnabled="True"></MediaElement>
-        <AppBarButton x:Name="btn_GoBack" Icon="Back" Width="48" Height="48" Click="btn_GoBack_Click"></AppBarButton>
+        <AppBarButton x:Name="btn_GoBack" Icon="Back" Width="48" Height="48" Click="btn_GoBack_Click" Foreground="Gray"></AppBarButton>
     </Grid>
 </Page>

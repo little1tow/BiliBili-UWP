@@ -651,7 +651,8 @@
                 <AppBarButton x:Name="btn_VideoInfo"  Icon="Important"   Label="视频信息"  Click="btn_VideoInfo_Click"/>
                 <AppBarButton x:Name="btn_GoBrowser"  Icon="Go"   Label="浏览器打开"  Click="btn_GoBrowser_Click"/>
                 <AppBarButton x:Name="btn_SaveImage"  Icon="Save" Label="保存封面" Click="btn_SaveImage_Click"/>
-                <AppBarButton x:Name="btn_Share"  Icon="Go"   Label="分享" Click="btn_Share_Click"/>
+                <AppBarButton x:Name="btn_Share"  Icon="Go"   Label="复制分享" Click="btn_Share_Click"/>
+                <AppBarButton x:Name="btn_ShareData"  Icon="Go"   Label="分享到..." Click="btn_ShareData_Click"/>
             </CommandBar.SecondaryCommands>
             <AppBarButton Icon="Play" Foreground="White" Label="播放" Click="btn_playP1_Click"></AppBarButton>
             <AppBarButton Icon="Emoji2"  Label="投币" Foreground="White">

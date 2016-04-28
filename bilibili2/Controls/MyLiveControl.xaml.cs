@@ -121,7 +121,7 @@ namespace bilibili2.Controls
                                 }
                                 break;
                             case "萌宅推荐":
-                                for (int i = 0; i < 12; i++)
+                                for (int i = 0; i < livesModel.Count - 1; i++)
                                 {
                                     HomeLiveModel ownerModel = JsonConvert.DeserializeObject<HomeLiveModel>(livesModel[i].owner.ToString());
                                     HomeLiveModel coverModel = JsonConvert.DeserializeObject<HomeLiveModel>(livesModel[i].cover.ToString());
@@ -133,7 +133,7 @@ namespace bilibili2.Controls
                                 }
                                 break;
                             case "绘画专区":
-                                for (int i = 0; i < 12; i++)
+                                for (int i = 0; i < livesModel.Count-1; i++)
                                 {
                                     HomeLiveModel ownerModel = JsonConvert.DeserializeObject<HomeLiveModel>(livesModel[i].owner.ToString());
                                     HomeLiveModel coverModel = JsonConvert.DeserializeObject<HomeLiveModel>(livesModel[i].cover.ToString());
@@ -227,16 +227,22 @@ namespace bilibili2.Controls
                     ErrorEvent("读取直播失败" + model.message);
                     isLoaded = false;
                 }
-            }
+        }
             catch (Exception ex)
             {
                 ErrorEvent("读取直播失败" + ex.Message);
-                isLoaded = false;
+        isLoaded = false;
             }
             finally
             {
                 pr_Load.Visibility = Visibility.Collapsed;
             }
         }
+
+        private void gridview_Hot_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            PlayEvent((e.ClickedItem as HomeLiveModel).room_id);
+        }
+
     }
 }

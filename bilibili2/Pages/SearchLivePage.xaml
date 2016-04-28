@@ -1,0 +1,123 @@
+﻿<Page
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:bilibili2.Pages"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:bilibili2="using:bilibili2"
+    x:Class="bilibili2.Pages.SearchLivePage"
+    mc:Ignorable="d"
+    Tag="搜索直播"
+   SizeChanged="Page_SizeChanged"
+    >
+    <Page.Resources>
+        <SolidColorBrush x:Name="bg" x:Key="BG" Color="#FFDF85A0" />
+        <Style x:Key="itemStyle" TargetType="GridViewItem">
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Background" Value="{ThemeResource Bili-List-Background}"/>
+            <Setter Property="BorderBrush" Value="{ThemeResource Bili-Background}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+        </Style>
+        <DataTemplate x:Key="GridItem">
+            <Viewbox MaxWidth="{Binding Width, ElementName=ViewBox_num}">
+                <Grid MaxWidth="200" >
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="125"/>
+                        <RowDefinition Height="24"/>
+                        <RowDefinition Height="24"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="48"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Image Source="{Binding cover}" Width="200" VerticalAlignment="Top" Height="125" Grid.ColumnSpan="2"/>
+                    <Ellipse Width="44" Height="44" VerticalAlignment="Bottom" HorizontalAlignment="Left" Grid.RowSpan="2" Margin="2">
+                        <Ellipse.Fill>
+                            <ImageBrush ImageSource="{Binding face}"/>
+                        </Ellipse.Fill>
+                    </Ellipse>
+                    <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding title}"  TextTrimming="CharacterEllipsis" Margin="5,0"/>
+                    <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.ColumnSpan="2">
+                        <Image  Source="ms-appx:///Assets/MiniIcon/up.png" Width="16" Height="16" HorizontalAlignment="Left" Margin="5,2,0,0"/>
+                        <TextBlock FontSize="12" VerticalAlignment="Center" Foreground="Gray" Text="{Binding name}"/>
+                        <Image  Source="ms-appx:///Assets/Icon/Play.png" Width="16" Height="16" HorizontalAlignment="Left" Margin="5,2,0,0"/>
+                        <TextBlock FontSize="12" VerticalAlignment="Center" Foreground="Gray" Text="{Binding online}"/>
+                    </StackPanel>
+                </Grid>
+            </Viewbox>
+        </DataTemplate>
+    </Page.Resources>
+    <Grid  Background="{ThemeResource Bili-Background}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="48"/>
+            <RowDefinition Height="32"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid Background="{StaticResource BG}" Grid.Row="0" Height="48" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="48"/>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
+            <AppBarButton x:Name="btn_back" Click="btn_back_Click" Icon="Back" Width="48" Height="48" Foreground="White"/>
+            <AutoSuggestBox x:Name="txt_Find"  PlaceholderText="搜索主播、房间" Grid.Column="1" Margin="5" QueryIcon="Find" VerticalAlignment="Center" QuerySubmitted="txt_Find_QuerySubmitted" ></AutoSuggestBox>
+        </Grid>
+        <Grid Background="{StaticResource BG}"   Grid.Row="1" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Button x:Name="btn_Liveing" Background="#00000000"  FontSize="16"  Foreground="#B2FFFFFF" Tag="0" VerticalContentAlignment="Stretch" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="btn_Liveing_Click" Content="正在直播"/>
+            <Button x:Name="btn_User" Grid.Column="1" FontSize="16"  Foreground="#B2FFFFFF" Tag="1"  Background="#00000000"  VerticalContentAlignment="Stretch" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="btn_Liveing_Click" Content="主播"/>
+        </Grid>
+        <Border x:Name="ViewBox_num" Width="200" Height="1" VerticalAlignment="Top"/>
+        <Pivot x:Name="pivot" Style="{StaticResource PivotStyle1}" Grid.Row="2" SelectionChanged="pivot_SelectionChanged">
+            <PivotItem Margin="0">
+                <GridView x:Name="live_List" SelectionMode="None" IsItemClickEnabled="True" ItemClick="live_HOT_ItemClick" HorizontalAlignment="Center" VerticalAlignment="Top" ItemContainerStyle="{StaticResource itemStyle}" ItemTemplate="{StaticResource GridItem}"/>
+            </PivotItem>
+            <PivotItem Margin="0" >
+                <ListView x:Name="list_User" SelectionMode="None" IsItemClickEnabled="True" ItemClick="ListView_ItemClick">
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
+                            <Setter Property="BorderThickness" Value="0 0 0 0.5"></Setter>
+                            <Setter Property="BorderBrush" Value="#7F808080"></Setter>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Margin="5">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <Ellipse Width="48" Height="48" Grid.RowSpan="3" Margin="0 0 10 0">
+                                    <Ellipse.Fill>
+                                        <ImageBrush ImageSource="{Binding face}"></ImageBrush>
+                                    </Ellipse.Fill>
+                                </Ellipse>
+                                <TextBlock Grid.Column="1" Text="{Binding name}"></TextBlock>
+                                <TextBlock Grid.Column="1" Grid.Row="1" FontSize="14" Foreground="{Binding color}" Text="{Binding Live_Status}" ></TextBlock>
+                                <TextBlock Grid.Column="1" Grid.Row="2" FontSize="14" Foreground="Gray" >
+                                <Run>分区：</Run>
+                                  <Run Text="{Binding areaName}"></Run>
+                                  <Run>关注：</Run>
+                                  <Run Text="{Binding fansNum}"></Run>
+                                </TextBlock>
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                   
+                </ListView>
+            </PivotItem>
+        </Pivot>
+        <ProgressBar x:Name="pr_Load" Visibility="Collapsed" VerticalAlignment="Top" Foreground="White" Background="#33FFFFFF" IsIndeterminate="True"></ProgressBar>
+        <bilibili2:MessageShow x:Name="messShow" Grid.RowSpan="3" VerticalAlignment="Bottom" Margin="20" HorizontalAlignment="Center"/>
+
+    </Grid>
+</Page>

@@ -9,7 +9,7 @@
     Loaded="Page_Loaded"
     >
 
-    <Grid Background="#FFDF85A0">
+    <Grid Background="#FFDF85A0" x:Name="grid">
         <StackPanel VerticalAlignment="Center">
             <Image Source="ms-appx:///Assets/Wide310x150Logo.png" Width="300" Height="150" ></Image>
         </StackPanel>

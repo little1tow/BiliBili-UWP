@@ -43,7 +43,7 @@ namespace bilibili2
         /// 将在启动应用程序以打开特定文件等情况下使用。
         /// </summary>
         /// <param name="e">有关启动请求和过程的详细信息。</param>
-        protected override void OnLaunched(LaunchActivatedEventArgs e)
+        protected override async void OnLaunched(LaunchActivatedEventArgs e)
         {
 
 #if DEBUG
@@ -99,11 +99,12 @@ namespace bilibili2
                 // 当导航堆栈尚未还原时，导航到第一页，
                 // 并通过将所需信息作为导航参数传入来配置
                 // 参数
-               
+
                 rootFrame.Navigate(typeof(LoadPage), e.Arguments);
             }
             // 确保当前窗口处于活动状态
             Window.Current.Activate();
+        
         }
 
         /// <summary>

@@ -20,8 +20,8 @@ namespace bilibili2
 {
     class ApiHelper
     {
-        public const string JyAppkey = @"1afd8ae4b933daa51a39573a5719bba5";
-        public const string JySecret = @"d9e7262e70801e795c18dc20e0972df6";
+        public const string JyAppkey = @"自行申请";
+        public const string JySecret = @"自行申请";
 
         public const string _appSecret = "ba3a4e554e9a6e15dc4d1d70c2b154e3";
         public const string _appKey = "422fd9d7289a1dd9";

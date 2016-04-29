@@ -13,6 +13,7 @@ using Windows.Foundation.Collections;
 using Windows.Graphics.Display;
 using Windows.Media;
 using Windows.Media.Playback;
+using Windows.Storage;
 using Windows.System.Display;
 using Windows.UI;
 using Windows.UI.Core;
@@ -84,6 +85,15 @@ namespace bilibili2.Pages
                         ApplicationView.GetForCurrentView().ExitFullScreenMode();
                     }
                     break;
+                case Windows.System.VirtualKey.F11:
+                    if (btn_ExitFull.Visibility== Visibility.Collapsed)
+                    {
+                        setting.SetSettingValue("Full", true);
+                        btn_Full.Visibility = Visibility.Collapsed;
+                        btn_ExitFull.Visibility = Visibility.Visible;
+                        ApplicationView.GetForCurrentView().TryEnterFullScreenMode();
+                    }
+                    break;
                 default:
                     break;
             }
@@ -103,14 +113,18 @@ namespace bilibili2.Pages
         string Cid = string.Empty;
         string Aid = string.Empty;
         private DisplayRequest dispRequest = null;//保持屏幕常亮
+        SqlHelper sql = new SqlHelper();
+       
+        long LastPost = 0;
+        bool lastPostVIs = false;
         protected override async  void OnNavigatedTo(NavigationEventArgs e)
         {
+            sql.CreateTable();
             datetimer.Interval = new TimeSpan(0, 0, 1);
             datetimer.Tick += Datetimer_Tick;
             datetimer.Start();
             VideoList = ((KeyValuePair<List<VideoModel>, int>)e.Parameter).Key;
             PlayP= ((KeyValuePair<List<VideoModel>, int>)e.Parameter).Value;
-
             if (VideoList.Count<=1)
             {
                 btn_Menu.Visibility = Visibility.Collapsed;
@@ -133,25 +147,94 @@ namespace bilibili2.Pages
 
         private async Task PlayVideo(VideoModel model)
         {
+            if (model.path!=null)
+            {
+               PlayLocalOld(model);
+                return;
+            }
             progress.Visibility = Visibility.Visible;
             top_Title.Text = model.title + " " + model.page;
             pro_Num.Text = "填充弹幕中...";
             Cid = model.cid;
             Aid = model.aid;
-            DanMuPool = await GetDM(model.cid);
+            if (sql.ValuesExists(Cid))
+            {
+                menu_LastPost.IsEnabled = true;
+                LastPost = sql.QueryValue(Cid);
+            }
+            else
+            {
+                menu_LastPost.IsEnabled = false;
+                sql.InsertValue(Cid);
+            }
+            lastPostVIs = false;
+            DanMuPool = await GetDM(model.cid,false,false,string.Empty);
             pro_Num.Text = "读取视频信息...";
             await GetPlayInfo(model.cid, top_cb_Quality.SelectedIndex+1);
         }
 
-
-
+        private async void PlayLocalOld(VideoModel model)
+        {
+            try
+            {
+                Cid = model.cid;
+                if (sql.ValuesExists(Cid))
+                {
+                    menu_LastPost.IsEnabled = true;
+                    LastPost = sql.QueryValue(Cid);
+                }
+                else
+                {
+                    menu_LastPost.IsEnabled = false;
+                    sql.InsertValue(Cid);
+                }
+                lastPostVIs = false;
+                top_Title.Text = model.title;
+                StorageFile file = await StorageFile.GetFileFromPathAsync(model.path);
+                
+                var stream = await file.OpenAsync(Windows.Storage.FileAccessMode.Read);
+                mediaElement.SetSource(stream, file.ContentType);
+                if (model.IsOld==true)
+                {
+                    DanMuPool = await GetDM(model.cid, true,true,string.Empty);
+                }
+                else
+                {
+                    DanMuPool = await GetDM(model.cid, true,false, (await file.GetParentAsync()).Path);
+                }
+                Send_text_Comment.PlaceholderText = "Sorry，本地视频暂不支持发送弹幕...";
+                Send_text_Comment.IsEnabled = false;
+                Send_btn_Send.IsEnabled = false;
+                top_cb_Quality.Visibility =  Visibility.Collapsed;
+                //btn_EPList.IsEnabled = false;
+                //GetPlayhistory(model.path);
+            }
+            catch (Exception)
+            {
+                messShow.Show("读取本地视频失败！", 3000);
+            }
+        }
+      
         private async void Datetimer_Tick(object sender, object e)
         {
             await this.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => {
                 top_txt_Time.Text = DateTime.Now.ToLocalTime().ToString("HH:mm");
+                switch (CheckNetworkHelper.CheckInternetConnectionType())
+                {
+                    case InternetConnectionType.WwanConnection:
+                        top_txt_NetType.Text = "移动数据";
+                        top_txt_NetType.Foreground = new SolidColorBrush(Colors.OrangeRed);
+                        break;
+                    case InternetConnectionType.WlanConnection:
+                        top_txt_NetType.Text = "WIFI";
+                        top_txt_NetType.Foreground = new SolidColorBrush(Colors.White);
+                        break;
+                    default:
+                        break;
+                }
+             
             });
-            //App.Current.NetworkType
-            
+         
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
@@ -405,17 +488,52 @@ namespace bilibili2.Pages
             }
         }
 
-        public async Task<List<MyDanmaku.DanMuModel>> GetDM(string cid)
+        public async Task<List<MyDanmaku.DanMuModel>> GetDM(string cid,bool IsLocal,bool IsOld,string path)
         {
             List<MyDanmaku.DanMuModel> ls = new List<MyDanmaku.DanMuModel>();
             try
             {
-                string a =await new WebClientClass().GetResults(new Uri("http://comment.bilibili.com/" + cid + ".xml"));
+
+                string a = string.Empty;
+                if (!IsLocal)
+                {
+                   a=  await new WebClientClass().GetResults(new Uri("http://comment.bilibili.com/" + cid + ".xml"));
+                }
+                else
+                {
+                    if (IsOld)
+                    {
+                        StorageFolder folder = ApplicationData.Current.LocalFolder;
+                        StorageFolder DownFolder = await folder.GetFolderAsync("DownLoad");
+                        StorageFolder DownFolder2 = await KnownFolders.VideosLibrary.GetFolderAsync("Bili-Download");
+                        StorageFile file = await DownFolder.CreateFileAsync(cid + ".xml", CreationCollisionOption.OpenIfExists);
+                        StorageFile file2 = await DownFolder2.CreateFileAsync(cid + ".xml", CreationCollisionOption.OpenIfExists);
+                        string filesOne = await FileIO.ReadTextAsync(file);
+                        string filesTwo = await FileIO.ReadTextAsync(file2);
+                        if (filesOne.Length != 0)
+                        {
+                            a = filesOne;
+                        }
+                        else
+                        {
+                            a = filesTwo;
+                        }
+                    }
+                    else
+                    {
+                        //StorageFolder folder = ApplicationData.Current.LocalFolder;
+                        StorageFolder DownFolder = await StorageFolder.GetFolderFromPathAsync(path);
+                        //StorageFolder DownFolder2 = await KnownFolders.VideosLibrary.GetFolderAsync("Bili-Download");
+                        StorageFile file = await DownFolder.CreateFileAsync(cid + ".xml", CreationCollisionOption.OpenIfExists);
+                        
+                        string files = await FileIO.ReadTextAsync(file);
+                        a = files;
+                    }
+                }
                 XmlDocument xdoc = new XmlDocument();
                 xdoc.LoadXml(a);
                 XmlElement el = xdoc.DocumentElement;
                 XmlNodeList xml = el.ChildNodes;
-
                 foreach (XmlNode item in xml)
                 {
                     if (item.Attributes["p"] != null)
@@ -452,6 +570,7 @@ namespace bilibili2.Pages
                slider3.Maximum = mediaElement.NaturalDuration.TimeSpan.TotalSeconds;
                slider.Value = mediaElement.Position.TotalSeconds;
                txt_Post.Text = mediaElement.Position.Hours.ToString("00") + ":" + mediaElement.Position.Minutes.ToString("00") + ":" + mediaElement.Position.Seconds.ToString("00") + "/" + mediaElement.NaturalDuration.TimeSpan.Hours.ToString("00") + ":" + mediaElement.NaturalDuration.TimeSpan.Minutes.ToString("00") + ":" + mediaElement.NaturalDuration.TimeSpan.Seconds.ToString("00");
+               sql.UpdateValue(Cid,Convert.ToInt32(mediaElement.Position.TotalSeconds));
            });
             if (mediaElement.CurrentState== MediaElementState.Playing&& LoadDanmu)
             {
@@ -612,7 +731,7 @@ namespace bilibili2.Pages
             pro_Num.Text = mediaElement.BufferingProgress.ToString("P");
         }
 
-        private void mediaElement_CurrentStateChanged(object sender, RoutedEventArgs e)
+        private async void mediaElement_CurrentStateChanged(object sender, RoutedEventArgs e)
         {
             danmu.state = mediaElement.CurrentState;
             switch (mediaElement.CurrentState)
@@ -637,12 +756,23 @@ namespace bilibili2.Pages
 
                     break;
                 case MediaElementState.Playing:
+                  
+
                     btn_Play.Visibility = Visibility.Collapsed;
                     btn_Pause.Visibility = Visibility.Visible;
                     danmu.IsPlaying = true;
                     progress.Visibility = Visibility.Collapsed;
                     timer.Start();
-                   
+                    if (!lastPostVIs&& LastPost != 0)
+                    {
+                        TimeSpan ts = new TimeSpan(0, 0, Convert.ToInt32(LastPost));
+                        txt_LastPo.Text = "上次播放到" + ts.Hours.ToString("00") + ":" + ts.Minutes.ToString("00") + ":" + ts.Seconds.ToString("00");
+                        btn_LastPost.Visibility = Visibility.Visible;
+                        lastPostVIs = true;
+                        await Task.Delay(3000);
+                        btn_LastPost.Visibility = Visibility.Collapsed;
+                    }
+                    
                     break;
                 case MediaElementState.Paused:
                     btn_Play.Visibility = Visibility.Visible;
@@ -1169,5 +1299,38 @@ namespace bilibili2.Pages
             grid_end.Visibility = Visibility.Collapsed;
         }
 
+        private void btn_LastPost_Click(object sender, RoutedEventArgs e)
+        {
+            if (LastPost != 0)
+            {
+                mediaElement.Position = new TimeSpan(0, 0, Convert.ToInt32(LastPost));
+                btn_LastPost.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        private void menu_LastPost_Click(object sender, RoutedEventArgs e)
+        {
+            if (LastPost!=0)
+            {
+                mediaElement.Position = new TimeSpan(0, 0, Convert.ToInt32(LastPost));
+                btn_LastPost.Visibility = Visibility.Collapsed;
+            }
+        }
+    }
+    //进度转换
+    public sealed class PostThumbToolTipValueConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            int i = 0;
+            int.TryParse(value.ToString(), out i);
+            TimeSpan ts = new TimeSpan(0, 0, i);
+            return ts.Hours.ToString("00") + ":" + ts.Minutes.ToString("00") + ":" + ts.Seconds.ToString("00");
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            return null;
+        }
     }
 }

@@ -561,7 +561,7 @@
         </StackPanel>
         <StackPanel x:Name="grid_Chptcha" Visibility="Collapsed" Width="200" HorizontalAlignment="Center" VerticalAlignment="Center" Background="#B2808080">
             <TextBlock  Margin="10 5">请输入验证码</TextBlock>
-            <Image x:Name="img_Chptcha" Margin="10" Height="40" ></Image>
+            <Image x:Name="img_Chptcha" Tapped="img_Chptcha_Tapped" Margin="10" Height="40" ></Image>
             <TextBox x:Name="txt_Chptcha" Margin="10 5" PlaceholderText="输入验证码"></TextBox>
             <Button x:Name="btn_Yes" Margin="10 5"  HorizontalAlignment="Right" Click="btn_Yes_Click">确定</Button>
         </StackPanel>

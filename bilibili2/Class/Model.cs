@@ -159,6 +159,11 @@ namespace bilibili2
         public string page { get; set; }
         public string from { get; set; }
         public string part { get; set; }
+        //以下两项用于本地视频
+        public bool inLocal { get; set; }
+        public string path { get; set; }
+        public bool IsOld { get; set; }
+        public SolidColorBrush forColor { get;set; }
         //视频关注信息
         public object req_user { get; set; }
         public int attention { get; set; }//关注Up主,-999为关注,1已关注
@@ -727,6 +732,8 @@ namespace bilibili2
         public string av_id { get; set; }
         public int danmaku { get; set; }
         public string index_title { get; set; }
+        public bool inLocal { get; set; }
+
 
         public int total_count { get; set; }
         public string status

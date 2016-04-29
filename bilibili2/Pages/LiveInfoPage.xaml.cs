@@ -205,8 +205,9 @@ namespace bilibili2.Pages
                         item.gold = coin_type.gold;
                     }
                     gridview_Gifts.ItemsSource = giftList;
-                    web_Desc.NavigateToString(meta.description);
-                   
+                    string b = @"<head><style>p{font-family:""微软雅黑"";}</style></head>";
+                    web_Desc.NavigateToString(b+meta.description);
+                    GetSliver();
                     if (info.is_attention == 1)
                     {
                         txt_guanzhu.Text = "已关注";
@@ -218,7 +219,7 @@ namespace bilibili2.Pages
                     if (info.status == "LIVE")
                     {
                         GetLiveUrl();
-                        GetSliver();
+                       
                     }
                     else
                     {
@@ -989,17 +990,12 @@ namespace bilibili2.Pages
             hr = new GetSilverHelper();
             hr.StartHeart();
             hr.guazievent += Hr_guazievent;
-            if (true)
-            {
-
-            }
         }
         bool CanGetSliver = false;
         private void Hr_guazievent(GetSilverHelper.heartdata data, string result)
         {
             btn_GetSliver.Foreground = new SolidColorBrush(Colors.Gold);
             CanGetSliver = true;
-
         }
 
         private async void btn_GetSliver_Click(object sender, RoutedEventArgs e)
@@ -1024,6 +1020,7 @@ namespace bilibili2.Pages
             {
                 await new MessageDialog(resluts.msg).ShowAsync();
             }
+
             CanGetSliver = false;
             btn_GetSliver.Foreground = new SolidColorBrush(Colors.White);
             GetUserInfo();
@@ -1109,5 +1106,11 @@ namespace bilibili2.Pages
         {
             grid_SendGift.Visibility = Visibility.Collapsed;
         }
+
+        private async void img_Chptcha_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            img_Chptcha.Source = await hr.GetCaptcha();
+        }
+
     }
 }

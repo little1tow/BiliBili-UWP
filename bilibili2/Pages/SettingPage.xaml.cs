@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.System.Display;
 using Windows.UI.Notifications;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
@@ -36,6 +37,7 @@ namespace bilibili2
             NavigationCacheMode = NavigationCacheMode.Enabled;
         }
         private SettingHelper settings = new SettingHelper();
+        private DisplayRequest dispRequest = null;
         private void btn_back_Click(object sender, RoutedEventArgs e)
         {
             if (this.Frame.CanGoBack)
@@ -113,6 +115,33 @@ namespace bilibili2
                 tw_HideStatusBar.IsOn = true;
             }
 
+            if (settings.SettingContains("PlayLocal"))
+            {
+                tw_PlayLocal.IsOn = (bool)settings.GetSettingValue("PlayLocal");
+            }
+            else
+            {
+                tw_PlayLocal.IsOn = true;
+            }
+
+
+            if (settings.SettingContains("UseWifi"))
+            {
+                sw_UseWifi.IsOn = (bool)settings.GetSettingValue("UseWifi");
+            }
+            else
+            {
+                sw_UseWifi.IsOn = false;
+            }
+
+            if (settings.SettingContains("HoldLight"))
+            {
+                sw_Light.IsOn = (bool)settings.GetSettingValue("HoldLight");
+            }
+            else
+            {
+                sw_Light.IsOn = false;
+            }
 
 
             if (settings.SettingContains("Quality"))
@@ -442,6 +471,54 @@ namespace bilibili2
         private void btn_feedback_Click(object sender, RoutedEventArgs e)
         {
             Feedback();
+        }
+
+        private void tw_Drak_Toggled_1(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void sw_Light_Toggled(object sender, RoutedEventArgs e)
+        {
+            if (sw_Light.IsOn)
+            {
+                if (dispRequest == null)
+                {
+                    dispRequest = new DisplayRequest();
+                    dispRequest.RequestActive(); 
+                }
+            }
+            else
+            {
+                if (dispRequest != null)
+                {
+                    dispRequest = null;
+                }
+            }
+            settings.SetSettingValue("HoldLight", sw_Light.IsOn);
+        }
+
+        private void sw_UseWifi_Toggled(object sender, RoutedEventArgs e)
+        {
+            settings.SetSettingValue("UseWifi", sw_UseWifi.IsOn);
+        }
+
+        private void tw_PlayLocal_Toggled(object sender, RoutedEventArgs e)
+        {
+            settings.SetSettingValue("PlayLocal", tw_PlayLocal.IsOn);
+        }
+
+        private void Page_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if (this.ActualWidth<=500)
+            {
+                dan_Sp.OpenPaneLength = this.ActualWidth;
+            }
+            else
+            {
+                dan_Sp.OpenPaneLength = 350;
+
+            }
         }
     }
 }

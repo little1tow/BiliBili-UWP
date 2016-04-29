@@ -11,6 +11,7 @@
     Tag="播放器"
     >
     <Page.Resources>
+        <local:PostThumbToolTipValueConverter x:Key="MyThumbToolTipValueConverter" />
         <Style x:Key="TextBoxStyle1" TargetType="TextBox">
             <Setter Property="MinWidth" Value="{ThemeResource TextControlThemeMinWidth}"/>
             <Setter Property="MinHeight" Value="{ThemeResource TextControlThemeMinHeight}"/>
@@ -588,6 +589,7 @@
                     <StackPanel Grid.Column="2" Orientation="Horizontal" >
                         
                         <TextBlock x:Name="top_txt_Time" Foreground="White" VerticalAlignment="Center" Margin="5 0" FontSize="18"/>
+                        <TextBlock x:Name="top_txt_NetType" Foreground="White" VerticalAlignment="Center" Margin="5 0" FontSize="18"></TextBlock>
                         <ComboBox x:Name="top_cb_Quality" Width="86"  VerticalAlignment="Stretch"  HorizontalContentAlignment="Center"  BorderThickness="0" VerticalContentAlignment="Center" Background="Transparent" Foreground="White" SelectionChanged="top_cb_Quality_SelectionChanged">
                             <ComboBoxItem Content="清晰"/>
                             <ComboBoxItem Content="高清"/>
@@ -611,6 +613,7 @@
                                     <MenuFlyoutItem x:Name="menu_Play" Text="播放设置" Tag="1" Click="menu_Play_Click"/>
                                     <MenuFlyoutItem x:Name="menu_Danmu" Tag="2" Text="弹幕设置" Click="menu_Danmu_Click"/>
                                     <MenuFlyoutItem x:Name="menu_DisDanmu" Tag="3" Text="弹幕隐蔽" Click="menu_DisDanmu_Click"/>
+                                    <MenuFlyoutItem x:Name="menu_LastPost" Text="上次进度" Click="menu_LastPost_Click"></MenuFlyoutItem>
                                     <MenuFlyoutItem x:Name="menu_About" Text="视频信息" Click="menu_About_Click"/>
                                 </MenuFlyout>
                             </AppBarButton.Flyout>
@@ -651,7 +654,7 @@
                     </Grid.RowDefinitions>
                     <Slider x:Name="slider2" VerticalAlignment="Center" Margin="5 2" Height="32" Style="{StaticResource SliderStyle2}" Foreground="#99DF85A0" Background="#33000000"/>
                     <Slider x:Name="slider" Value="0" VerticalAlignment="Center" Maximum="300"  Margin="5 2" Height="32" Style="{StaticResource SliderStyle1}" Foreground="#FFDF82A0" Background="#00000000" ValueChanged="slider_ValueChanged"/>
-                    <Slider x:Name="slider3" VerticalAlignment="Center" Margin="5 2" Height="32" Style="{StaticResource SliderStyle2}" Foreground="#00DF85A0" Background="#00000000" ValueChanged="slider3_ValueChanged"/>
+                    <Slider x:Name="slider3" VerticalAlignment="Center" Margin="5 2" Height="32" Style="{StaticResource SliderStyle2}" Foreground="#00DF85A0" Background="#00000000" ValueChanged="slider3_ValueChanged" ThumbToolTipValueConverter="{StaticResource MyThumbToolTipValueConverter}" />
                     <Grid Grid.Row="1" BorderThickness="0 0.5 0 0" BorderBrush="#33FFFFFF">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="48"/>
@@ -693,6 +696,11 @@
                 <Border x:Name="ss_Light" Grid.Row="2"  ManipulationMode="TranslateY" ManipulationDelta="ss_Light_ManipulationDelta" ManipulationCompleted="ss_Light_ManipulationCompleted" Background="#00000000" Tapped="ss_Volume_Tapped" DoubleTapped="ss_Volume_DoubleTapped"/>
                 <Border x:Name="ss_Volume" Grid.Row="2" Grid.Column="2"   ManipulationMode="TranslateY" ManipulationDelta="ss_Volume_ManipulationDelta" ManipulationCompleted="ss_Light_ManipulationCompleted" Background="#00000000" Tapped="ss_Volume_Tapped" DoubleTapped="ss_Volume_DoubleTapped"/>
                 <Border x:Name="ss"  Grid.Row="2" Grid.Column="1" ManipulationMode="TranslateX" ManipulationDelta="Grid_ManipulationDelta" ManipulationCompleted="Grid_ManipulationCompleted" Background="#00000000" Tapped="ss_Volume_Tapped" DoubleTapped="ss_Volume_DoubleTapped"/>
+                <HyperlinkButton x:Name="btn_LastPost" Visibility="Collapsed" Grid.ColumnSpan="3" Grid.Row="2"  Margin="10,0" HorizontalAlignment="Left"  Click="btn_LastPost_Click">
+                    <Border   Height="48" Visibility="Visible"   Background="#7F000000">
+                        <TextBlock x:Name="txt_LastPo"  Margin="10 0" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White">上次播放到12:12:00处</TextBlock>
+                    </Border>
+                </HyperlinkButton>
                 <Grid x:Name="grid_end" Grid.ColumnSpan="3" Visibility="Collapsed" Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Center">
                     <StackPanel VerticalAlignment="Center">
                         <Image Source="ms-appx:///Assets/LOGO88.png" Width="88" Height="88" />

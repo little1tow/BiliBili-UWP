@@ -10,106 +10,90 @@ namespace bilibili2.Class
 {
     class SqlHelper
     {
-        #region 历史纪录
 
-        #endregion
         #region 播放进度
-
+        private static string DB_NAME = "Info.db";
+        private static string SQL_CREATE_TABLE = "CREATE TABLE IF NOT EXISTS PositionTable (Cid TEXT primary key,Position INTEGER);";
+        private static string SQL_QUERY_VALUE = "SELECT * FROM PositionTable WHERE Cid = ?;";
+        private static string SQL_INSERT = "INSERT INTO PositionTable VALUES(?,?);";
+        private static string SQL_UPDATE = "UPDATE PositionTable SET Position = ? WHERE Cid = ?";
+        private static string SQL_DELETE = "DELETE FROM PositionTable WHERE Key = ?";
         #endregion
-        #region 下载进程
-
-        #endregion
-
-        private static String DB_NAME = "Info.db";
-        private static String SQL_CREATE_TABLE = "CREATE TABLE IF NOT EXISTS {0} (aid TEXT,title TEXT,pic Text,type TEXT);";
-        private static String SQL_QUERY_VALUE = "SELECT Value FROM {0} WHERE aid = ?;";
-        private static String SQL_INSERT = "INSERT INTO {0} VALUES(?,?,?,?);";
-        //private static String SQL_UPDATE = "UPDATE {0} SET Value = ? WHERE Key = ?";
-        //private static String SQL_DELETE = "DELETE FROM {0} WHERE Key = ?";
 
         SQLiteConnection con;
-        public void CreateTable(string tableName)
+        public void CreateTable()
         {
             con = new SQLiteConnection(DB_NAME);
-            using (var state=con.Prepare(string.Format(SQL_CREATE_TABLE,tableName)))
+            using (var state=con.Prepare(SQL_CREATE_TABLE))
             {
                 state.Step();
             }
         }
-        public void InsertValue()
+        public void InsertValue(string Cid)
         {
             con = new SQLiteConnection(DB_NAME);
-            using (var statement = con.Prepare(string.Format(SQL_INSERT, "ViewHistory")))
+            using (var statement = con.Prepare(SQL_INSERT))
             {
-                statement.Bind(1, "1");
-                statement.Bind(2, "2");
-                statement.Bind(3, "3");
-                statement.Bind(4, "4");
+                statement.Bind(1, Cid);
+                statement.Bind(2, 0);
                 statement.Step();
             }
         }
 
-        public string QueryValue()
+        public void UpdateValue(string Cid, int position)
         {
             con = new SQLiteConnection(DB_NAME);
-            using (var statement = con.Prepare(string.Format(SQL_QUERY_VALUE, "ViewHistory")))
+            using (var statement = con.Prepare(SQL_UPDATE))
             {
-                statement.Bind(1, "1");
+                statement.Bind(1, position);
+                statement.Bind(2, Cid);
+                statement.Step();
+            }
+        }
+        public long QueryValue(string cid)
+        {
+            con = new SQLiteConnection(DB_NAME);
+            using (var statement = con.Prepare(SQL_QUERY_VALUE))
+            {
+                statement.Bind(1, cid);
                 SQLiteResult result = statement.Step();
                 if (SQLiteResult.ROW == result)
                 {
-                    string a = string.Empty;
-                    for (int i = 0; i < statement.ColumnCount-1; i++)
-                    {
-                        a += statement[i] as String+"\t";
-                    }
-                    return  a;
+                    long a = (long)statement["Position"];
+                    return a;
                 }
                 else
                 {
-                    return string.Empty;
+                    return 0;
                 }
             }
         }
 
-
-        public void CreateShieldingTable()
+       public bool ValuesExists(string cid)
         {
             con = new SQLiteConnection(DB_NAME);
-            using (var state = con.Prepare("CREATE TABLE IF NOT EXISTS Shielding (text TEXT,mode INT);"))
+            using (var statement = con.Prepare(SQL_QUERY_VALUE))
             {
-                state.Step();
-            }
-        }
-
-        public void InsertShieldingValue(string text,int mode)
-        {
-            con = new SQLiteConnection(DB_NAME);
-            using (var statement = con.Prepare("INSERT INTO Shielding VALUES(?,?);"))
-            {
-                statement.Bind(1, text);
-                statement.Bind(2, mode);
-                statement.Step();
-            }
-        }
-
-        public List<string> GetShieldingText()
-        {
-            con = new SQLiteConnection(DB_NAME);
-            using (var state=con.Prepare("SELECT text FROM Shielding WHERE mode = 0;"))
-            {
-                List<string> list = new List<string>();
-                SQLiteResult result = state.Step();
-                if (result == SQLiteResult.ROW)
+                statement.Bind(1, cid);
+                SQLiteResult result = statement.Step();
+                if (SQLiteResult.ROW == result)
                 {
-
-                    list.Add(state[0] as String);
+                    if (statement["Position"] == null)
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        return true;
+                    }
                 }
-                return list;
+                else
+                {
+                    return false;
+                }
             }
-        }
 
-       
+        }
 
 
     }

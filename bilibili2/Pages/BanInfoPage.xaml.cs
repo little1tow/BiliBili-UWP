@@ -21,6 +21,7 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using Windows.UI.Core;
 using Windows.ApplicationModel.DataTransfer;
+using Windows.UI;
 
 // “空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=234238 上提供
 
@@ -149,6 +150,10 @@ namespace bilibili2.Pages
                     {
                         list[i].Num = i;
                         list2.Add(list[i]);
+                        if (DownloadManage.Downloaded.Contains(list[i].danmaku.ToString()))
+                        {
+                            list[i].inLocal = true;
+                        }
                     }
                     list_E.ItemsSource = list2;
                     List<BangumiInfoModel> list_CV = JsonConvert.DeserializeObject<List<BangumiInfoModel>>(model.actor.ToString());
@@ -203,21 +208,20 @@ namespace bilibili2.Pages
         {
             bor_Width.Width = Width / 3;
         }
-
+        private SettingHelper settings = new SettingHelper();
         private async void grid_E_ItemClick(object sender, ItemClickEventArgs e)
         {
             if (cb_IsPlay.IsChecked.Value)
             {
-                if (CheckNetworkHelper.CheckInternetConnectionType() == InternetConnectionType.WwanConnection)
-                {
-                    var dialog = new MessageDialog("当前为移动网络，是否继续播放", "警告");
-                    dialog.Commands.Add(new UICommand("确定", cmd => { }, commandId: 0));
-                    dialog.Commands.Add(new UICommand("不再提醒", cmd =>
-                    {
-                    }, commandId: 1));
-                    await dialog.ShowAsync();
-                }
                 BangumiInfoModel model = e.ClickedItem as BangumiInfoModel;
+                if (model.inLocal)
+                {
+                    if ((bool)settings.GetSettingValue("PlayLocal"))
+                    {
+                        this.Frame.Navigate(typeof(DownloadPage), 1);
+                        return;
+                    }
+                }
                 List<VideoModel> listVideo = new List<VideoModel>();
                 List<BangumiInfoModel> ls = ((List<BangumiInfoModel>)list_E.ItemsSource).OrderByDescending(s => Convert.ToDouble(s.Num)).ToList();
                 foreach (BangumiInfoModel item in ls)
@@ -305,7 +309,6 @@ namespace bilibili2.Pages
             com_bar_Down.Visibility = Visibility.Visible;
             list_E.SelectionMode = ListViewSelectionMode.Multiple;
             list_E.IsItemClickEnabled = false;
-
         }
 
         private void btn_Cancel_Click(object sender, RoutedEventArgs e)
@@ -444,6 +447,57 @@ namespace bilibili2.Pages
         private void btn_Share_Click(object sender, RoutedEventArgs e)
         {
             DataTransferManager.ShowShareUI();
+        }
+
+        private async void btn_OK_Click(object sender, RoutedEventArgs e)
+        {
+            using (DownloadManage wc = new DownloadManage())
+            {
+                if (list_E.SelectedItems.Count != 0)
+                {
+                    //循环读取全部选中的项目
+                    foreach (BangumiInfoModel item in list_E.SelectedItems)
+                    {
+                        int quality = cb_Qu.SelectedIndex + 1;//清晰度1-3
+                        string Downurl = await wc.GetVideoUri(item.danmaku.ToString(), quality);//取得视频URL
+                        if (Downurl != null)
+                        {
+                            DownloadManage.DownModel model = new DownloadManage.DownModel()
+                            {
+                                mid = item.danmaku.ToString(),
+                                title = "【番剧】"+txt_Name.Text,
+                                part = item.index,
+                                url = Downurl,
+                                aid = banID,
+                                danmuUrl = "http://comment.bilibili.com/" + item.danmaku + ".xml",
+                                quality = quality,
+                                downloaded = false,
+                                partTitle = item.index_title??"",
+                                isBangumi = true
+                            };
+                            wc.StartDownload(model);
+                            //StartDownload(model);
+                        }
+                        else
+                        {
+                            MessageDialog md = new MessageDialog(item.title + "\t视频地址获取失败");
+                            await md.ShowAsync();
+                        }
+                    }
+                    messShow.Show("任务已加入下载队列", 3000);
+                    list_E.SelectionMode = ListViewSelectionMode.None;
+                    list_E.IsItemClickEnabled = true;
+                    com_bar_Down.Visibility = Visibility.Collapsed;
+                    com_bar.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    list_E.SelectionMode = ListViewSelectionMode.None;
+                    list_E.IsItemClickEnabled = true;
+                    com_bar_Down.Visibility = Visibility.Collapsed;
+                    com_bar.Visibility = Visibility.Visible;
+                }
+            }
         }
     }
 }

@@ -358,8 +358,12 @@
                 </Grid.RowDefinitions>
                 <Grid  Background="{ThemeResource Bili-ForeColor}" Grid.Row="0" Height="48" x:Name="top_grid">
                     <TextBlock Text="首页" FontSize="16" x:Name="top_txt_Header" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" />
-                    <AppBarButton x:Name="btn_GoFind" Grid.ColumnSpan="2" Icon="Find" HorizontalAlignment="Right" Width="48" Height="48" Foreground="White" Click="btn_GoFind_Click"/>
-                    <AutoSuggestBox x:Name="top_txt_find"   PlaceholderText="输入关键字或AV号" Visibility="Collapsed" Height="32"  Width="180" QueryIcon="Find" Grid.Column="2" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Right" Margin="5,0"  Style="{StaticResource AutoSuggestBoxStyle1}"  TextChanged="top_txt_find_TextChanged" QuerySubmitted="top_txt_find_QuerySubmitted" SuggestionChosen="top_txt_find_SuggestionChosen"/>
+                    <StackPanel Orientation="Horizontal" Grid.ColumnSpan="2" HorizontalAlignment="Right" >
+                        <AppBarButton x:Name="btn_GoFind" Icon="Find" Width="48" Height="48" Foreground="White" Click="btn_GoFind_Click"/>
+                        <AutoSuggestBox x:Name="top_txt_find"   PlaceholderText="输入关键字或AV号" Visibility="Collapsed" Height="32"  Width="180" QueryIcon="Find" Grid.Column="2" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Right" Margin="5,0"  Style="{StaticResource AutoSuggestBoxStyle1}"  TextChanged="top_txt_find_TextChanged" QuerySubmitted="top_txt_find_QuerySubmitted" SuggestionChosen="top_txt_find_SuggestionChosen"/>
+                        <AppBarButton Icon="Download" Visibility="Collapsed" Width="48" Height="48" Foreground="White"></AppBarButton>
+                    </StackPanel>
+                  
                 </Grid>
 
                 <Grid Background="{ThemeResource Bili-ForeColor}" Grid.Row="1">

@@ -7,12 +7,13 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
         Tag="用户中心"
+    SizeChanged="Page_SizeChanged"
     >
     <Page.Resources>
         <SolidColorBrush x:Key="BG" x:Name="bg" Color="#FFDF85A0"></SolidColorBrush>
     </Page.Resources>
     <Grid Background="{ThemeResource Bili-Background}">
-        <SplitView x:Name="sp" PanePlacement="Right" OpenPaneLength="320">
+        <SplitView x:Name="sp"  PanePlacement="Right" OpenPaneLength="320">
             <SplitView.Pane>
                 <Grid >
                     <Grid x:Name="grid_AUser" Visibility="Collapsed">
@@ -186,34 +187,6 @@
                             </StackPanel>
                             <TextBlock Text="{Binding sign}" Margin="15 0" HorizontalAlignment="Center" FontSize="12"  Foreground="White" IsTextSelectionEnabled="True" TextWrapping="Wrap" TextAlignment="Center"></TextBlock>
                         </StackPanel>
-                        <AppBarButton x:Name="btn_Back" Click="btn_Back_Click"  Width="48" Height="48" Icon="Back" Foreground="White"></AppBarButton>
-                        <StackPanel Orientation="Horizontal" Margin="10 0" VerticalAlignment="Top" HorizontalAlignment="Right">
-                            <AppBarButton x:Name="btn_Attention" Width="48" Visibility="Collapsed" Height="48" ToolTipService.ToolTip="关注" Click="btn_Attention_Click">
-                                <AppBarButton.Icon>
-                                    <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE006;" Foreground="White" />
-                                </AppBarButton.Icon>
-                            </AppBarButton>
-                            <AppBarButton x:Name="btn_CannelAttention" Width="48" Visibility="Collapsed" Height="48" ToolTipService.ToolTip="取消关注" Click="btn_CannelAttention_Click">
-                                <AppBarButton.Icon>
-                                    <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE00B;" Foreground="White" />
-                                </AppBarButton.Icon>
-                            </AppBarButton>
-                            <AppBarButton x:Name="btn_Edit" Icon="Edit" Width="48" Height="48" Foreground="White"></AppBarButton>
-                            <AppBarButton x:Name="btn_More" Width="48" Height="48" Icon="More" HorizontalAlignment="Right" Foreground="White">
-                                <AppBarButton.Flyout>
-                                    <MenuFlyout>
-                                        <MenuFlyoutItem Visibility="Collapsed">编辑资料</MenuFlyoutItem>
-                                        <MenuFlyoutItem Visibility="Collapsed">隐私设置</MenuFlyoutItem>
-                                        <MenuFlyoutSubItem Text="更换背景" Visibility="Collapsed">
-                                            <ToggleMenuFlyoutItem x:Name="menu_One" Click="ToggleMenuFlyoutItem_Click" IsChecked="True">蓝</ToggleMenuFlyoutItem>
-                                            <ToggleMenuFlyoutItem x:Name="menu_Two" Click="ToggleMenuFlyoutItem_Click">黄</ToggleMenuFlyoutItem>
-                                            <ToggleMenuFlyoutItem x:Name="menu_Three" Click="ToggleMenuFlyoutItem_Click">绿</ToggleMenuFlyoutItem>
-                                        </MenuFlyoutSubItem>
-                                        <MenuFlyoutItem x:Name="btn_Exit" Click="btn_Exit_Click">退出登录</MenuFlyoutItem>
-                                    </MenuFlyout>
-                                </AppBarButton.Flyout>
-                            </AppBarButton>
-                        </StackPanel>
                     </Grid>
                     <StackPanel Margin="5 0" Grid.Row="1" >
                         <Grid>
@@ -274,6 +247,53 @@
                                 <TextBlock Text="{Binding place}" VerticalAlignment="Center" Foreground="#FF7A7A7A"></TextBlock>
                             </StackPanel>
                         </Grid>
+                        <HyperlinkButton x:Name="sub" Foreground="{ThemeResource Bili-FontColor}">
+                            <StackPanel Orientation="Horizontal">
+                                <Border Background="{StaticResource BG}" Width="10"  Height="24" ></Border>
+                                <TextBlock Text="投稿" VerticalAlignment="Center" FontSize="16" Margin="5 0"></TextBlock>
+                            </StackPanel>
+                        </HyperlinkButton>
+                        <ScrollViewer HorizontalScrollBarVisibility="Hidden" HorizontalScrollMode="Auto"  VerticalScrollMode="Disabled" VerticalScrollBarVisibility="Disabled">
+                            <GridView x:Name="user_GridView_Submit" SelectionMode="None" IsItemClickEnabled="True" HorizontalAlignment="Left" ItemClick="list_ASubit_ItemClick">
+                                <GridView.ItemContainerStyle>
+                                    <Style TargetType="GridViewItem">
+                                        <Setter Property="Margin" Value="10"></Setter>
+                                        <Setter Property="Width" Value="160"></Setter>
+                                        <Setter Property="BorderThickness" Value="1"></Setter>
+                                        <Setter Property="BorderBrush" Value="{ThemeResource Bili-Background}"></Setter>
+                                        <Setter Property="Background" Value="{ThemeResource Bili-List-Background}"></Setter>
+                                    </Style>
+                                </GridView.ItemContainerStyle>
+                                <GridView.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel >
+                                            <Grid>
+                                                <Image Source="{Binding pic}" Width="160"  VerticalAlignment="Top" ></Image>
+                                                <Grid Height="20" VerticalAlignment="Bottom" >
+                                                    <Grid.Background>
+                                                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                                            <GradientStop Color="#00000000" Offset="0"/>
+                                                            <GradientStop Color="#7F000000" Offset="1"/>
+                                                        </LinearGradientBrush>
+                                                    </Grid.Background>
+                                                    <StackPanel Orientation="Horizontal" Margin="5,0" >
+                                                        <TextBlock Text="播放：" FontSize="12"  Foreground="White"></TextBlock>
+                                                        <TextBlock Text="{Binding Path=play}" FontSize="12"  Foreground="White"></TextBlock>
+                                                    </StackPanel>
+                                                    <StackPanel Orientation="Horizontal" Margin="5,0" HorizontalAlignment="Right">
+                                                        <TextBlock Text="弹幕：" FontSize="12"  Foreground="White"></TextBlock>
+                                                        <TextBlock Text="{Binding Path=video_review}" FontSize="12"  Foreground="White"></TextBlock>
+                                                    </StackPanel>
+                                                </Grid>
+                                            </Grid>
+                                            <TextBlock Text="{Binding title}" Height="36" TextWrapping="Wrap" MaxLines="2" FontSize="12"  Margin="5,0"></TextBlock>
+                                            <TextBlock Text="{Binding created}" TextWrapping="Wrap" MaxLines="2" FontSize="12" Foreground="#FF7E7E7E" Margin="5"></TextBlock>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </GridView.ItemTemplate>
+                            </GridView>
+                        </ScrollViewer>
+                        <TextBlock x:Name="DT_SUB" HorizontalAlignment="Center" Foreground="Gray">╮(╯_╰)╭ 没有投稿</TextBlock>
                         <HyperlinkButton x:Name="fav" Foreground="{ThemeResource Bili-FontColor}">
                             <StackPanel Orientation="Horizontal">
                                 <Border Background="{StaticResource BG}" Width="10"  Height="24" ></Border>
@@ -337,7 +357,36 @@
                 
             </ScrollViewer>
         </SplitView>
-       
+        <Grid VerticalAlignment="Top">
+            <AppBarButton x:Name="btn_Back" Click="btn_Back_Click"  Width="48" Height="48" Icon="Back" Foreground="White"></AppBarButton>
+            <StackPanel Orientation="Horizontal" Margin="10 0" VerticalAlignment="Top" HorizontalAlignment="Right">
+                <AppBarButton x:Name="btn_Attention" Width="48" Visibility="Collapsed" Height="48" ToolTipService.ToolTip="关注" Click="btn_Attention_Click">
+                    <AppBarButton.Icon>
+                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE006;" Foreground="White" />
+                    </AppBarButton.Icon>
+                </AppBarButton>
+                <AppBarButton x:Name="btn_CannelAttention" Width="48" Visibility="Collapsed" Height="48" ToolTipService.ToolTip="取消关注" Click="btn_CannelAttention_Click">
+                    <AppBarButton.Icon>
+                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE00B;" Foreground="White" />
+                    </AppBarButton.Icon>
+                </AppBarButton>
+                <AppBarButton x:Name="btn_Edit" Icon="Edit" Width="48" Height="48" Foreground="White" Click="btn_Edit_Click"></AppBarButton>
+                <AppBarButton x:Name="btn_More" Width="48" Height="48" Icon="More" HorizontalAlignment="Right" Foreground="White">
+                    <AppBarButton.Flyout>
+                        <MenuFlyout>
+                            <MenuFlyoutItem Visibility="Collapsed">编辑资料</MenuFlyoutItem>
+                            <MenuFlyoutItem Visibility="Collapsed">隐私设置</MenuFlyoutItem>
+                            <MenuFlyoutSubItem Text="更换背景" Visibility="Collapsed">
+                                <ToggleMenuFlyoutItem x:Name="menu_One" Click="ToggleMenuFlyoutItem_Click" IsChecked="True">蓝</ToggleMenuFlyoutItem>
+                                <ToggleMenuFlyoutItem x:Name="menu_Two" Click="ToggleMenuFlyoutItem_Click">黄</ToggleMenuFlyoutItem>
+                                <ToggleMenuFlyoutItem x:Name="menu_Three" Click="ToggleMenuFlyoutItem_Click">绿</ToggleMenuFlyoutItem>
+                            </MenuFlyoutSubItem>
+                            <MenuFlyoutItem x:Name="btn_Exit" Click="btn_Exit_Click">退出登录</MenuFlyoutItem>
+                        </MenuFlyout>
+                    </AppBarButton.Flyout>
+                </AppBarButton>
+            </StackPanel>
+        </Grid>
     </Grid>
    
 </Page>

@@ -205,7 +205,13 @@ namespace bilibili2
                 {
                     item.title = InfoModel.title;
                     item.aid = aid;
+                    if (DownloadManage.Downloaded.Contains(item.cid))
+                    {
+                        item.inLocal = true;
+                        item.forColor = new SolidColorBrush(Colors.Gray);
+                    }
                 }
+
                 Video_List.ItemsSource = ban;
                 List<string> _tag = JsonConvert.DeserializeObject<List<string>>(InfoModel.tags.ToString());
                 //string[] _tag = model.tag.Split(',');
@@ -463,41 +469,40 @@ namespace bilibili2
             ListView_Comment_Hot.Items.Clear();
         }
 
-        private async void Video_List_ItemClick(object sender, ItemClickEventArgs e)
+        private  void Video_List_ItemClick(object sender, ItemClickEventArgs e)
         {
-            if (CheckNetworkHelper.CheckInternetConnectionType()== InternetConnectionType.WwanConnection)
+
+            if (((VideoModel)e.ClickedItem).inLocal)
             {
-                var dialog = new MessageDialog("当前为移动网络，是否继续播放", "警告");
-                dialog.Commands.Add(new UICommand("确定", cmd => { }, commandId: 0));
-                dialog.Commands.Add(new UICommand("不再提醒", cmd =>
+                if ((bool)settings.GetSettingValue("PlayLocal"))
                 {
-                }, commandId: 1));
-               await  dialog.ShowAsync();
-            } 
+                    this.Frame.Navigate(typeof(DownloadPage), 1);
+                    return;
+                }
+            }
             List<VideoModel> list = (List<VideoModel>)Video_List.ItemsSource;
             KeyValuePair<List<VideoModel>, int> Par = new KeyValuePair<List<VideoModel>, int>(list, list.IndexOf((VideoModel)e.ClickedItem));
             PostHistory();
             this.Frame.Navigate(typeof(PlayerPage), Par);
             //this.Frame.Navigate(typeof(PlayerPage), (e.ClickedItem as VideoModel).cid);
         }
-
-        private async void btn_playP1_Click(object sender, RoutedEventArgs e)
+        SettingHelper settings = new SettingHelper();
+        private  void btn_playP1_Click(object sender, RoutedEventArgs e)
         {
-            if (CheckNetworkHelper.CheckInternetConnectionType() == InternetConnectionType.WwanConnection)
-            {
-                var dialog = new MessageDialog("当前为移动网络，是否继续播放", "警告");
-                dialog.Commands.Add(new UICommand("确定", cmd => { }, commandId: 0));
-                dialog.Commands.Add(new UICommand("不再提醒", cmd =>
-                {
-                }, commandId: 1));
-                await dialog.ShowAsync();
-            }
-            List<VideoModel> list= (List<VideoModel>)Video_List.ItemsSource;
 
-            
-            KeyValuePair<List<VideoModel>, int> Par = new KeyValuePair<List<VideoModel>, int>(list,0);
+            if (((List<VideoModel>)Video_List.ItemsSource)[0].inLocal)
+            {
+                if ((bool)settings.GetSettingValue("PlayLocal"))
+                {
+                    this.Frame.Navigate(typeof(DownloadPage),1);
+                    return;
+                }
+            }
+            List<VideoModel> list = (List<VideoModel>)Video_List.ItemsSource;
+            KeyValuePair<List<VideoModel>, int> Par = new KeyValuePair<List<VideoModel>, int>(list, 0);
             PostHistory();
-            this.Frame.Navigate(typeof(PlayerPage),Par);
+            this.Frame.Navigate(typeof(PlayerPage), Par);
+
         }
 
         private void btn_TB_1_Click(object sender, RoutedEventArgs e)
@@ -1084,5 +1089,80 @@ namespace bilibili2
         {
             DataTransferManager.ShowShareUI();
         }
+
+        private void btn_Download_Click(object sender, RoutedEventArgs e)
+        {
+           
+            Video_List.SelectionMode = ListViewSelectionMode.Multiple;
+            Video_List.IsItemClickEnabled = false;
+            Down_ComBar.Visibility = Visibility.Visible;
+            com_bar.Visibility = Visibility.Collapsed;
+        }
+
+        private void btn_Cancel_Click(object sender, RoutedEventArgs e)
+        {
+            Video_List.SelectionMode = ListViewSelectionMode.None;
+            Video_List.IsItemClickEnabled = true;
+            Down_ComBar.Visibility = Visibility.Collapsed;
+            com_bar.Visibility = Visibility.Visible;
+        }
+
+        private async void btn_Ok_Click(object sender, RoutedEventArgs e)
+        {
+            using (DownloadManage wc = new DownloadManage())
+            {
+                if (Video_List.SelectedItems.Count != 0)
+                {
+                    //循环读取全部选中的项目
+                    foreach (VideoModel item in Video_List.SelectedItems)
+                    {
+                        int quality = cb_Qu.SelectedIndex + 1;//清晰度1-3
+                        if (DownloadManage.Downloaded.Contains(item.cid))
+                        {
+                            break;
+                        }
+                        string Downurl = await wc.GetVideoUri(item.cid, quality);//取得视频URL
+                        if (Downurl != null)
+                        {
+                            DownloadManage.DownModel model = new DownloadManage.DownModel()
+                            {
+                                mid = item.cid,
+                                title = Video_Title.Text,
+                                part = item.page,
+                                url = Downurl,
+                                aid = item.aid,
+                                danmuUrl = "http://comment.bilibili.com/" + item.cid + ".xml",
+                                quality = quality,
+                                downloaded = false,
+                                partTitle = item.part,
+                                isBangumi = false
+                            };
+                            wc.StartDownload(model);
+                            //StartDownload(model);
+                        }
+                        else
+                        {
+                            MessageDialog md = new MessageDialog(item.title + "\t视频地址获取失败");
+                            await md.ShowAsync();
+                        }
+                    }
+                    messShow.Show("任务已加入下载队列",3000);
+                    Video_List.SelectionMode = ListViewSelectionMode.None;
+                    Video_List.IsItemClickEnabled = true;
+                    Down_ComBar.Visibility = Visibility.Collapsed;
+                    com_bar.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    Video_List.SelectionMode = ListViewSelectionMode.None;
+                    Video_List.IsItemClickEnabled = true;
+                    Down_ComBar.Visibility = Visibility.Collapsed;
+                    com_bar.Visibility = Visibility.Visible;
+                }
+            }
+
+        }
+
+
     }
 }

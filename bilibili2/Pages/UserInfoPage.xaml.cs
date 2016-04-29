@@ -73,11 +73,11 @@ namespace bilibili2.Pages
                 UserClass getUser = new UserClass();
                 pr_Load.Visibility = Visibility.Visible;
                 await GetUserInfo();
+                await GetSubInfo();
                 await GetDt();
+             
                 user_GridView_FovBox.ItemsSource = await getUser.GetUserFovBox();
                 pr_Load.Visibility = Visibility.Collapsed;
-
-
             }
             else
             {
@@ -89,6 +89,7 @@ namespace bilibili2.Pages
                 user_GridView_FovBox.Visibility = Visibility.Collapsed;
                 pr_Load.Visibility = Visibility.Visible;
                 await GetUserInfo();
+                await GetSubInfo();
                 await GetDt();
                 if (UserClass.AttentionList.Contains(Uid))
                 {
@@ -104,6 +105,41 @@ namespace bilibili2.Pages
             }
 
         }
+
+        private async Task GetSubInfo()
+        {
+            try
+            {
+                user_GridView_Submit.ItemsSource = null;
+                WebClientClass wc = new WebClientClass();
+                txt_Load.IsEnabled = false;
+                txt_Load.Content = "加载中...";
+                string results = await wc.GetResults(new Uri("http://space.bilibili.com/ajax/member/getSubmitVideos?mid=" + Uid + "&pagesize=20&page=1"));
+                //一层
+                GetUserSubmit model1 = JsonConvert.DeserializeObject<GetUserSubmit>(results);
+                //二层
+                GetUserSubmit model2 = JsonConvert.DeserializeObject<GetUserSubmit>(model1.data.ToString());
+                //三层
+                List<GetUserSubmit> lsModel = JsonConvert.DeserializeObject<List<GetUserSubmit>>(model2.vlist.ToString());
+                user_GridView_Submit.ItemsSource = lsModel;
+            }
+            catch (Exception)
+            {
+            }
+            finally
+            {
+                if (user_GridView_Submit.Items.Count == 0)
+                {
+                    DT_SUB.Visibility =  Visibility.Visible;
+                }
+                else
+                {
+                    DT_SUB.Visibility = Visibility.Collapsed;
+                }
+
+            }
+        }
+
 
         private async Task GetUserInfo()
         {
@@ -504,6 +540,24 @@ namespace bilibili2.Pages
             grid_ACoin.Visibility = Visibility.Visible;
             GetPutCoin();
             sp.IsPaneOpen = true;
+        }
+
+        private void btn_Edit_Click(object sender, RoutedEventArgs e)
+        {
+            this.Frame.Navigate(typeof(EditPage), grid_Info.DataContext);
+        }
+
+        private void Page_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if (this.ActualWidth <= 500)
+            {
+                sp.OpenPaneLength = this.ActualWidth;
+            }
+            else
+            {
+                sp.OpenPaneLength = 350;
+
+            }
         }
     }
 }

@@ -37,6 +37,8 @@
                     <VisualState.Setters>
                         <Setter Target="com_bar.(Grid.Row)" Value="0"/>
                         <Setter Target="com_bar.HorizontalAlignment" Value="Right"/>
+                        <Setter Target="Down_ComBar.(Grid.Row)" Value="0"/>
+                        <Setter Target="Down_ComBar.HorizontalAlignment" Value="Right"/>
                         <Setter Target="grid_HotComment.Visibility" Value="Visible"></Setter>
                         <Setter Target="width.Width" Value="*"></Setter>
                     </VisualState.Setters>
@@ -48,6 +50,8 @@
                     <VisualState.Setters>
                         <Setter Target="com_bar.(Grid.Row)" Value="3"/>
                         <Setter Target="com_bar.HorizontalAlignment" Value="Stretch"/>
+                        <Setter Target="Down_ComBar.(Grid.Row)" Value="3"/>
+                        <Setter Target="Down_ComBar.HorizontalAlignment" Value="Stretch"/>
                         <Setter Target="grid_HotComment.Visibility" Value="Collapsed"></Setter>
                         <Setter Target="width.Width" Value="auto"></Setter>
                     </VisualState.Setters>
@@ -242,7 +246,7 @@
             </SplitView.Pane>
             <Pivot x:Name="pivot" Style="{StaticResource PivotStyle1}" Margin="0" SelectionChanged="pivot_SelectionChanged">
                 <PivotItem Margin="0">
-                    <ScrollViewer HorizontalScrollMode="Disabled" VerticalScrollBarVisibility="Auto">
+                    <ScrollViewer x:Name="sv2" HorizontalScrollMode="Disabled" VerticalScrollBarVisibility="Auto">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition/>
@@ -259,7 +263,7 @@
                                         <RowDefinition Height="auto"/>
                                         <RowDefinition Height="auto"/>
                                     </Grid.RowDefinitions>
-                                    <Image Source="{Binding pic}" />
+                                    <Image x:Name="img_1" Source="{Binding pic}" />
                                     <Grid Grid.Row="0"  VerticalAlignment="Bottom" >
                                         <Grid.Background>
                                             <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
@@ -274,7 +278,7 @@
                                     <HyperlinkButton  x:Name="btn_playP1" Foreground="{ThemeResource Bili-ForeColor}" HorizontalAlignment="Stretch" ToolTipService.ToolTip="点击播放P1" VerticalAlignment="Stretch" Background="#00EAEAEA" Click="btn_playP1_Click">
                                         <!--<FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE102;" FontSize="80" />-->
                                     </HyperlinkButton>
-                                    <Grid x:Name="Video_UP" Grid.Row="1">
+                                    <Grid x:Name="Video_UP"  Grid.Row="1">
                                         <HyperlinkButton x:Name="btn_UP" Foreground="{ThemeResource Bili-FontColor}" HorizontalContentAlignment="Stretch" Click="btn_UP_Click">
                                             <Grid >
                                                 <Grid.ColumnDefinitions>
@@ -306,13 +310,13 @@
                                         </HyperlinkButton>
 
                                     </Grid>
-                                    <StackPanel Grid.Row="3" Margin="0 5">
+                                    <StackPanel  Grid.Row="3" Margin="0 5">
                                         <TextBlock x:Name="txt_Desc"  IsTextSelectionEnabled="True" TextWrapping="Wrap" MaxLines="2" Foreground="Gray">
 							<Run Text="{Binding desc}"/>
                                         </TextBlock>
                                         <HyperlinkButton x:Name="btn_Open" HorizontalAlignment="Right" Foreground="Gray" FontSize="12" Content="展开" Click="btn_Open_Click"/>
                                     </StackPanel>
-                                    <ScrollViewer Grid.Row="2" Margin="0 5" VerticalScrollMode="Disabled" VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Hidden" HorizontalScrollMode="Enabled">
+                                    <ScrollViewer  Grid.Row="2" Margin="0 5" VerticalScrollMode="Disabled" VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Hidden" HorizontalScrollMode="Enabled">
                                         <StackPanel x:Name="Video_data" Orientation="Horizontal" >
                                             <StackPanel  Orientation="Horizontal">
                                                 <TextBlock FontSize="14">播放：</TextBlock>
@@ -334,7 +338,7 @@
                                         </StackPanel>
                                     </ScrollViewer>
 
-                                    <ScrollViewer Grid.Row="4" Margin="0 5" VerticalScrollMode="Disabled" VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Hidden" HorizontalScrollMode="Enabled">
+                                    <ScrollViewer  Grid.Row="4" Margin="0 5" VerticalScrollMode="Disabled" VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Hidden" HorizontalScrollMode="Enabled">
                                         <StackPanel x:Name="grid_tag" Orientation="Horizontal">
 
                                         </StackPanel>
@@ -352,8 +356,8 @@
                                             <ListView.ItemTemplate>
                                                 <DataTemplate>
                                                     <StackPanel Orientation="Horizontal">
-                                                        <TextBlock Text="{Binding page}" Margin="0,0,5,0"/>
-                                                        <TextBlock Text="{Binding part}"/>
+                                                        <TextBlock Text="{Binding page}" Foreground="{Binding forColor}" Margin="0,0,5,0"/>
+                                                        <TextBlock Text="{Binding part}" Foreground="{Binding forColor}"/>
                                                     </StackPanel>
                                                 </DataTemplate>
                                             </ListView.ItemTemplate>
@@ -647,6 +651,7 @@
         </Grid>
         <CommandBar x:Name="com_bar" Grid.Row="0" HorizontalAlignment="Right" Background="{StaticResource BG}"   Foreground="White">
             <CommandBar.SecondaryCommands>
+                
                 <AppBarButton x:Name="Video_Refresh" Icon="Refresh"  Label="刷新" Click="Video_Refresh_Click"/>
                 <AppBarButton x:Name="btn_VideoInfo"  Icon="Important"   Label="视频信息"  Click="btn_VideoInfo_Click"/>
                 <AppBarButton x:Name="btn_GoBrowser"  Icon="Go"   Label="浏览器打开"  Click="btn_GoBrowser_Click"/>
@@ -669,7 +674,18 @@
             </AppBarButton>
             <AppBarButton x:Name="btn_Favbox" Icon="OutlineStar"  Label="收藏" Foreground="White" Click="btn_Favbox_Click">
             </AppBarButton>
-            <AppBarButton x:Name="btn_Download" Icon="Download"  Label="下载"  Foreground="White"/>
+            <AppBarButton x:Name="btn_Download" Icon="Download"  Label="下载"  Foreground="White" Click="btn_Download_Click"/>
+        </CommandBar>
+        <CommandBar x:Name="Down_ComBar" Visibility="Collapsed" HorizontalAlignment="Right" Background="{StaticResource BG}" Foreground="White" VerticalAlignment="Bottom">
+            <CommandBar.Content>
+                <ComboBox x:Name="cb_Qu" SelectedIndex="1" Margin="10,10">
+                    <ComboBoxItem Content="清晰"/>
+                    <ComboBoxItem Content="高清"/>
+                    <ComboBoxItem Content="原画"/>
+                </ComboBox>
+            </CommandBar.Content>
+            <AppBarButton x:Name="btn_Ok" Icon="Accept"  Label="开始下载"  Foreground="White" Click="btn_Ok_Click"/>
+            <AppBarButton Icon="Cancel"  x:Name="btn_Cancel" Label="取消" Foreground="White" Click="btn_Cancel_Click"/>
         </CommandBar>
         <ProgressBar x:Name="pr_Load" VerticalAlignment="Top" Background="{x:Null}" IsIndeterminate="True" Foreground="White" ></ProgressBar>
         <local:MessageShow x:Name="messShow" Grid.RowSpan="4" VerticalAlignment="Bottom" Margin="10" HorizontalAlignment="Center"></local:MessageShow>

@@ -105,7 +105,7 @@ namespace bilibili2.Class
             {
                 using (HttpClient hc=new HttpClient())
                 {
-                    HttpResponseMessage hr =await hc.GetAsync(new Uri("http://live.bilibili.com/freeSilver/heart"));
+                    HttpResponseMessage hr =await hc.GetAsync(new Uri("http://live.bilibili.com/freeSilver/heart?r="+new Random().Next(1,9999)));
                     hr.EnsureSuccessStatusCode();
                     var result =await hr.Content.ReadAsStringAsync();
                     heartdata model = JsonConvert.DeserializeObject<heartdata>(result);

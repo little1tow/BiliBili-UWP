@@ -78,7 +78,7 @@ namespace bilibili2.Pages
                 CanLoad = false;
                 pr_Load.Visibility = Visibility.Visible;
                 WebClientClass wc = new WebClientClass();
-                string results = await wc.GetResults(new Uri("http://api.bilibili.com/live/room_list?page=" + PageNum + "&pagesize=30&status=LIVE"));
+                string results = await wc.GetResults(new Uri("http://api.bilibili.com/live/room_list?page=" + PageNum + "&pagesize=20&status=LIVE"));
                 InfoModel model = new InfoModel();
                 model = JsonConvert.DeserializeObject<InfoModel>(results);
                 JObject json = JObject.Parse(model.list.ToString());
@@ -98,6 +98,10 @@ namespace bilibili2.Pages
                 Hot = true;
                 CanLoad = true;
                 PageNum++;
+                if (PageNum==2)
+                {
+                    GetZBInfo();
+                }
             }
             catch (Exception)
             {
@@ -105,6 +109,7 @@ namespace bilibili2.Pages
             finally
             {
                 pr_Load.Visibility = Visibility.Collapsed;
+                
             }
         }
 
@@ -290,6 +295,7 @@ namespace bilibili2.Pages
                     if (!Hot)
                     {
                         GetZBInfo();
+                       
                     }
                     break;
                 case 1:

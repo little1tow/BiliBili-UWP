@@ -4,11 +4,13 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Background;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Storage;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -35,7 +37,7 @@ namespace bilibili2
 
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
-
+          
             switch (new Random().Next(1,16))
             {
                 case 1:
@@ -63,7 +65,7 @@ namespace bilibili2
                     txt_Load.Text = "哔哩哔哩动画 UWP";
                     break;
                 case 9:
-                    txt_Load.Text = "只有帅哥才能看到这句话";
+                    txt_Load.Text = "只有帅的人才能看到这句话";
                     break;
                 case 10:
                     txt_Load.Text = "C#是世界上最好的语言！";
@@ -89,6 +91,7 @@ namespace bilibili2
             try
             {
                 await RegisterBackgroundTask();
+                new DownloadManage().GetDownOk();
                 if (!CheckNetworkHelper.CheckNetwork())
                 {
                     new MessageDialog("请检查网络连接！").ShowAsync();
@@ -97,13 +100,13 @@ namespace bilibili2
             catch (Exception)
             {
             }
-           
-
         }
+
+      
         private async void Page_Loaded(object sender, RoutedEventArgs e)
         {
 
-            await Task.Delay(3000);
+            await Task.Delay(2000);
             this.Frame.Navigate(typeof(MainPage));
         }
 

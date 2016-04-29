@@ -105,6 +105,7 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Class\CheckNetworkHelper.cs" />
+    <Compile Include="Class\DownloadManage.cs" />
     <Compile Include="Class\GetSilverHelper.cs" />
     <Compile Include="Class\MD5.cs" />
     <Compile Include="Class\SettingHelper.cs" />
@@ -148,6 +149,12 @@
     </Compile>
     <Compile Include="Pages\DiliInfo.xaml.cs">
       <DependentUpon>DiliInfo.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\DownloadPage.xaml.cs">
+      <DependentUpon>DownloadPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\EditPage.xaml.cs">
+      <DependentUpon>EditPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\FavPage.xaml.cs">
       <DependentUpon>FavPage.xaml</DependentUpon>
@@ -368,6 +375,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Pages\DiliInfo.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\DownloadPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\EditPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

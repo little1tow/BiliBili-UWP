@@ -8,6 +8,7 @@
     x:Class="bilibili2.SettingPage"
     mc:Ignorable="d"
     Tag="设置"
+    SizeChanged="Page_SizeChanged"
     >
     <Page.Resources>
         <SolidColorBrush x:Name="bg" x:Key="BG" Color="#FFDC638F" />
@@ -51,7 +52,7 @@
                             <ListView x:Name="list_Guanjianzi" SelectionMode="Multiple" Grid.Row="2"/>
                             <StackPanel Orientation="Horizontal" Grid.Row="3">
                                 <Button Margin="5" x:Name="btn_DeleteGuanjianzi" Click="btn_DeleteGuanjianzi_Click" Content="删除选中"/>
-                                <Button Margin="5" x:Name="btn_GetGuanjianzi" Click="btn_GetGuanjianzi_Click" IsEnabled="False" Content="获取网页屏蔽信息"/>
+                                <Button Margin="5" x:Name="btn_GetGuanjianzi" Visibility="Collapsed" Click="btn_GetGuanjianzi_Click" IsEnabled="False" Content="获取网页屏蔽信息"/>
                             </StackPanel>
 
                         </Grid>
@@ -76,7 +77,7 @@
                             <ListView x:Name="list_Yonghu" SelectionMode="Multiple" Grid.Row="2"/>
                             <StackPanel Orientation="Horizontal" Grid.Row="3">
                                 <Button Margin="5" x:Name="btn_DeleteYonghu" Click="btn_DeleteYonghu_Click" Content="删除选中"/>
-                                <Button Margin="5" x:Name="btn_GetYonghu" Click="btn_GetYonghu_Click" IsEnabled="False" Content="获取网页屏蔽信息"/>
+                                <Button Margin="5" x:Name="btn_GetYonghu" Click="btn_GetYonghu_Click" Visibility="Collapsed" IsEnabled="True" Content="获取网页屏蔽信息"/>
                             </StackPanel>
 
                         </Grid>
@@ -178,6 +179,10 @@
 									<Run Text="*很快就能更改格式啦"/>
                                 </TextBlock>
                                 <ToggleSwitch x:Name="tw_AutoFull" OffContent="播放时不自动全屏" OnContent="播放时自动全屏" HorizontalAlignment="Left" Toggled="tw_AutoFull_Toggled"/>
+                                <ToggleSwitch x:Name="tw_PlayLocal" OffContent="优先播放在线视频" OnContent="优先播放本地视频" HorizontalAlignment="Left" Toggled="tw_PlayLocal_Toggled"/>
+                                <!--<TextBlock Foreground="Gray">
+									<Run Text="*当本地离线存在视频时播放本地视频"/>
+                                </TextBlock>-->
                                 <ToggleSwitch  x:Name="tw_AutoPlay" Visibility="Collapsed" OffContent="不自动播放视频" OnContent="自动播放视频" HorizontalAlignment="Left" Toggled="tw_AutoPlay_Toggled"/>
                             </StackPanel>
                         </ScrollViewer>
@@ -209,22 +214,22 @@
                                     <ComboBoxItem Content="宋体"/>
                                     <ComboBoxItem Content="等线"/>
                                 </ComboBox>
-                                <TextBlock Foreground="Black" FontSize="16" >
+                                <TextBlock  FontSize="16" >
 									<Run Text="弹幕大小" />
 									<Run Text="{Binding Value, ElementName=slider_DanmuSize}" />
                                 </TextBlock>
                                 <Slider x:Name="slider_DanmuSize" Width="250" HorizontalAlignment="Left" Maximum="50" ValueChanged="slider_DanmuSize_ValueChanged" />
-                                <TextBlock Foreground="Black" FontSize="16" >
+                                <TextBlock  FontSize="16" >
 									<Run Text="弹幕速度" />
 									<Run Text="{Binding Value, ElementName=slider_DanmuSpeed}"/>
                                 </TextBlock>
                                 <Slider x:Name="slider_DanmuSpeed"  Width="250" HorizontalAlignment="Left"   Maximum="25" ValueChanged="slider_DanmuSpeed_ValueChanged"/>
-                                <TextBlock Foreground="Black" FontSize="16" >
+                                <TextBlock  FontSize="16" >
 									<Run Text="弹幕间距" />
 									<Run Text="{Binding Value, ElementName=slider_DanmuJianju}" />
                                 </TextBlock>
                                 <Slider x:Name="slider_DanmuJianju"  Width="250" HorizontalAlignment="Left"  Maximum="500"  ValueChanged="slider_DanmuJianju_ValueChanged"/>
-                                <TextBlock Foreground="Black" FontSize="16" >
+                                <TextBlock FontSize="16" >
 									<Run Text="弹幕透明度" />
 									<Run Text="{Binding Value, ElementName=slider_DanmuTran}"/>
                                 </TextBlock>
@@ -241,9 +246,14 @@
                         </PivotItem.Header>
                         <ScrollViewer VerticalScrollBarVisibility="Auto">
                             <StackPanel Margin="10 0">
+                                <ToggleSwitch x:Name="sw_UseWifi"  OffContent="禁止使用数据下载" OnContent="允许使用数据下载" HorizontalAlignment="Left" VerticalAlignment="Top" Toggled="sw_UseWifi_Toggled"/>
+                                <ToggleSwitch x:Name="sw_Light"  OffContent="不保持屏幕常亮" OnContent="保持屏幕常亮" HorizontalAlignment="Left" VerticalAlignment="Top" Toggled="sw_Light_Toggled"/>
                                 <TextBlock FontSize="16" >
 									<Run Text="默认位置"/>
                                 </TextBlock>
+                             
+                                <TextBlock Foreground="Gray">系统视频库</TextBlock>
+                                <HyperlinkButton NavigateUri="http://7xj00j.com1.z0.glb.clouddn.com/help.html">如何更改下载位置?</HyperlinkButton>
                             </StackPanel>
                         </ScrollViewer>
                     </PivotItem>
@@ -269,7 +279,7 @@
 									<Run Text="帮助及反馈"/>
                                 </TextBlock>
                                 <HyperlinkButton x:Name="btn_feedback" Click="btn_feedback_Click" Content="反馈"/>
-                                <HyperlinkButton NavigateUri="http://xiaoyaocz.com/FAQ.html" Content="常见问题"/>
+                                <HyperlinkButton NavigateUri="http://7xj00j.com1.z0.glb.clouddn.com/help.html" Content="常见问题"/>
                                 <TextBlock Foreground="Gray" Margin="0 5" IsTextSelectionEnabled="True">
 									<Run Text="交流群:530991215"/>
                                 </TextBlock>
@@ -301,10 +311,12 @@
                                 <TextBlock Foreground="Gray" Margin="0 5">
 									<Run Text="诚挚感谢以下小伙伴的帮助(排名不分先后)"/>
                                 </TextBlock>
-                                <WrapPanel:WrapPanel  Visibility="Collapsed">
+                                <WrapPanel:WrapPanel  Visibility="Visible">
                                     <HyperlinkButton NavigateUri="http://toosame.com/m/" Margin="5 0">旋风小伙(微页开发者)</HyperlinkButton>
-                                    <!--<HyperlinkButton NavigateUri="http://toosame.com/m/" Margin="5 0">旋风小伙(微页开发者)</HyperlinkButton>
-                                    <HyperlinkButton NavigateUri="http://toosame.com/m/" Margin="5 0">旋风小伙(微页开发者)</HyperlinkButton>-->
+                                    <HyperlinkButton Margin="5 0">Dearest匿爱</HyperlinkButton>
+                                    <HyperlinkButton  Margin="5 0">狮子座</HyperlinkButton>
+                                    <HyperlinkButton  Margin="5 0">夜仲泪雪</HyperlinkButton>
+                                    <HyperlinkButton NavigateUri="https://github.com/CodeForCSharp" Margin="5 0">CodeForCSharp</HyperlinkButton>
                                 </WrapPanel:WrapPanel>
                                 <TextBlock FontSize="18" >
 									<Run Text="引用及参考"/>
@@ -318,7 +330,6 @@
                                 <HyperlinkButton  NavigateUri="https://github.com/WhiteBlue/bilibili-service" Content="WhiteBlue/bilibili-service"/>
                                 <HyperlinkButton  NavigateUri="http://www.cnblogs.com/hebeiDGL/p/4775377.html" Content="段博琼/侧滑打开菜单"/>
                                 <HyperlinkButton  NavigateUri="http://www.fuckbilibili.com/biliapi.html" Content="fuckbilibili/biliapi"/>
-                               
                             </StackPanel>
                         </ScrollViewer>
                     </PivotItem>

@@ -62,13 +62,13 @@ namespace bilibili2
                 var fileOpenPicker = new FileOpenPicker();
                 fileOpenPicker.FileTypeFilter.Add(".png");
                 fileOpenPicker.FileTypeFilter.Add(".jpg");
-
                 var file = await fileOpenPicker.PickSingleFileAsync();
                 if (file != null)
                 {
                     _jyUserFeedbackSdkManager.UploadPicture(ApiHelper.JyAppkey, ApiHelper.JySecret, file);
                 }
             };
+            ChangeTitbarColor();
             //this.RequestedTheme = ElementTheme.Dark;
         }
 
@@ -94,9 +94,10 @@ namespace bilibili2
                 timer.Tick += Timer_Tick;
 
             }
-           
+            GetSetting();
             ChangeTheme();
             ChangeDrak();
+           
             navInfo = infoFrame.GetNavigationState();
             infoFrame.Tag = (SolidColorBrush)top_grid.Background;
         }
@@ -153,7 +154,10 @@ namespace bilibili2
 
         private void GetSetting()
         {
-
+            if (!settings.SettingContains("PlayLocal"))
+            {
+                settings.SetSettingValue("PlayLocal",true);
+            }
         }
         //首页错误
         private void Home_Items_ErrorEvent(string aid)
@@ -936,6 +940,7 @@ namespace bilibili2
                     }
                     break;
                 case "Download":
+                    infoFrame.Navigate(typeof(DownloadPage));
                     break;
                 case "Setting":
                     infoFrame.Navigate(typeof(SettingPage));
@@ -1306,6 +1311,12 @@ namespace bilibili2
                     break;
                 case "搜索直播":
                     (infoFrame.Content as SearchLivePage).BackEvent += MainPage_BackEvent;
+                    break;
+                case "离线管理":
+                    (infoFrame.Content as DownloadPage).BackEvent += MainPage_BackEvent;
+                    break;
+                case "编辑资料":
+                    (infoFrame.Content as EditPage).BackEvent += MainPage_BackEvent;
                     break;
                 default:
                     break;
@@ -2005,10 +2016,6 @@ namespace bilibili2
 
         private void top_txt_find_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
         {
-            if (sender.PlaceholderText != "搜索关键字或AV号")
-            {
-                return;
-            }
             if (sender.Text.Length == 0)
             {
                 //top_txt_find.Visibility = Visibility.Collapsed;
@@ -2073,31 +2080,31 @@ namespace bilibili2
         //读取直播Banner
         private async void GetLiveBanner()
         {
-            wc = new WebClientClass();
-            string url = string.Format("http://live.bilibili.com/AppIndex/home?_device=wp&_ulv=10000&access_key={0}&appkey={1}&build=411005&platform=android&scale=xxhdpi", ApiHelper.access_key, ApiHelper._appKey);
-            url += "&sign=" + ApiHelper.GetSign(url);
-            string results = await wc.GetResults(new Uri(url));
-            HomeLiveModel model = JsonConvert.DeserializeObject<HomeLiveModel>(results);
-            if (model.code == 0)
+            try
             {
-                HomeLiveModel dataModel = JsonConvert.DeserializeObject<HomeLiveModel>(model.data.ToString());
-                List<HomeLiveModel> bannerModel = JsonConvert.DeserializeObject<List<HomeLiveModel>>(dataModel.banner.ToString());
-                home_flipView_Live.ItemsSource = bannerModel;
-                fvLeft_Live.ItemsSource = bannerModel;
-                fvRight_Live.ItemsSource = bannerModel;
-                this.home_flipView_Live.SelectedIndex = 0;
-                try
+                wc = new WebClientClass();
+                string url = string.Format("http://live.bilibili.com/AppIndex/home?_device=wp&_ulv=10000&access_key={0}&appkey={1}&build=411005&platform=android&scale=xxhdpi", ApiHelper.access_key, ApiHelper._appKey);
+                url += "&sign=" + ApiHelper.GetSign(url);
+                string results = await wc.GetResults(new Uri(url));
+                HomeLiveModel model = JsonConvert.DeserializeObject<HomeLiveModel>(results);
+                if (model.code == 0)
                 {
+                    HomeLiveModel dataModel = JsonConvert.DeserializeObject<HomeLiveModel>(model.data.ToString());
+                    List<HomeLiveModel> bannerModel = JsonConvert.DeserializeObject<List<HomeLiveModel>>(dataModel.banner.ToString());
+                    home_flipView_Live.ItemsSource = bannerModel;
+                    fvLeft_Live.ItemsSource = bannerModel;
+                    fvRight_Live.ItemsSource = bannerModel;
+                    this.home_flipView_Live.SelectedIndex = 0;
+
                     if (fvLeft_Live.Visibility != Visibility.Collapsed || fvRight_Live.Visibility != Visibility.Collapsed)
                     {
                         this.fvLeft_Live.SelectedIndex = this.fvLeft_Live.Items.Count - 1;
                         this.fvRight_Live.SelectedIndex = this.home_flipView_Live.SelectedIndex + 1;
                     }
                 }
-                catch (Exception)
-                {
-                }
-                
+            }
+            catch (Exception)
+            {
             }
         }
         //直播Banner点击
